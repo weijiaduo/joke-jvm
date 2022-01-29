@@ -1,5 +1,7 @@
 package com.wjd.rtda;
 
+import java.util.Arrays;
+
 /**
  * 局部变量表
  */
@@ -69,4 +71,10 @@ public class LocalVars {
         return slots[index].getRef();
     }
 
+    @Override
+    public String toString() {
+        return "LocalVars{" +
+                "slots=" + Arrays.toString(slots) +
+                '}';
+    }
 }

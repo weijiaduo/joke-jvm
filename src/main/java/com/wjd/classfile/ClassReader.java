@@ -13,7 +13,7 @@ public class ClassReader {
 
     private ClassFile classFile;
 
-    ClassReader (byte[] bytes) {
+    public ClassReader (byte[] bytes) {
         buf = ByteBuffer.wrap(bytes);
         buf.order(ByteOrder.BIG_ENDIAN); // 大端
     }
@@ -35,7 +35,8 @@ public class ClassReader {
     }
 
     public Uint8 readUint8() {
-        int val = buf.get();
+        byte b = buf.get();
+        int val = 0x0FF & b;
         return new Uint8(val);
     }
 

@@ -1,6 +1,6 @@
-package com.wjd.instructions.math;
+package com.wjd.instructions.extended;
 
-import com.wjd.classfile.type.Uint8;
+import com.wjd.classfile.type.Uint16;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.Frame;
@@ -10,16 +10,16 @@ import com.wjd.rtda.Frame;
  *
  * @since 2021/12/5
  */
-public class IInc implements Instruction {
+public class WIInc implements Instruction {
 
     /**
      * 局部变量索引
      */
-    private Uint8 index;
+    private Uint16 index;
     /**
      * 常量
      */
-    private Uint8 value;
+    private Uint16 value;
 
     @Override
     public void execute(Frame frame) {
@@ -30,7 +30,7 @@ public class IInc implements Instruction {
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
-        index = reader.readUint8();
-        value = reader.readUint8();
+        index = reader.readUint16();
+        value = reader.readUint16();
     }
 }

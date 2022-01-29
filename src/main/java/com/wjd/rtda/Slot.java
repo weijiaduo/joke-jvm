@@ -63,4 +63,11 @@ public class Slot {
         return Double.longBitsToDouble(bits);
     }
 
+    @Override
+    public String toString() {
+        return "Slot{" +
+                "num=" + num +
+                ", ref=" + ref +
+                '}';
+    }
 }

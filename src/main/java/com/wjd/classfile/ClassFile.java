@@ -144,4 +144,12 @@ public class ClassFile {
         ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(className);
         return getUTF8String(info.getIndex());
     }
+
+    /**
+     * 获取所有方法
+     * @return 所有方法信息
+     */
+    public MethodInfo[] getMethods() {
+        return methods;
+    }
 }

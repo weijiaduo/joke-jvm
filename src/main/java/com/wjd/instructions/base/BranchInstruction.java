@@ -1,6 +1,5 @@
 package com.wjd.instructions.base;
 
-import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.Frame;
 
 /**
@@ -8,8 +7,8 @@ import com.wjd.rtda.Frame;
  */
 public class BranchInstruction implements Instruction {
 
-    private int offset;
-    private Uint16 source;
+    /** 16位有符号整数偏移 */
+    protected int offset;
 
     @Override
     public void execute(Frame frame) {
@@ -18,8 +17,13 @@ public class BranchInstruction implements Instruction {
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
-        source = reader.readUint16();
-        offset = source.value();
+        // 注意是16位有符号整数
+        offset = reader.readShort();
+    }
+
+    public void branch(Frame frame) {
+        int pc = frame.getThread().getPc();
+        frame.setNextPc(pc + offset);
     }
 
 }

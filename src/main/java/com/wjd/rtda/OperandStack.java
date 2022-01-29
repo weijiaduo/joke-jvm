@@ -1,5 +1,7 @@
 package com.wjd.rtda;
 
+import java.util.Arrays;
+
 /**
  * 操作数栈
  */
@@ -94,4 +96,10 @@ public class OperandStack {
         return ref;
     }
 
+    @Override
+    public String toString() {
+        return "OperandStack{" +
+                "slots=" + Arrays.toString(slots) +
+                '}';
+    }
 }

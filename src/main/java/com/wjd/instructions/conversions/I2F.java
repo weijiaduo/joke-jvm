@@ -1,0 +1,18 @@
+package com.wjd.instructions.conversions;
+
+import com.wjd.instructions.constants.NoOperandsInstruction;
+import com.wjd.rtda.Frame;
+
+/**
+ * int 转 float
+ * @since 2022/1/29
+ */
+public class I2F extends NoOperandsInstruction {
+
+    @Override
+    public void execute(Frame frame) {
+        int i = frame.getOperandStack().popInt();
+        float f = i;
+        frame.getOperandStack().pushFloat(f);
+    }
+}

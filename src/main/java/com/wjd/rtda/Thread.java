@@ -36,4 +36,8 @@ public class Thread {
     public Frame currentFrame() {
         return stack.top();
     }
+
+    public Frame newFrame(int maxLocals, int maxStack) {
+        return new Frame(this, maxLocals, maxStack);
+    }
 }

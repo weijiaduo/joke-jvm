@@ -13,21 +13,21 @@ public abstract class MemberInfo {
     /**
      * 访问标志
      */
-    private Uint16 accessFlags;
+    protected Uint16 accessFlags;
     /**
      * 名称索引
      */
-    private Uint16 nameIndex;
+    protected Uint16 nameIndex;
     /**
      * 描述索引
      */
-    private Uint16 descriptorIndex;
+    protected Uint16 descriptorIndex;
     /**
      * 属性表
      */
-    private AttributeInfoTable attributeTable;
+    protected AttributeInfoTable attributeTable;
 
-    private ClassFile classFile;
+    protected ClassFile classFile;
 
     public void readFrom(ClassReader reader) {
         classFile = reader.getClassFile();
@@ -47,8 +47,16 @@ public abstract class MemberInfo {
         return nameIndex;
     }
 
+    public String name() {
+        return classFile.getUTF8String(nameIndex);
+    }
+
     public Uint16 getDescriptorIndex() {
         return descriptorIndex;
+    }
+
+    public String descriptor() {
+        return classFile.getUTF8String(descriptorIndex);
     }
 
     public AttributeInfoTable getAttributeTable() {
