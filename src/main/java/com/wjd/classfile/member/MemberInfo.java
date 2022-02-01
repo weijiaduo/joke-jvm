@@ -3,6 +3,7 @@ package com.wjd.classfile.member;
 import com.wjd.classfile.AttributeInfoTable;
 import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.ClassReader;
+import com.wjd.classfile.attr.AttributeInfo;
 import com.wjd.classfile.type.Uint16;
 
 /**
@@ -43,27 +44,19 @@ public abstract class MemberInfo {
         return accessFlags;
     }
 
-    public Uint16 getNameIndex() {
-        return nameIndex;
-    }
-
-    public String name() {
+    public String getName() {
         return classFile.getUTF8String(nameIndex);
     }
 
-    public Uint16 getDescriptorIndex() {
-        return descriptorIndex;
-    }
-
-    public String descriptor() {
+    public String getDescriptor() {
         return classFile.getUTF8String(descriptorIndex);
-    }
-
-    public AttributeInfoTable getAttributeTable() {
-        return attributeTable;
     }
 
     public ClassFile getClassFile() {
         return classFile;
+    }
+
+    public AttributeInfo[] getAttributes() {
+        return attributeTable.getAttributes();
     }
 }

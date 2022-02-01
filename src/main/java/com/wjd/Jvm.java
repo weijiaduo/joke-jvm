@@ -44,7 +44,7 @@ public class Jvm {
      */
     public static MethodInfo getMainMethod(ClassFile classFile) {
         for (MethodInfo m : classFile.getMethods())
-            if ("main".equals(m.name()) && "([Ljava/lang/String;)V".equals(m.descriptor())) {
+            if ("main".equals(m.getName()) && "([Ljava/lang/String;)V".equals(m.getDescriptor())) {
                 return m;
             }
         return null;

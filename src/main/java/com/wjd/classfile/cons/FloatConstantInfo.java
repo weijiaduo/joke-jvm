@@ -19,7 +19,7 @@ public class FloatConstantInfo implements LiteralConstantInfo {
         val = reader.readFloat();
     }
 
-    private float value() {
+    public float value() {
         return val;
     }
 

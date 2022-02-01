@@ -1,5 +1,7 @@
 package com.wjd.rtda;
 
+import com.wjd.rtda.heap.Object;
+
 /**
  * 局部变量插槽
  */

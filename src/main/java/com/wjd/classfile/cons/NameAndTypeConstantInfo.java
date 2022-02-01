@@ -1,5 +1,6 @@
 package com.wjd.classfile.cons;
 
+import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.ClassReader;
 import com.wjd.classfile.type.Uint16;
 
@@ -23,18 +24,22 @@ public class NameAndTypeConstantInfo implements RefConstantInfo {
      */
     private Uint16 descriptorIndex;
 
+    protected ClassFile classFile;
+
     @Override
     public void readFrom(ClassReader reader) {
+        classFile = reader.getClassFile();
+
         nameIndex = reader.readUint16();
         descriptorIndex = reader.readUint16();
     }
 
-    public Uint16 getNameIndex() {
-        return nameIndex;
+    public String getName() {
+        return classFile.getUTF8String(nameIndex);
     }
 
-    public Uint16 getDescriptorIndex() {
-        return descriptorIndex;
+    public String getDescriptor() {
+        return classFile.getUTF8String(descriptorIndex);
     }
 
     @Override

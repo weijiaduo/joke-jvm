@@ -13,7 +13,7 @@ public class LocalVarsTest {
         localVars.setLong(4, -2997924580L);
         localVars.setFloat(6, 3.1415926F);
         localVars.setDouble(7, 2.71828182845);
-        localVars.setRef(9, this);
+        localVars.setRef(9, null);
         System.out.println(localVars.getInt(0));
         System.out.println(localVars.getInt(1));
         System.out.println(localVars.getLong(2));

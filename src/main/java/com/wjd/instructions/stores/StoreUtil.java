@@ -31,8 +31,7 @@ public final class StoreUtil {
     }
 
     public static void astore(Frame frame, int index) {
-        Object val = frame.getOperandStack().popRef();
-        frame.getLocalVars().setRef(index, val);
+        frame.getLocalVars().setRef(index, frame.getOperandStack().popRef());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.wjd.rtda;
 
 import java.util.Arrays;
+import com.wjd.rtda.heap.Object;
 
 /**
  * 操作数栈

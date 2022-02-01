@@ -132,17 +132,56 @@ public class ClassFile {
      * @return 字符串
      */
     public String getUTF8String(Uint16 index) {
-        Utf8ConstantInfo info = (Utf8ConstantInfo) getConstantInfo(index);
-        return new String(info.value(), StandardCharsets.UTF_8);
+        return constantPool.getUTF8String(index);
     }
 
     /**
-     * 获取类名
-     * @return 类名
+     * 类名
      */
     public String getClassName() {
         ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(className);
         return getUTF8String(info.getIndex());
+    }
+
+    /**
+     * 父类名
+     */
+    public String getSuperClassName() {
+        ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(superClassName);
+        return getUTF8String(info.getIndex());
+    }
+
+    /**
+     * 接口名称
+     */
+    public String[] getInterfaceNames() {
+        String[] interfaceNames = new String[interfaces.length];
+        for (int i = 0; i < interfaces.length; i++) {
+            ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(interfaces[i]);
+            interfaceNames[i] = getUTF8String(info.getIndex());
+        }
+        return interfaceNames;
+    }
+
+    /**
+     * 访问标志
+     */
+    public Uint16 getAccessFlags() {
+        return accessFlags;
+    }
+
+    /**
+     * 常量池
+     */
+    public ConstantInfoPool getConstantPool() {
+        return constantPool;
+    }
+
+    /**
+     * 字段
+     */
+    public FieldInfo[] getFields() {
+        return fields;
     }
 
     /**

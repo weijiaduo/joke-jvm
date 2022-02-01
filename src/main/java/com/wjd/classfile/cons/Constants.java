@@ -1,6 +1,6 @@
 package com.wjd.classfile.cons;
 
-public class Constant {
+public class Constants {
 
     public static final int ConstantUtf8 = 1;                // Java 1.0.2
     public static final int ConstantInteger = 3;             // Java 1.0.2

@@ -30,8 +30,7 @@ public final class LoadUtil {
     }
 
     public static void aload(Frame frame, int index) {
-        Object val = frame.getLocalVars().getRef(index);
-        frame.getOperandStack().pushRef(val);
+        frame.getOperandStack().pushRef(frame.getLocalVars().getRef(index));
     }
 
 }

@@ -5,6 +5,8 @@ import com.wjd.classfile.cons.*;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint8;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * 常量池信息
  */
@@ -43,58 +45,58 @@ public class ConstantInfoPool {
     }
 
     private ConstantInfo readConstantInfo(ClassReader reader) {
-        ConstantInfo constantInfo = null;
+        ConstantInfo constantInfo;
         Uint8 tag = reader.readUint8();
         switch (tag.value()) {
-            case Constant.ConstantUtf8:
+            case Constants.ConstantUtf8:
                 constantInfo = new Utf8ConstantInfo();
                 break;
-            case Constant.ConstantInteger:
+            case Constants.ConstantInteger:
                 constantInfo = new IntegerConstantInfo();
                 break;
-            case Constant.ConstantFloat:
+            case Constants.ConstantFloat:
                 constantInfo = new FloatConstantInfo();
                 break;
-            case Constant.ConstantLong:
+            case Constants.ConstantLong:
                 constantInfo = new LongConstantInfo();
                 break;
-            case Constant.ConstantDouble:
+            case Constants.ConstantDouble:
                 constantInfo = new DoubleConstantInfo();
                 break;
-            case Constant.ConstantClass:
+            case Constants.ConstantClass:
                 constantInfo = new ClassConstantInfo();
                 break;
-            case Constant.ConstantString:
+            case Constants.ConstantString:
                 constantInfo = new StringConstantInfo();
                 break;
-            case Constant.ConstantFieldRef:
+            case Constants.ConstantFieldRef:
                 constantInfo = new FieldRefConstantInfo();
                 break;
-            case Constant.ConstantMethodRef:
+            case Constants.ConstantMethodRef:
                 constantInfo = new MethodRefConstantInfo();
                 break;
-            case Constant.ConstantInterfaceMethodRef:
+            case Constants.ConstantInterfaceMethodRef:
                 constantInfo = new InterfaceMethodRefConstantInfo();
                 break;
-            case Constant.ConstantNameAndType:
+            case Constants.ConstantNameAndType:
                 constantInfo = new NameAndTypeConstantInfo();
                 break;
-            case Constant.ConstantMethodHandle:
+            case Constants.ConstantMethodHandle:
                 constantInfo = new MethodHandleConstantInfo();
                 break;
-            case Constant.ConstantMethodType:
+            case Constants.ConstantMethodType:
                 constantInfo = new MethodTypeConstantInfo();
                 break;
-            case Constant.ConstantInvokeDynamic:
+            case Constants.ConstantInvokeDynamic:
                 constantInfo = new InvokeDynamicConstantInfo();
                 break;
-            case Constant.ConstantModule:
+            case Constants.ConstantModule:
                 constantInfo = new ModuleConstantInfo();
                 break;
-            case Constant.ConstantPackage:
+            case Constants.ConstantPackage:
                 constantInfo = new PackageConstantInfo();
                 break;
-            case Constant.ConstantDynamic:
+            case Constants.ConstantDynamic:
             default:
                 throw new ClassFormatException("invalid constant pool tag: " + tag.value());
         }
@@ -119,8 +121,25 @@ public class ConstantInfoPool {
         return constantPool[index.value()];
     }
 
+    /**
+     * 常量信息
+     */
+    public ConstantInfo[] getConstantInfos() {
+        return constantPool;
+    }
+
     public ClassFile getClassFile() {
         return classFile;
+    }
+
+    /**
+     * 获取指定的UTF8字符串
+     * @param index 索引位置
+     * @return 字符串
+     */
+    public String getUTF8String(Uint16 index) {
+        Utf8ConstantInfo info = (Utf8ConstantInfo) getConstantInfo(index);
+        return new String(info.value(), StandardCharsets.UTF_8);
     }
 
 }
