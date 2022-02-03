@@ -2,13 +2,10 @@ package com.wjd.classfile;
 
 import com.wjd.classfile.cons.ClassConstantInfo;
 import com.wjd.classfile.cons.ConstantInfo;
-import com.wjd.classfile.cons.Utf8ConstantInfo;
 import com.wjd.classfile.member.FieldInfo;
 import com.wjd.classfile.member.MethodInfo;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint32;
-
-import java.nio.charset.StandardCharsets;
 
 public class ClassFile {
 
@@ -139,16 +136,14 @@ public class ClassFile {
      * 类名
      */
     public String getClassName() {
-        ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(className);
-        return getUTF8String(info.getIndex());
+        return findClassName(className);
     }
 
     /**
      * 父类名
      */
     public String getSuperClassName() {
-        ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(superClassName);
-        return getUTF8String(info.getIndex());
+        return findClassName(superClassName);
     }
 
     /**
@@ -157,10 +152,20 @@ public class ClassFile {
     public String[] getInterfaceNames() {
         String[] interfaceNames = new String[interfaces.length];
         for (int i = 0; i < interfaces.length; i++) {
-            ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(interfaces[i]);
-            interfaceNames[i] = getUTF8String(info.getIndex());
+            interfaceNames[i] = findClassName(interfaces[i]);
         }
         return interfaceNames;
+    }
+
+    /**
+     * 查找类名称
+     */
+    private String findClassName(Uint16 index) {
+        if (index.value() == 0) {
+            return "";
+        }
+        ClassConstantInfo info = (ClassConstantInfo) getConstantInfo(index);
+        return getUTF8String(info.getIndex());
     }
 
     /**

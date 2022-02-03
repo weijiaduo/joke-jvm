@@ -25,4 +25,11 @@ public class MemberRef extends SymbolRef {
         descriptor = memberConstantInfo.getDescriptor();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescriptor() {
+        return descriptor;
+    }
 }

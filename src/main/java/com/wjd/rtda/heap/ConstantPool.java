@@ -58,7 +58,7 @@ public class ConstantPool {
                 InterfaceMethodRefConstantInfo info = (InterfaceMethodRefConstantInfo) constantInfo;
                 constantPool.constants[i] = InterfaceMethodRef.newInterfaceMethodRef(constantPool, info);
             } else {
-                System.out.println("UnSupported constant: " + constantInfo);
+                // System.out.println("UnSupported constant: " + constantInfo);
             }
         }
         return constantPool;

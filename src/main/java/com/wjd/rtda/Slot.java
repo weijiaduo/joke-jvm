@@ -12,6 +12,19 @@ public class Slot {
     /** 引用 */
     private Object ref;
 
+    /**
+     * 用于设置/重置值
+     */
+    public void setSlot(Slot slot) {
+        if (slot != null) {
+            num = slot.num;
+            ref = slot.ref;
+        } else {
+            num = 0;
+            ref = null;
+        }
+    }
+
     public Object getRef() {
         return ref;
     }

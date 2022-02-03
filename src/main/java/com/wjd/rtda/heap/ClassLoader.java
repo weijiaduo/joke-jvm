@@ -70,6 +70,7 @@ public class ClassLoader {
      */
     protected Class defineClass(byte[] classBytes) {
         Class clazz = parseClass(classBytes);
+        clazz.setLoader(this);
         resolveSuperClass(clazz);
         resolveInterfaces(clazz);
         classMap.put(clazz.getName(), clazz);
@@ -179,7 +180,11 @@ public class ClassLoader {
      * 分配静态变量空间以及初始化静态常量值
      */
     private void allocAndInitStaticVars(Class clazz) {
-        clazz.setStaticVars(new Slot[clazz.getStaticSlotCount()]);
+        Slot[] slots = new Slot[clazz.getStaticSlotCount()];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = new Slot();
+        }
+        clazz.setStaticVars(slots);
         for (Field field : clazz.getFields()) {
             if (field.isStatic() && field.isFinal()) {
                 initStaticFinalVars(clazz, field);

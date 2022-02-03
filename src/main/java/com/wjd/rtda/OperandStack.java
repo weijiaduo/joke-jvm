@@ -30,14 +30,15 @@ public class OperandStack {
     }
 
     public void pushSlot(Slot slot) {
-        slots[size] = slot;
+        slots[size].setSlot(slot);
         size++;
     }
 
     public Slot popSlot() {
         size--;
-        Slot slot = slots[size];
-        slots[size] = null;
+        Slot slot = new Slot();
+        slot.setSlot(slots[size]);
+        slots[size].setSlot(null);
         return slot;
     }
 
@@ -100,7 +101,7 @@ public class OperandStack {
     @Override
     public String toString() {
         return "OperandStack{" +
-                "slots=" + Arrays.toString(slots) +
+                "slots=" + Arrays.asList(slots).subList(0, size) +
                 '}';
     }
 }

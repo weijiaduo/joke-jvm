@@ -1,5 +1,7 @@
 package com.wjd.rtda;
 
+import com.wjd.rtda.heap.member.Method;
+
 /**
  * 线程
  */
@@ -37,7 +39,7 @@ public class Thread {
         return stack.top();
     }
 
-    public Frame newFrame(int maxLocals, int maxStack) {
-        return new Frame(this, maxLocals, maxStack);
+    public Frame newFrame(Method method) {
+        return new Frame(this, method);
     }
 }

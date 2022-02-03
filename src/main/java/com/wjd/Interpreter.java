@@ -1,30 +1,22 @@
 package com.wjd;
 
-import com.wjd.classfile.attr.CodeAttributeInfo;
-import com.wjd.classfile.member.MethodInfo;
-import com.wjd.classfile.type.Uint16;
 import com.wjd.instructions.InstructionFactory;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.Thread;
+import com.wjd.rtda.heap.member.Method;
 
 /**
  * @since 2022/1/29
  */
 public class Interpreter {
 
-    public void interpret(MethodInfo methodInfo) {
-        CodeAttributeInfo codeAttr = methodInfo.getCodeAttributeInfo();
-        Uint16 maxLocals = codeAttr.getMaxLocals();
-        Uint16 maxStack = codeAttr.getMaxStack();
-        byte[] codes = codeAttr.getCodes();
-
+    public void interpret(Method method) {
         Thread thread = new Thread();
-        Frame frame = thread.newFrame(maxLocals.value(), maxStack.value());
+        Frame frame = thread.newFrame(method);
         thread.pushFrame(frame);
-
-        loop(thread, codes);
+        loop(thread, method.getCodes());
     }
 
     private void loop(Thread thread, byte[] codes) {
@@ -49,6 +41,7 @@ public class Interpreter {
                 frame.setNextPc(reader.getPosition());
 
                 // 执行指令
+                System.out.println(instruction);
                 instruction.execute(frame);
             }
         } catch (Exception e) {

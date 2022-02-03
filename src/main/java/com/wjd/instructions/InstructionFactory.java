@@ -10,6 +10,7 @@ import com.wjd.instructions.conversions.*;
 import com.wjd.instructions.extended.*;
 import com.wjd.instructions.loads.*;
 import com.wjd.instructions.math.*;
+import com.wjd.instructions.references.*;
 import com.wjd.instructions.stack.*;
 import com.wjd.instructions.stores.*;
 
@@ -57,11 +58,11 @@ public class InstructionFactory {
             case 0x11:
                 return new SIPush();
             case 0x12:
-                return null;
+                return new IDC();
             case 0x13:
-                return null;
+                return new IDCW();
             case 0x14:
-                return null;
+                return new IDC2W();
             case 0x15:
                 return new WILoad();
             case 0x16:
@@ -377,17 +378,17 @@ public class InstructionFactory {
             case 0xb1:
                 return null;
             case 0xb2:
-                return null;
+                return new GetStatic();
             case 0xb3:
-                return null;
+                return new PutStatic();
             case 0xb4:
-                return null;
+                return new GetField();
             case 0xb5:
-                return null;
+                return new PutField();
             case 0xb6:
-                return null;
+                return new InvokeVirtual();
             case 0xb7:
-                return null;
+                return new InvokeSpecial();
             case 0xb8:
                 return null;
             case 0xb9:
@@ -395,7 +396,7 @@ public class InstructionFactory {
             case 0xba:
                 return null;
             case 0xbb:
-                return null;
+                return new New();
             case 0xbc:
                 return null;
             case 0xbd:
@@ -405,9 +406,9 @@ public class InstructionFactory {
             case 0xbf:
                 return null;
             case 0xc0:
-                return null;
+                return new CheckCast();
             case 0xc1:
-                return null;
+                return new InstanceOf();
             case 0xc2:
                 return null;
             case 0xc3:

@@ -38,10 +38,10 @@ public class ConstantInfoPool {
             }
         }
 
-        System.out.println("Constant Pool: ");
-        for (int i = 1; i < constantPool.length; i++) {
-            System.out.println(i + ": " + constantPool[i]);
-        }
+        // System.out.println("Constant Pool: ");
+        // for (int i = 1; i < constantPool.length; i++) {
+        //     System.out.println(i + ": " + constantPool[i]);
+        // }
     }
 
     private ConstantInfo readConstantInfo(ClassReader reader) {

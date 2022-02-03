@@ -79,6 +79,10 @@ public class Class {
         return loader;
     }
 
+    public void setLoader(ClassLoader loader) {
+        this.loader = loader;
+    }
+
     public Class getSuperClass() {
         return superClass;
     }
@@ -136,8 +140,17 @@ public class Class {
         return AccessFlags.isPrivate(accessFlags);
     }
 
+    public boolean isInterface() {
+        return AccessFlags.isInterface(accessFlags);
+    }
+
+    public boolean isAbstract() {
+        return AccessFlags.isAbstract(accessFlags);
+    }
+
     public String getPackageName() {
         String packageName = "";
+        System.out.println("package name: " + name);
         int index = name.lastIndexOf("/");
         if (index > 0) {
             packageName = name.substring(0, index);
@@ -152,5 +165,58 @@ public class Class {
             }
         }
         return false;
+    }
+
+    public boolean isSubInterfaceOf(Class parent) {
+        for (Class i : getInterfaces()) {
+            if (i == parent || i.isSubInterfaceOf(parent)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isImplements(Class parent) {
+        for (Class c = this; c != null; c = c.superClass) {
+            for (Class i : c.getInterfaces()) {
+                if (i == parent || i.isSubInterfaceOf(parent)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isAssignableFrom(Class sub) {
+        if (this == sub) {
+            return true;
+        }
+        if (!isInterface()) {
+            return sub.isSubClassOf(this);
+        } else {
+            return sub.isImplements(this);
+        }
+    }
+
+    public Object newObject() {
+        return Object.newObject(this);
+    }
+
+    /**
+     * 获取类文件中的main方法
+     */
+    public Method getMainMethod() {
+        return getStaticMethod("main", "([Ljava/lang/String;)V");
+    }
+
+    /**
+     * 获取静态方法
+     */
+    public Method getStaticMethod(String name, String descriptor) {
+        for (Method m : getMethods())
+            if (name.equals(m.getName()) && descriptor.equals(m.getDescriptor())) {
+                return m;
+            }
+        return null;
     }
 }
