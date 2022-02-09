@@ -17,6 +17,14 @@ public class New extends Index16Instruction {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
         Class clazz = classRef.resolvedClass();
+
+        // 类初始化
+        if (!clazz.isInitStarted()) {
+            frame.revertNextPc();
+            InitClass.initClass(frame.getThread(), clazz);
+            return;
+        }
+
         if (clazz.isInterface() || clazz.isAbstract()) {
             throw new InstantiationError("Class : " + clazz.getName());
         }

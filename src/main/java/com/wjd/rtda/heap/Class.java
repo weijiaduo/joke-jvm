@@ -39,6 +39,9 @@ public class Class {
     /** 静态变量 */
     private Slot[] staticVars;
 
+    /** 类是否已初始化 */
+    private boolean initStarted;
+
     public static Class newClass(ClassFile classFile) {
         Class clazz = new Class();
         clazz.accessFlags = classFile.getAccessFlags();
@@ -123,6 +126,14 @@ public class Class {
         this.staticVars = staticVars;
     }
 
+    public boolean isInitStarted() {
+        return initStarted;
+    }
+
+    public void startInit() {
+        this.initStarted = true;
+    }
+
     public boolean isAccessibleTo(Class other) {
         // 公开权限/包权限
         return isPublic() || getPackageName().equals(other.getPackageName());
@@ -148,6 +159,10 @@ public class Class {
         return AccessFlags.isAbstract(accessFlags);
     }
 
+    public boolean isSuper() {
+        return AccessFlags.isSuper(accessFlags);
+    }
+
     public String getPackageName() {
         String packageName = "";
         System.out.println("package name: " + name);
@@ -156,6 +171,10 @@ public class Class {
             packageName = name.substring(0, index);
         }
         return packageName;
+    }
+
+    public boolean isSuperClassOf(Class child) {
+        return child.isSubClassOf(this);
     }
 
     public boolean isSubClassOf(Class parent) {
@@ -207,6 +226,10 @@ public class Class {
      */
     public Method getMainMethod() {
         return getStaticMethod("main", "([Ljava/lang/String;)V");
+    }
+
+    public Method getClinitMethod() {
+        return getStaticMethod("<clinit>", "()V");
     }
 
     /**

@@ -19,11 +19,13 @@ public class ClassLoader {
 
     private Classpath classpath;
     private Map<String, Class> classMap;
+    private boolean verboseFlag = false;
 
-    public static ClassLoader newClassLoader(Classpath classpath) {
+    public static ClassLoader newClassLoader(Classpath classpath, boolean verboseFlag) {
         ClassLoader classLoader = new ClassLoader();
         classLoader.classpath = classpath;
         classLoader.classMap = new HashMap<>();
+        classLoader.verboseFlag = verboseFlag;
         return classLoader;
     }
 
@@ -51,7 +53,9 @@ public class ClassLoader {
         byte[] classBytes = readClass(name);
         Class clazz = defineClass(classBytes);
         link(clazz);
-        System.out.println("Loaded Class: " + name);
+        if (verboseFlag) {
+            System.out.println("Loaded Class: " + name);
+        }
         return clazz;
     }
 

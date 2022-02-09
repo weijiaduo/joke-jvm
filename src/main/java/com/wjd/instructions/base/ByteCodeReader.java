@@ -15,10 +15,17 @@ public class ByteCodeReader {
     private byte[] bytes;
     private ByteBuffer buf;
 
+    public ByteCodeReader() {}
+
     public ByteCodeReader(byte[] bytes) {
+        reset(bytes, 0);
+    }
+
+    public void reset(byte[] bytes, int position) {
         this.bytes = bytes;
         buf = ByteBuffer.wrap(bytes);
         buf.order(ByteOrder.BIG_ENDIAN); // 大端
+        buf.position(position);
     }
 
     public void setPosition(int position) {

@@ -12,6 +12,9 @@ public class Method extends ClassMember {
 
     private int maxStacks;
     private int maxLocals;
+    private MethodDescriptor methodDescriptor;
+    private int paramSlotCount;
+    private int argSlotCount;
     private byte[] codes;
 
     public static Method[] newMethods(Class clazz, MethodInfo[] methodInfos) {
@@ -21,6 +24,7 @@ public class Method extends ClassMember {
             methods[i].clazz = clazz;
             methods[i].copyMemberInfo(methodInfos[i]);
             methods[i].copyAttributes(methodInfos[i]);
+            methods[i].calcArgSlotCount();
         }
         return methods;
     }
@@ -34,12 +38,30 @@ public class Method extends ClassMember {
         }
     }
 
+    private void calcArgSlotCount() {
+        methodDescriptor = MethodDescriptorParser.parseMethodDescriptor(descriptor);
+        paramSlotCount = methodDescriptor.getParamSlotCount();
+        argSlotCount = paramSlotCount;
+        if (!isStatic()) {
+            // this对象
+            argSlotCount++;
+        }
+    }
+
     public int getMaxStacks() {
         return maxStacks;
     }
 
     public int getMaxLocals() {
         return maxLocals;
+    }
+
+    public int getParamSlotCount() {
+        return paramSlotCount;
+    }
+
+    public int getArgSlotCount() {
+        return argSlotCount;
     }
 
     public byte[] getCodes() {

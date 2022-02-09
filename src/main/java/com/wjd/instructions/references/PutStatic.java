@@ -23,6 +23,14 @@ public class PutStatic extends Index16Instruction {
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
         Field field = fieldRef.resolvedField();
         Class fieldClass = field.getClazz();
+
+        // 类初始化
+        if (!fieldClass.isInitStarted()) {
+            frame.revertNextPc();
+            InitClass.initClass(frame.getThread(), fieldClass);
+            return;
+        }
+
         if (!field.isStatic()) {
             throw new IncompatibleClassChangeError("putstatic field: " + field.getName());
         }

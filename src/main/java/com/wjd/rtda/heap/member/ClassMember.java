@@ -46,6 +46,10 @@ public abstract class ClassMember {
         return AccessFlags.isFinal(accessFlags);
     }
 
+    public boolean isAbstract() {
+        return AccessFlags.isAbstract(accessFlags);
+    }
+
     public boolean isPrivate() {
         return AccessFlags.isPrivate(accessFlags);
     }

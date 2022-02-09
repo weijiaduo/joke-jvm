@@ -3,9 +3,7 @@ package com.wjd.instructions;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.instructions.comparisons.*;
 import com.wjd.instructions.constants.*;
-import com.wjd.instructions.control.Goto;
-import com.wjd.instructions.control.LookupSwitch;
-import com.wjd.instructions.control.TableSwitch;
+import com.wjd.instructions.control.*;
 import com.wjd.instructions.conversions.*;
 import com.wjd.instructions.extended.*;
 import com.wjd.instructions.loads.*;
@@ -366,17 +364,17 @@ public class InstructionFactory {
             case 0xab:
                 return new LookupSwitch();
             case 0xac:
-                return null;
+                return new IReturn();
             case 0xad:
-                return null;
+                return new LReturn();
             case 0xae:
-                return null;
+                return new FReturn();
             case 0xaf:
-                return null;
+                return new DReturn();
             case 0xb0:
-                return null;
+                return new AReturn();
             case 0xb1:
-                return null;
+                return new Return();
             case 0xb2:
                 return new GetStatic();
             case 0xb3:
@@ -390,9 +388,9 @@ public class InstructionFactory {
             case 0xb7:
                 return new InvokeSpecial();
             case 0xb8:
-                return null;
+                return new InvokeStatic();
             case 0xb9:
-                return null;
+                return new InvokeInterface();
             case 0xba:
                 return null;
             case 0xbb:

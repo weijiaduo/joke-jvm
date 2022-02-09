@@ -12,6 +12,12 @@ public class Slot {
     /** 引用 */
     private Object ref;
 
+    public Slot(){}
+
+    public Slot(Slot slot) {
+        setSlot(slot);
+    }
+
     /**
      * 用于设置/重置值
      */

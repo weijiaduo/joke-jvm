@@ -13,6 +13,8 @@ public class Cmd {
         options.addOption(new Option("help", false, "print help message"));
         options.addOption(new Option("?", false, "print help message"));
         options.addOption(new Option("version", false, "print version and exit"));
+        options.addOption(new Option("verboseClass", false, "Displays information about each class loaded."));
+        options.addOption(new Option("verboseInst", false, "Displays executed instructions."));
         options.addOption(Option.builder("Xjre")
                 .hasArg().desc("jre directory")
                 .type(String.class)
@@ -30,6 +32,8 @@ public class Cmd {
     private String[] args;
     private boolean helpFlag = false;
     private boolean versionFlag = false;
+    private boolean verboseClassFlag = false;
+    private boolean verboseInstFlag = false;
     private String mainClass;
     private String jreOption;
     private String cpOption;
@@ -57,6 +61,16 @@ public class Cmd {
                 System.out.println("version 0.0.1");
             }
 
+            // 打印类加载信息
+            if (line.hasOption("verboseClass")) {
+                verboseClassFlag = true;
+            }
+
+            // 打印指令执行信息
+            if (line.hasOption("verboseInst")) {
+                verboseInstFlag = true;
+            }
+
             // 启动程序主类名
             if (args.length > 0) {
                 mainClass = args[0];
@@ -77,6 +91,8 @@ public class Cmd {
             // 打印所有参数
             System.out.println("helpFlag = " + helpFlag);
             System.out.println("versionFlag = " + versionFlag);
+            System.out.println("verboseClassFlag = " + verboseClassFlag);
+            System.out.println("verboseInstFlag = " + verboseInstFlag);
             System.out.println("mainClass = " + mainClass);
             System.out.println("jre = " + jreOption);
             System.out.println("classpath = " + cpOption);
@@ -99,6 +115,14 @@ public class Cmd {
 
     public boolean isVersionFlag() {
         return versionFlag;
+    }
+
+    public boolean isVerboseClassFlag() {
+        return verboseClassFlag;
+    }
+
+    public boolean isVerboseInstFlag() {
+        return verboseInstFlag;
     }
 
     public String getJreOption() {

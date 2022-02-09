@@ -28,6 +28,10 @@ public class LocalVars {
         }
     }
 
+    public void setSlot(int index, Slot slot) {
+        slots[index].setSlot(slot);
+    }
+
     public void setInt(int index, int num) {
         Slot.setInt(slots[index], num);
     }

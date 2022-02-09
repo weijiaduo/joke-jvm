@@ -36,10 +36,10 @@ public class OperandStack {
 
     public Slot popSlot() {
         size--;
-        Slot slot = new Slot();
-        slot.setSlot(slots[size]);
-        slots[size].setSlot(null);
-        return slot;
+        Slot slot = slots[size];
+        Slot copySlot = new Slot(slot);
+        slot.setSlot(null);
+        return copySlot;
     }
 
     public void pushInt(int val) {
@@ -49,7 +49,10 @@ public class OperandStack {
 
     public int popInt() {
         size--;
-        return Slot.getInt(slots[size]);
+        Slot slot = slots[size];
+        int val = Slot.getInt(slot);
+        slot.setSlot(null);
+        return val;
     }
 
     public void pushFloat(float val) {
@@ -59,7 +62,10 @@ public class OperandStack {
 
     public float popFloat() {
         size--;
-        return Slot.getFloat(slots[size]);
+        Slot slot = slots[size];
+        float val = Slot.getFloat(slot);
+        slot.setSlot(null);
+        return val;
     }
 
     public void pushLong(long val) {
@@ -71,7 +77,12 @@ public class OperandStack {
     public long popLong() {
         // long类型占用2个插槽
         size -= 2;
-        return Slot.getLong(slots[size + 1], slots[size]);
+        Slot highSlot = slots[size + 1];
+        Slot lowSlot = slots[size];
+        long val = Slot.getLong(highSlot, lowSlot);
+        highSlot.setSlot(null);
+        lowSlot.setSlot(null);
+        return val;
     }
 
     public void pushDouble(double val) {
@@ -83,7 +94,12 @@ public class OperandStack {
     public double popDouble() {
         // double类型占用2个插槽
         size -= 2;
-        return Slot.getDouble(slots[size + 1], slots[size]);
+        Slot highSlot = slots[size + 1];
+        Slot lowSlot = slots[size];
+        double val = Slot.getDouble(highSlot, lowSlot);
+        highSlot.setSlot(null);
+        lowSlot.setSlot(null);
+        return val;
     }
 
     public void pushRef(Object ref) {
@@ -93,9 +109,17 @@ public class OperandStack {
 
     public Object popRef() {
         size--;
-        Object ref = slots[size].getRef();
-        slots[size].setRef(null);
-        return ref;
+        Slot slot = slots[size];
+        Object val = slot.getRef();
+        slot.setRef(null);
+        return val;
+    }
+
+    public Object getRefFromTop(int n) {
+        if (n > size - 1) {
+            return null;
+        }
+        return slots[size -  1 - n].getRef();
     }
 
     @Override

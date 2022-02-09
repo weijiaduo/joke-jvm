@@ -43,4 +43,8 @@ public class JvmStack {
         return top;
     }
 
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
 }

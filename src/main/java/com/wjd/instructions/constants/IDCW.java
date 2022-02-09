@@ -1,6 +1,6 @@
 package com.wjd.instructions.constants;
 
-import com.wjd.instructions.base.Index8Instruction;
+import com.wjd.instructions.base.Index16Instruction;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.OperandStack;
 import com.wjd.rtda.heap.ConstantPool;
@@ -11,7 +11,7 @@ import com.wjd.rtda.heap.cons.IntegerConstant;
 /**
  * @since 2022/2/2
  */
-public class IDCW extends Index8Instruction {
+public class IDCW extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
