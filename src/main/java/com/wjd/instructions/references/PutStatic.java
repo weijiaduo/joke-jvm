@@ -35,7 +35,7 @@ public class PutStatic extends Index16Instruction {
             throw new IncompatibleClassChangeError("putstatic field: " + field.getName());
         }
         if (field.isFinal()) {
-            if (currentClass != fieldClass || !"<cinit>".equals(currentMethod.getName())) {
+            if (currentClass != fieldClass || !"<clinit>".equals(currentMethod.getName())) {
                 throw new IllegalAccessError("putstatic field: " + field.getName());
             }
         }

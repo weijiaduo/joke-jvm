@@ -1,6 +1,6 @@
 package com.wjd.rtda;
 
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 
 /**
  * 局部变量插槽
@@ -10,7 +10,7 @@ public class Slot {
     /** 索引 */
     private long num;
     /** 引用 */
-    private Object ref;
+    private HeapObject ref;
 
     public Slot(){}
 
@@ -31,11 +31,11 @@ public class Slot {
         }
     }
 
-    public Object getRef() {
+    public HeapObject getRef() {
         return ref;
     }
 
-    public void setRef(Object ref) {
+    public void setRef(HeapObject ref) {
         this.ref = ref;
     }
 

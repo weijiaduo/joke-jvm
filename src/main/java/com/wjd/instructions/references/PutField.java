@@ -6,7 +6,7 @@ import com.wjd.rtda.OperandStack;
 import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.Class;
 import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.heap.cons.FieldRef;
 import com.wjd.rtda.heap.member.Field;
 import com.wjd.rtda.heap.member.Method;
@@ -28,7 +28,7 @@ public class PutField extends Index16Instruction {
             throw new IncompatibleClassChangeError("putfield field: " + field.getName());
         }
         if (field.isFinal()) {
-            if (currentClass != fieldClass || !"<cinit>".equals(currentMethod.getName())) {
+            if (currentClass != fieldClass || !"<clinit>".equals(currentMethod.getName())) {
                 throw new IllegalAccessError("putfield field: " + field.getName());
             }
         }
@@ -45,7 +45,7 @@ public class PutField extends Index16Instruction {
             case 'I':
             {
                 int val = stack.popInt();
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -56,7 +56,7 @@ public class PutField extends Index16Instruction {
             case 'F':
             {
                 float val = stack.popFloat();
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -67,7 +67,7 @@ public class PutField extends Index16Instruction {
             case 'J':
             {
                 long val = stack.popLong();
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -78,7 +78,7 @@ public class PutField extends Index16Instruction {
             case 'D':
             {
                 double val = stack.popDouble();
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -89,8 +89,8 @@ public class PutField extends Index16Instruction {
             case 'L':
             case '[':
             {
-                Object val = stack.popRef();
-                Object ref = stack.popRef();
+                HeapObject val = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }

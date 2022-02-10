@@ -5,7 +5,7 @@ import com.wjd.rtda.Frame;
 import com.wjd.rtda.OperandStack;
 import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.heap.cons.FieldRef;
 import com.wjd.rtda.heap.member.Field;
 
@@ -34,7 +34,7 @@ public class GetField extends Index16Instruction {
             case 'S':
             case 'I':
             {
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -44,7 +44,7 @@ public class GetField extends Index16Instruction {
             }
             case 'F':
             {
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -54,7 +54,7 @@ public class GetField extends Index16Instruction {
             }
             case 'J':
             {
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -64,7 +64,7 @@ public class GetField extends Index16Instruction {
             }
             case 'D':
             {
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
@@ -75,7 +75,7 @@ public class GetField extends Index16Instruction {
             case 'L':
             case '[':
             {
-                Object ref = stack.popRef();
+                HeapObject ref = stack.popRef();
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }

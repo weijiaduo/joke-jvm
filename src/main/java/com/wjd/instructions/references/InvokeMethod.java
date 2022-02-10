@@ -22,6 +22,15 @@ public class InvokeMethod extends Index16Instruction {
                 newFrame.getLocalVars().setSlot(i, slot);
             }
         }
+
+        // 临时处理本地方法
+        if (method.isNative()) {
+            if ("registerNatives".equals(method.getName())) {
+                thread.popFrame();
+            } else {
+                throw new IllegalAccessError("native method: " + method.getName());
+            }
+        }
     }
 
 }

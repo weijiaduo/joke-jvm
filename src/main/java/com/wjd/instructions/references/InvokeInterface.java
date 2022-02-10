@@ -4,7 +4,7 @@ import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.heap.cons.InterfaceMethodRef;
 import com.wjd.rtda.heap.cons.MethodRef;
 import com.wjd.rtda.heap.member.Method;
@@ -31,7 +31,7 @@ public class InvokeInterface extends InvokeMethod {
         }
 
         // 调用方法的this对象
-        Object ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
             throw new NullPointerException("Invoke interface method: " + resolvedMethod.getName());
         }

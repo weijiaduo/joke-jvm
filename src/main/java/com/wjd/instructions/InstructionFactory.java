@@ -62,15 +62,15 @@ public class InstructionFactory {
             case 0x14:
                 return new IDC2W();
             case 0x15:
-                return new WILoad();
+                return new ILoad();
             case 0x16:
-                return new WLLoad();
+                return new LLoad();
             case 0x17:
-                return new WFLoad();
+                return new FLoad();
             case 0x18:
-                return new WDLoad();
+                return new DLoad();
             case 0x19:
-                return new WALoad();
+                return new ALoad();
             case 0x1a:
                 return new ILoad0();
             case 0x1b:
@@ -112,31 +112,31 @@ public class InstructionFactory {
             case 0x2d:
                 return new ALoad3();
             case 0x2e:
-                return new ILoad();
+                return new IALoad();
             case 0x2f:
-                return new LLoad();
+                return new LALoad();
             case 0x30:
-                return new FLoad();
+                return new FALoad();
             case 0x31:
-                return new DLoad();
+                return new DALoad();
             case 0x32:
-                return null;
+                return new AALoad();
             case 0x33:
-                return null;
+                return new BALoad();
             case 0x34:
-                return null;
+                return new CALoad();
             case 0x35:
-                return null;
+                return new SALoad();
             case 0x36:
-                return new WIStore();
+                return new IStore();
             case 0x37:
-                return new WLStore();
+                return new LStore();
             case 0x38:
-                return new WFStore();
+                return new FStore();
             case 0x39:
-                return new WDStore();
+                return new DStore();
             case 0x3a:
-                return new WAStore();
+                return new AStore();
             case 0x3b:
                 return new IStore0();
             case 0x3c:
@@ -178,21 +178,21 @@ public class InstructionFactory {
             case 0x4e:
                 return new AStore3();
             case 0x4f:
-                return null;
+                return new IAStore();
             case 0x50:
-                return null;
+                return new LAStore();
             case 0x51:
-                return null;
+                return new FAStore();
             case 0x52:
-                return null;
+                return new DAStore();
             case 0x53:
-                return null;
+                return new AAStore();
             case 0x54:
-                return null;
+                return new BAStore();
             case 0x55:
-                return null;
+                return new CAStore();
             case 0x56:
-                return null;
+                return new SAStore();
             case 0x57:
                 return new Pop();
             case 0x58:
@@ -396,11 +396,11 @@ public class InstructionFactory {
             case 0xbb:
                 return new New();
             case 0xbc:
-                return null;
+                return new NewArray();
             case 0xbd:
-                return null;
+                return new ANewArray();
             case 0xbe:
-                return null;
+                return new ArrayLength();
             case 0xbf:
                 return null;
             case 0xc0:
@@ -414,7 +414,7 @@ public class InstructionFactory {
             case 0xc4:
                 return new Wide();
             case 0xc5:
-                return null;
+                return new MultiANewArray();
             case 0xc6:
                 return new IfNull();
             case 0xc7:

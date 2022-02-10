@@ -3,7 +3,7 @@ package com.wjd.instructions.references;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.heap.Class;
 import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.heap.cons.MethodRef;
 import com.wjd.rtda.heap.member.Method;
 
@@ -30,7 +30,7 @@ public class InvokeSpecial extends InvokeMethod {
         }
 
         // 调用方法的this对象
-        Object ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
             throw new NullPointerException("Invoke special method: " + resolvedMethod.getName());
         }

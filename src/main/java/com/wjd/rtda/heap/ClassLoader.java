@@ -38,11 +38,34 @@ public class ClassLoader {
             return classMap.get(name);
         }
         try {
+            // 数组类型
+            if (name.charAt(0) == '[') {
+                return loadArrayClass(name);
+            }
+            // 非数组类型
             return loadNonArrayClass(name);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Load class error: " + name);
         }
+    }
+
+    /**
+     * 加载数组类型
+     */
+    protected Class loadArrayClass(String name) {
+        Class arrayClass = new Class();
+        arrayClass.setLoader(this);
+        arrayClass.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
+        arrayClass.setName(name);
+        arrayClass.setSuperClass(this.loadClass("java/lang/Object"));
+        arrayClass.setInterfaces(new Class[]{
+                this.loadClass("java/lang/Cloneable"),
+                this.loadClass("java/io/Serializable")
+        });
+        arrayClass.startInit();
+        classMap.put(name, arrayClass);
+        return arrayClass;
     }
 
     /**

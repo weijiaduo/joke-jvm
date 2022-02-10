@@ -3,7 +3,6 @@ package com.wjd.instructions.control;
 import com.wjd.instructions.constants.NoOperandsInstruction;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.Thread;
-import com.wjd.rtda.heap.Object;
 
 /**
  * 返回整数

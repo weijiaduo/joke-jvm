@@ -1,7 +1,7 @@
 package com.wjd.rtda;
 
 import java.util.Arrays;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 
 /**
  * 局部变量表
@@ -68,11 +68,11 @@ public class LocalVars {
         return Slot.getDouble(slots[index + 1], slots[index]);
     }
 
-    public void setRef(int index, Object ref) {
+    public void setRef(int index, HeapObject ref) {
         slots[index].setRef(ref);
     }
 
-    public Object getRef(int index) {
+    public HeapObject getRef(int index) {
         return slots[index].getRef();
     }
 

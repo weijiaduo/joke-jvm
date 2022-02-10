@@ -4,7 +4,7 @@ import com.wjd.instructions.base.Index16Instruction;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.heap.Class;
 import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.heap.cons.ClassRef;
 
 /**
@@ -28,7 +28,7 @@ public class New extends Index16Instruction {
         if (clazz.isInterface() || clazz.isAbstract()) {
             throw new InstantiationError("Class : " + clazz.getName());
         }
-        Object ref = clazz.newObject();
+        HeapObject ref = clazz.newObject();
         frame.getOperandStack().pushRef(ref);
     }
 }

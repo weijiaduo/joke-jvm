@@ -3,7 +3,7 @@ package com.wjd.instructions.control;
 import com.wjd.instructions.constants.NoOperandsInstruction;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.Thread;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 
 /**
  * 返回对象引用
@@ -16,7 +16,7 @@ public class AReturn extends NoOperandsInstruction {
         Thread thread = frame.getThread();
         Frame currentFrame = thread.popFrame();
         Frame invokeFrame = thread.topFrame();
-        Object returnVal = currentFrame.getOperandStack().popRef();
+        HeapObject returnVal = currentFrame.getOperandStack().popRef();
         invokeFrame.getOperandStack().pushRef(returnVal);
     }
 }

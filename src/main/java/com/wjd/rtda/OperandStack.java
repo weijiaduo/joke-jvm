@@ -1,7 +1,7 @@
 package com.wjd.rtda;
 
 import java.util.Arrays;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 
 /**
  * 操作数栈
@@ -102,20 +102,20 @@ public class OperandStack {
         return val;
     }
 
-    public void pushRef(Object ref) {
+    public void pushRef(HeapObject ref) {
         slots[size].setRef(ref);
         size++;
     }
 
-    public Object popRef() {
+    public HeapObject popRef() {
         size--;
         Slot slot = slots[size];
-        Object val = slot.getRef();
+        HeapObject val = slot.getRef();
         slot.setRef(null);
         return val;
     }
 
-    public Object getRefFromTop(int n) {
+    public HeapObject getRefFromTop(int n) {
         if (n > size - 1) {
             return null;
         }

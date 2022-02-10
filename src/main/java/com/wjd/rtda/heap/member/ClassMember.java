@@ -62,6 +62,10 @@ public abstract class ClassMember {
         return AccessFlags.isProtected(accessFlags);
     }
 
+    public boolean isNative() {
+        return AccessFlags.isNative(accessFlags);
+    }
+
     public boolean isAccessibleTo(Class other) {
         // 公开权限
         if (isPublic()) {

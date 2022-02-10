@@ -16,7 +16,7 @@ public class Jvm {
                 "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes" };
         cmd.parse(testArgs);
 
-        String testClassName = "com\\wjd\\rtda\\FibonacciTest";
+        String testClassName = "com\\wjd\\rtda\\ArrayDemo";
         Classpath classpath = new Classpath(cmd.getJreOption(), cmd.getCpOption());
 
         ClassLoader classLoader = ClassLoader.newClassLoader(classpath, cmd.isVerboseClassFlag());

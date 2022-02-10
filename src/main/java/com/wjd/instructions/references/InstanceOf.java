@@ -5,7 +5,7 @@ import com.wjd.rtda.Frame;
 import com.wjd.rtda.OperandStack;
 import com.wjd.rtda.heap.Class;
 import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.Object;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.heap.cons.ClassRef;
 
 /**
@@ -16,7 +16,7 @@ public class InstanceOf extends Index16Instruction {
     @Override
     public void execute(Frame frame) {
         OperandStack stack = frame.getOperandStack();
-        Object ref = stack.popRef();
+        HeapObject ref = stack.popRef();
         if (ref == null) {
             stack.pushInt(0);
             return;

@@ -2,15 +2,34 @@ package com.wjd.rtda.heap;
 
 import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.type.Uint16;
+import com.wjd.classfile.type.Uint8;
 import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.member.Field;
 import com.wjd.rtda.heap.member.Method;
+import sun.awt.geom.AreaOp;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 类
  * @since 2022/1/30
  */
 public class Class {
+
+    public static Map<String, String> primitiveTypes;
+    {
+        primitiveTypes = new HashMap<>();
+        primitiveTypes.put("void", "V");
+        primitiveTypes.put("boolean", "Z");
+        primitiveTypes.put("byte", "B");
+        primitiveTypes.put("char", "C");
+        primitiveTypes.put("short", "S");
+        primitiveTypes.put("int", "I");
+        primitiveTypes.put("long", "J");
+        primitiveTypes.put("float", "F");
+        primitiveTypes.put("double", "D");
+    }
 
     /** 访问标志 */
     private Uint16 accessFlags;
@@ -54,8 +73,16 @@ public class Class {
         return clazz;
     }
 
+    public void setAccessFlags(Uint16 accessFlags) {
+        this.accessFlags = accessFlags;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSuperClassName() {
@@ -186,6 +213,10 @@ public class Class {
         return false;
     }
 
+    public boolean isSuperInterfaceOf(Class child) {
+        return child.isSubInterfaceOf(this);
+    }
+
     public boolean isSubInterfaceOf(Class parent) {
         for (Class i : getInterfaces()) {
             if (i == parent || i.isSubInterfaceOf(parent)) {
@@ -210,15 +241,53 @@ public class Class {
         if (this == sub) {
             return true;
         }
-        if (!isInterface()) {
-            return sub.isSubClassOf(this);
+        Class s = sub;
+        Class t = this;
+        if (!s.isArray()) {
+            // 非数组类型
+            if (!s.isInterface()) {
+                if (!t.isInterface()) {
+                    return s.isSubClassOf(t);
+                } else {
+                    return s.isImplements(t);
+                }
+            } else {
+                if (!t.isInterface()) {
+                    // 接口可以转成 Object
+                    return t.isJlObject();
+                } else {
+                    return t.isSuperInterfaceOf(s);
+                }
+            }
+
         } else {
-            return sub.isImplements(this);
+            // 数组类型
+            if (!t.isArray()) {
+                // 数组可以转成 Object/Cloneable/Serializable
+                if (!t.isInterface()) {
+                    return t.isJlObject();
+                } else {
+                    return t.isJlCloneable() || t.isJioSerializable();
+                }
+            } else {
+                // 都是数组类型
+                Class sc = s.getComponentClass();
+                Class tc = t.getComponentClass();
+                return sc == tc || tc.isAssignableFrom(sc);
+            }
         }
     }
 
-    public Object newObject() {
-        return Object.newObject(this);
+    public boolean isJlObject() {
+        return this == loader.loadClass("java/lang/Object");
+    }
+
+    public boolean isJlCloneable() {
+        return this == loader.loadClass("java/lang/Cloneable");
+    }
+
+    public boolean isJioSerializable() {
+        return this == loader.loadClass("java/io/Serializable");
     }
 
     /**
@@ -242,4 +311,129 @@ public class Class {
             }
         return null;
     }
+
+    public boolean isArray() {
+        return name.charAt(0) == '[';
+    }
+
+    /**
+     * 获取基本类型的数组类型
+     */
+    public static Class getPrimitiveArrayClass(ClassLoader loader, Uint8 atype) {
+        int val = atype.value();
+        switch (val) {
+            case 4:
+                return loader.loadClass("[Z");
+            case 5:
+                return loader.loadClass("[C");
+            case 6:
+                return loader.loadClass("[F");
+            case 7:
+                return loader.loadClass("[D");
+            case 8:
+                return loader.loadClass("[B");
+            case 9:
+                return loader.loadClass("[S");
+            case 10:
+                return loader.loadClass("[I");
+            case 11:
+                return loader.loadClass("[J");
+            default:
+                throw new IllegalArgumentException("Invalid atype: " + val);
+        }
+    }
+
+    /**
+     * 获取当前类型对应的数组类型
+     */
+    public Class getArrayClass() {
+        String arrayClassName = getArrayClassName(name);
+        return loader.loadClass(arrayClassName);
+    }
+
+    private String getArrayClassName(String className) {
+        return "[" + toDescriptor(className);
+    }
+
+    private String toDescriptor(String className) {
+        // 数组类型
+        if (className.charAt(0) == '[') {
+            return className;
+        }
+        // 基本类型
+        if (primitiveTypes.containsKey(className)) {
+            return primitiveTypes.get(className);
+        }
+        // 引用类型
+        return "L" + className + ";";
+    }
+
+    /**
+     * 获取数组类型的元素类型
+     */
+    public Class getComponentClass() {
+        String componentClassName = getComponentClassName(name);
+        return loader.loadClass(componentClassName);
+    }
+
+    private String getComponentClassName(String className) {
+        if (className.charAt(0) == '[') {
+            String componentTypeDescriptor = className.substring(1);
+            return toClassName(componentTypeDescriptor);
+        }
+        throw new IllegalArgumentException("Not Array: " + className);
+    }
+
+    private String toClassName(String descriptor) {
+        // 数组类型
+        if (descriptor.charAt(0) == '[') {
+            return descriptor;
+        }
+        // 引用类型
+        if (descriptor.charAt(0) == 'L') {
+            return descriptor.substring(1, descriptor.length() - 1);
+        }
+        // 基本类型
+        for (String className : primitiveTypes.keySet()) {
+            if (descriptor.equals(primitiveTypes.get(className))) {
+                return className;
+            }
+        }
+        throw new IllegalArgumentException("Invalid descriptor: " + descriptor);
+    }
+
+    public HeapObject newObject() {
+        return HeapObject.newObject(this);
+    }
+
+    public HeapObject newArray(int count) {
+        if (!isArray()) {
+            throw new IllegalStateException("Not array class: " + name);
+        }
+        return HeapObject.newArray(this, makeArray(count));
+    }
+
+    private Object makeArray(int count) {
+        switch (name) {
+            case "[Z":
+                return new boolean[count];
+            case "[B":
+                return new byte[count];
+            case "[C":
+                return new char[count];
+            case "[S":
+                return new short[count];
+            case "[I":
+                return new int[count];
+            case "[J":
+                return new long[count];
+            case "[F":
+                return new float[count];
+            case "[D":
+                return new double[count];
+            default:
+                return new HeapObject[count];
+        }
+    }
+
 }
