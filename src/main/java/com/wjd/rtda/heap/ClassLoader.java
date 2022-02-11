@@ -262,7 +262,9 @@ public class ClassLoader {
             }
             case "Ljava/lang/String;":
             {
-                System.out.println("Unsupported String constant now~");
+                String val = ((StringConstant) constant).value();
+                HeapObject stringObj = StringPool.getJString(clazz.getLoader(), val);
+                vars[slotId].setRef(stringObj);
                 break;
             }
             default:

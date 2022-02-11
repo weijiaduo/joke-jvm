@@ -1,6 +1,7 @@
 package com.wjd.rtda.heap;
 
 import com.wjd.rtda.Slot;
+import com.wjd.rtda.heap.member.Field;
 
 /**
  * 对象基类
@@ -104,5 +105,17 @@ public class HeapObject {
 
     public boolean isInstanceOf(Class cls) {
         return cls.isAssignableFrom(clazz);
+    }
+
+    public void setRefVar(String name, String descriptor, HeapObject ref) {
+        Field field = clazz.getField(name, descriptor, false);
+        Slot[] slots = getFields();
+        slots[field.getSlotId()].setRef(ref);
+    }
+
+    public HeapObject getRefVar(String name, String descriptor) {
+        Field field = clazz.getField(name, descriptor, false);
+        Slot[] slots = getFields();
+        return slots[field.getSlotId()].getRef();
     }
 }

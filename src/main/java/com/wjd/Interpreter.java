@@ -5,18 +5,34 @@ import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.Frame;
 import com.wjd.rtda.Thread;
+import com.wjd.rtda.heap.ClassLoader;
+import com.wjd.rtda.heap.HeapObject;
+import com.wjd.rtda.heap.StringPool;
 import com.wjd.rtda.heap.member.Method;
+import com.wjd.rtda.heap.Class;
 
 /**
  * @since 2022/1/29
  */
 public class Interpreter {
 
-    public void interpret(Method method, boolean logInst) {
+    public void interpret(Method method, boolean logInst, String[] args) {
         Thread thread = new Thread();
         Frame frame = thread.newFrame(method);
         thread.pushFrame(frame);
+        HeapObject argsObj = createArgsArray(method.getClazz().getLoader(), args);
+        frame.getLocalVars().setRef(0, argsObj);
         loop(thread, logInst);
+    }
+
+    private HeapObject createArgsArray(ClassLoader loader, String[] args) {
+        Class stringClass = loader.loadClass("java/lang/String");
+        HeapObject argsArray = stringClass.getArrayClass().newArray(args.length);
+        HeapObject[] refs = argsArray.getRefs();
+        for (int i = 0; i < args.length; i++) {
+            refs[i] = StringPool.getJString(loader, args[i]);
+        }
+        return argsArray;
     }
 
     private void loop(Thread thread, boolean logInst) {

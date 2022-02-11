@@ -5,6 +5,7 @@ import com.wjd.rtda.OperandStack;
 import com.wjd.rtda.heap.Class;
 import com.wjd.rtda.heap.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
+import com.wjd.rtda.heap.StringPool;
 import com.wjd.rtda.heap.cons.MethodRef;
 import com.wjd.rtda.heap.member.Method;
 
@@ -78,6 +79,10 @@ public class InvokeVirtual extends InvokeMethod {
                 break;
             case "(D)V":
                 System.out.println(stack.popDouble());
+                break;
+            case "(Ljava/lang/String;)V":
+                HeapObject stringObj = stack.popRef();
+                System.out.println(StringPool.getString(stringObj));
                 break;
             default:
                 System.out.println("println: " + methodRef.getDescriptor());

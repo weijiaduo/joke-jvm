@@ -16,14 +16,14 @@ public class Jvm {
                 "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes" };
         cmd.parse(testArgs);
 
-        String testClassName = "com\\wjd\\rtda\\ArrayDemo";
+        String testClassName = "com\\wjd\\rtda\\PrintArgs";
         Classpath classpath = new Classpath(cmd.getJreOption(), cmd.getCpOption());
 
         ClassLoader classLoader = ClassLoader.newClassLoader(classpath, cmd.isVerboseClassFlag());
         Class mainClass = classLoader.loadClass(testClassName);
         Method mainMethod = mainClass.getMainMethod();
         if (mainMethod != null) {
-            new Interpreter().interpret(mainMethod, cmd.isVerboseInstFlag());
+            new Interpreter().interpret(mainMethod, cmd.isVerboseInstFlag(), cmd.getArgs());
         } else {
             System.out.println("Not found main method!");
         }

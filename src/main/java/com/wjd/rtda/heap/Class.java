@@ -436,4 +436,16 @@ public class Class {
         }
     }
 
+    public Field getField(String name, String descriptor, boolean isStatic) {
+        for (Class c = this; c != null; c = c.getSuperClass()) {
+            for (Field field : c.getFields()) {
+                if (field.isStatic() == isStatic &&
+                        field.getName().equals(name) &&
+                        field.getDescriptor().equals(descriptor)) {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
 }
