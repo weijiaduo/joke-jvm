@@ -2,34 +2,16 @@ package com.wjd.rtda.meta;
 
 import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.type.Uint16;
-import com.wjd.classfile.type.Uint8;
-import com.wjd.rtda.Slot;
 import com.wjd.rtda.AccessFlags;
+import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.ClassLoader;
 import com.wjd.rtda.heap.HeapObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 类
  * @since 2022/1/30
  */
 public class ClassMeta {
-
-    public static Map<String, String> primitiveTypes;
-    static {
-        primitiveTypes = new HashMap<>();
-        primitiveTypes.put("void", "V");
-        primitiveTypes.put("boolean", "Z");
-        primitiveTypes.put("byte", "B");
-        primitiveTypes.put("char", "C");
-        primitiveTypes.put("short", "S");
-        primitiveTypes.put("int", "I");
-        primitiveTypes.put("long", "J");
-        primitiveTypes.put("float", "F");
-        primitiveTypes.put("double", "D");
-    }
 
     /** 访问标志 */
     private Uint16 accessFlags;
@@ -298,6 +280,19 @@ public class ClassMeta {
         }
     }
 
+    public FieldMeta getField(String name, String descriptor, boolean isStatic) {
+        for (ClassMeta c = this; c != null; c = c.getSuperClass()) {
+            for (FieldMeta fieldMeta : c.getFields()) {
+                if (fieldMeta.isStatic() == isStatic &&
+                        fieldMeta.getName().equals(name) &&
+                        fieldMeta.getDescriptor().equals(descriptor)) {
+                    return fieldMeta;
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean isJlObject() {
         return this == loader.loadClass("java/lang/Object");
     }
@@ -325,101 +320,32 @@ public class ClassMeta {
      * 获取静态方法
      */
     public MethodMeta getStaticMethod(String name, String descriptor) {
-        for (MethodMeta m : getMethods())
+        for (MethodMeta m : getMethods()) {
             if (name.equals(m.getName()) && descriptor.equals(m.getDescriptor())) {
                 return m;
             }
+        }
         return null;
     }
 
     public boolean isArray() {
-        return name.charAt(0) == '[';
-    }
-
-    /**
-     * 获取基本类型的数组类型
-     */
-    public static ClassMeta getPrimitiveArrayClass(ClassLoader loader, Uint8 atype) {
-        int val = atype.value();
-        switch (val) {
-            case 4:
-                return loader.loadClass("[Z");
-            case 5:
-                return loader.loadClass("[C");
-            case 6:
-                return loader.loadClass("[F");
-            case 7:
-                return loader.loadClass("[D");
-            case 8:
-                return loader.loadClass("[B");
-            case 9:
-                return loader.loadClass("[S");
-            case 10:
-                return loader.loadClass("[I");
-            case 11:
-                return loader.loadClass("[J");
-            default:
-                throw new IllegalArgumentException("Invalid atype: " + val);
-        }
+        return ArrayMetaHelper.isArray(this);
     }
 
     /**
      * 获取当前类型对应的数组类型
      */
     public ClassMeta getArrayClass() {
-        String arrayClassName = getArrayClassName(name);
+        String arrayClassName = ArrayMetaHelper.getArrayClassName(name);
         return loader.loadClass(arrayClassName);
-    }
-
-    private String getArrayClassName(String className) {
-        return "[" + toDescriptor(className);
-    }
-
-    private String toDescriptor(String className) {
-        // 数组类型
-        if (className.charAt(0) == '[') {
-            return className;
-        }
-        // 基本类型
-        if (primitiveTypes.containsKey(className)) {
-            return primitiveTypes.get(className);
-        }
-        // 引用类型
-        return "L" + className + ";";
     }
 
     /**
      * 获取数组类型的元素类型
      */
     public ClassMeta getComponentClass() {
-        String componentClassName = getComponentClassName(name);
+        String componentClassName = ArrayMetaHelper.getComponentClassName(name);
         return loader.loadClass(componentClassName);
-    }
-
-    private String getComponentClassName(String className) {
-        if (className.charAt(0) == '[') {
-            String componentTypeDescriptor = className.substring(1);
-            return toClassName(componentTypeDescriptor);
-        }
-        throw new IllegalArgumentException("Not Array: " + className);
-    }
-
-    private String toClassName(String descriptor) {
-        // 数组类型
-        if (descriptor.charAt(0) == '[') {
-            return descriptor;
-        }
-        // 引用类型
-        if (descriptor.charAt(0) == 'L') {
-            return descriptor.substring(1, descriptor.length() - 1);
-        }
-        // 基本类型
-        for (String className : primitiveTypes.keySet()) {
-            if (descriptor.equals(primitiveTypes.get(className))) {
-                return className;
-            }
-        }
-        throw new IllegalArgumentException("Invalid descriptor: " + descriptor);
     }
 
     public HeapObject newObject() {
@@ -430,42 +356,7 @@ public class ClassMeta {
         if (!isArray()) {
             throw new IllegalStateException("Not array class: " + name);
         }
-        return HeapObject.newArray(this, makeArray(count));
+        return HeapObject.newArray(this, ArrayMetaHelper.makeArray(name, count));
     }
 
-    private Object makeArray(int count) {
-        switch (name) {
-            case "[Z":
-                return new boolean[count];
-            case "[B":
-                return new byte[count];
-            case "[C":
-                return new char[count];
-            case "[S":
-                return new short[count];
-            case "[I":
-                return new int[count];
-            case "[J":
-                return new long[count];
-            case "[F":
-                return new float[count];
-            case "[D":
-                return new double[count];
-            default:
-                return new HeapObject[count];
-        }
-    }
-
-    public FieldMeta getField(String name, String descriptor, boolean isStatic) {
-        for (ClassMeta c = this; c != null; c = c.getSuperClass()) {
-            for (FieldMeta fieldMeta : c.getFields()) {
-                if (fieldMeta.isStatic() == isStatic &&
-                        fieldMeta.getName().equals(name) &&
-                        fieldMeta.getDescriptor().equals(descriptor)) {
-                    return fieldMeta;
-                }
-            }
-        }
-        return null;
-    }
 }

@@ -6,11 +6,8 @@ import com.wjd.classfile.type.Uint16;
 import com.wjd.cp.Classpath;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.meta.StringPool;
+import com.wjd.rtda.meta.*;
 import com.wjd.rtda.meta.cons.*;
-import com.wjd.rtda.meta.ConstantPool;
-import com.wjd.rtda.meta.FieldMeta;
-import com.wjd.rtda.meta.ClassMeta;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,20 +17,6 @@ import java.util.Map;
  * @since 2022/1/30
  */
 public class ClassLoader {
-
-    public static Map<String, String> primitiveTypes;
-    static {
-        primitiveTypes = new HashMap<>();
-        primitiveTypes.put("void", "java/lang/Void");
-        primitiveTypes.put("boolean", "java/lang/Boolean");
-        primitiveTypes.put("byte", "java/lang/Byte");
-        primitiveTypes.put("char", "java/lang/Character");
-        primitiveTypes.put("short", "java/lang/Short");
-        primitiveTypes.put("int", "java/lang/Integer");
-        primitiveTypes.put("long", "java/lang/Long");
-        primitiveTypes.put("float", "java/lang/Float");
-        primitiveTypes.put("double", "java/lang/Double");
-    }
 
     private Classpath classpath;
     private Map<String, ClassMeta> classMap;
@@ -69,7 +52,7 @@ public class ClassLoader {
      * 加载基本类型
      */
     private void loadPrimitiveClasses() {
-        for (String className : ClassMeta.primitiveTypes.keySet()) {
+        for (String className : PrimitiveMeta.primitiveTypes.keySet()) {
             loadPrimitiveClass(className);
         }
     }

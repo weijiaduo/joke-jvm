@@ -3,6 +3,7 @@ package com.wjd.instructions.references;
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
+import com.wjd.rtda.meta.ArrayMetaHelper;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.heap.ClassLoader;
@@ -24,7 +25,7 @@ public class NewArray implements Instruction {
         }
 
         ClassLoader classLoader = frame.getMethod().getClazz().getLoader();
-        ClassMeta arrayClassMeta = ClassMeta.getPrimitiveArrayClass(classLoader, atype);
+        ClassMeta arrayClassMeta = ArrayMetaHelper.getPrimitiveArrayClass(classLoader, atype);
         HeapObject arrayObject = arrayClassMeta.newArray(count);
         frame.getOperandStack().pushRef(arrayObject);
     }

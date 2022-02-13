@@ -1,0 +1,124 @@
+package com.wjd.rtda.meta;
+
+import com.wjd.classfile.type.Uint8;
+import com.wjd.rtda.heap.ClassLoader;
+import com.wjd.rtda.heap.HeapObject;
+
+/**
+ * @since 2022/2/13
+ */
+public class ArrayMetaHelper {
+
+    private static class AType {
+        public static final int AT_BOOLEAN = 4;
+        public static final int AT_CHAR = 5;
+        public static final int AT_FLOAT = 6;
+        public static final int AT_DOUBLE = 7;
+        public static final int AT_BYTE = 8;
+        public static final int AT_SHORT = 9;
+        public static final int AT_INT = 10;
+        public static final int AT_LONG = 11;
+    }
+
+    public static boolean isArray(ClassMeta classMeta) {
+        String name = classMeta.getName();
+        return name.charAt(0) == '[';
+    }
+
+    /**
+     * 获取数组类名
+     */
+    public static String getArrayClassName(String className) {
+        return "[" + toDescriptor(className);
+    }
+
+    private static String toDescriptor(String className) {
+        // 数组类型
+        if (className.charAt(0) == '[') {
+            return className;
+        }
+        // 基本类型
+        if (PrimitiveMeta.primitiveTypes.containsKey(className)) {
+            return PrimitiveMeta.primitiveTypes.get(className);
+        }
+        // 引用类型
+        return "L" + className + ";";
+    }
+
+    public static String getComponentClassName(String className) {
+        if (className.charAt(0) == '[') {
+            String componentTypeDescriptor = className.substring(1);
+            return toClassName(componentTypeDescriptor);
+        }
+        throw new IllegalArgumentException("Not Array: " + className);
+    }
+
+    private static String toClassName(String descriptor) {
+        // 数组类型
+        if (descriptor.charAt(0) == '[') {
+            return descriptor;
+        }
+        // 引用类型
+        if (descriptor.charAt(0) == 'L') {
+            return descriptor.substring(1, descriptor.length() - 1);
+        }
+        // 基本类型
+        for (String className : PrimitiveMeta.primitiveTypes.keySet()) {
+            if (descriptor.equals(PrimitiveMeta.primitiveTypes.get(className))) {
+                return className;
+            }
+        }
+        throw new IllegalArgumentException("Invalid descriptor: " + descriptor);
+    }
+
+    /**
+     * 获取基本类型的数组类型
+     */
+    public static ClassMeta getPrimitiveArrayClass(ClassLoader loader, Uint8 atype) {
+        int val = atype.value();
+        switch (val) {
+            case AType.AT_BOOLEAN:
+                return loader.loadClass("[Z");
+            case AType.AT_CHAR:
+                return loader.loadClass("[C");
+            case AType.AT_FLOAT:
+                return loader.loadClass("[F");
+            case AType.AT_DOUBLE:
+                return loader.loadClass("[D");
+            case AType.AT_BYTE:
+                return loader.loadClass("[B");
+            case AType.AT_SHORT:
+                return loader.loadClass("[S");
+            case AType.AT_INT:
+                return loader.loadClass("[I");
+            case AType.AT_LONG:
+                return loader.loadClass("[J");
+            default:
+                throw new IllegalArgumentException("Invalid atype: " + val);
+        }
+    }
+
+    public static Object makeArray(String name, int count) {
+        switch (name) {
+            case "[Z":
+                return new boolean[count];
+            case "[B":
+                return new byte[count];
+            case "[C":
+                return new char[count];
+            case "[S":
+                return new short[count];
+            case "[I":
+                return new int[count];
+            case "[J":
+                return new long[count];
+            case "[F":
+                return new float[count];
+            case "[D":
+                return new double[count];
+            default:
+                return new HeapObject[count];
+        }
+    }
+
+}
