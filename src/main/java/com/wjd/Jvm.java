@@ -3,7 +3,7 @@ package com.wjd;
 import com.wjd.cmd.Cmd;
 import com.wjd.cp.Classpath;
 import com.wjd.rtda.meta.ClassMeta;
-import com.wjd.rtda.heap.ClassLoader;
+import com.wjd.rtda.meta.ClassMetaLoader;
 import com.wjd.rtda.meta.MethodMeta;
 
 public class Jvm {
@@ -20,8 +20,8 @@ public class Jvm {
         Classpath classpath = new Classpath(cmd.getJreOption(), cmd.getCpOption());
         Classpath.verbosePath = cmd.isVerboseClassPathFlag();
 
-        ClassLoader classLoader = ClassLoader.newClassLoader(classpath, cmd.isVerboseClassFlag());
-        ClassMeta mainClassMeta = classLoader.loadClass(testClassName);
+        ClassMetaLoader classMetaLoader = ClassMetaLoader.newClassLoader(classpath, cmd.isVerboseClassFlag());
+        ClassMeta mainClassMeta = classMetaLoader.loadClass(testClassName);
         MethodMeta mainMethodMeta = mainClassMeta.getMainMethod();
         if (mainMethodMeta != null) {
             new Interpreter().interpret(mainMethodMeta, cmd.isVerboseInstFlag(), cmd.getArgs());

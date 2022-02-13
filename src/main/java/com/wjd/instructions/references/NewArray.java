@@ -6,7 +6,7 @@ import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.meta.ArrayMetaHelper;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.meta.ClassMeta;
-import com.wjd.rtda.heap.ClassLoader;
+import com.wjd.rtda.meta.ClassMetaLoader;
 import com.wjd.rtda.heap.HeapObject;
 
 /**
@@ -24,8 +24,8 @@ public class NewArray implements Instruction {
             throw new NegativeArraySizeException("NewArray count: " + count);
         }
 
-        ClassLoader classLoader = frame.getMethod().getClazz().getLoader();
-        ClassMeta arrayClassMeta = ArrayMetaHelper.getPrimitiveArrayClass(classLoader, atype);
+        ClassMetaLoader classMetaLoader = frame.getMethod().getClazz().getLoader();
+        ClassMeta arrayClassMeta = ArrayMetaHelper.getPrimitiveArrayClass(classMetaLoader, atype);
         HeapObject arrayObject = arrayClassMeta.newArray(count);
         frame.getOperandStack().pushRef(arrayObject);
     }

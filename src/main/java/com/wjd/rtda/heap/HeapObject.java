@@ -10,8 +10,11 @@ import com.wjd.rtda.meta.FieldMeta;
  */
 public class HeapObject implements Cloneable {
 
+    /** 对象的元数据类型 */
     private ClassMeta clazz;
+    /** 实例对象的数据 */
     private Object data;
+    /** 目前是Class对象 */
     private Object extra;
 
     public static HeapObject newObject(ClassMeta clazz) {

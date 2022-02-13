@@ -5,7 +5,7 @@ import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.Thread;
-import com.wjd.rtda.heap.ClassLoader;
+import com.wjd.rtda.meta.ClassMetaLoader;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.StringPool;
 import com.wjd.rtda.meta.MethodMeta;
@@ -25,7 +25,7 @@ public class Interpreter {
         loop(thread, logInst);
     }
 
-    private HeapObject createArgsArray(ClassLoader loader, String[] args) {
+    private HeapObject createArgsArray(ClassMetaLoader loader, String[] args) {
         ClassMeta stringClassMeta = loader.loadClass("java/lang/String");
         HeapObject argsArray = stringClassMeta.getArrayClass().newArray(args.length);
         HeapObject[] refs = argsArray.getRefs();

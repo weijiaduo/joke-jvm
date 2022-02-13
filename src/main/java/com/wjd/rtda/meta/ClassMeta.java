@@ -4,7 +4,6 @@ import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.heap.ClassLoader;
 import com.wjd.rtda.heap.HeapObject;
 
 /**
@@ -24,13 +23,13 @@ public class ClassMeta {
     /** 常量池 */
     private ConstantPool constantPool;
     /** 字段 */
-    private FieldMeta[] fieldMetas;
+    private FieldMeta[] fields;
     /** 方法 */
-    private MethodMeta[] methodMetas;
+    private MethodMeta[] methods;
     /** 类加载器 */
-    private ClassLoader loader;
+    private ClassMetaLoader loader;
     /** 父类引用 */
-    private ClassMeta superClassMeta;
+    private ClassMeta superClass;
     /** 接口引用 */
     private ClassMeta[] interfaces;
     /** 实例变量数量 */
@@ -47,8 +46,8 @@ public class ClassMeta {
 
     public ClassMeta() {
         interfaceNames = new String[0];
-        fieldMetas = new FieldMeta[0];
-        methodMetas = new MethodMeta[0];
+        fields = new FieldMeta[0];
+        methods = new MethodMeta[0];
         staticVars = new Slot[0];
     }
 
@@ -59,8 +58,8 @@ public class ClassMeta {
         clazz.superClassName = classFile.getSuperClassName();
         clazz.interfaceNames = classFile.getInterfaceNames();
         clazz.constantPool = ConstantPool.newConstantPool(clazz, classFile.getConstantPool());
-        clazz.fieldMetas = FieldMeta.newFields(clazz, classFile.getFields());
-        clazz.methodMetas = MethodMeta.newMethods(clazz, classFile.getMethods());
+        clazz.fields = FieldMeta.newFields(clazz, classFile.getFields());
+        clazz.methods = MethodMeta.newMethods(clazz, classFile.getMethods());
         return clazz;
     }
 
@@ -89,27 +88,27 @@ public class ClassMeta {
     }
 
     public FieldMeta[] getFields() {
-        return fieldMetas;
+        return fields;
     }
 
     public MethodMeta[] getMethods() {
-        return methodMetas;
+        return methods;
     }
 
-    public ClassLoader getLoader() {
+    public ClassMetaLoader getLoader() {
         return loader;
     }
 
-    public void setLoader(ClassLoader loader) {
+    public void setLoader(ClassMetaLoader loader) {
         this.loader = loader;
     }
 
     public ClassMeta getSuperClass() {
-        return superClassMeta;
+        return superClass;
     }
 
     public void setSuperClass(ClassMeta superClassMeta) {
-        this.superClassMeta = superClassMeta;
+        this.superClass = superClassMeta;
     }
 
     public ClassMeta[] getInterfaces() {
@@ -207,7 +206,7 @@ public class ClassMeta {
     }
 
     public boolean isSubClassOf(ClassMeta parent) {
-        for (ClassMeta p = superClassMeta; p != null; p = p.superClassMeta) {
+        for (ClassMeta p = superClass; p != null; p = p.superClass) {
             if (p == parent) {
                 return true;
             }
@@ -229,7 +228,7 @@ public class ClassMeta {
     }
 
     public boolean isImplements(ClassMeta parent) {
-        for (ClassMeta c = this; c != null; c = c.superClassMeta) {
+        for (ClassMeta c = this; c != null; c = c.superClass) {
             for (ClassMeta i : c.getInterfaces()) {
                 if (i == parent || i.isSubInterfaceOf(parent)) {
                     return true;

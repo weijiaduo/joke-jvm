@@ -1,4 +1,4 @@
-package com.wjd.rtda.heap;
+package com.wjd.rtda.meta;
 
 import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.ClassReader;
@@ -6,7 +6,7 @@ import com.wjd.classfile.type.Uint16;
 import com.wjd.cp.Classpath;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.meta.*;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.cons.*;
 
 import java.io.IOException;
@@ -16,22 +16,22 @@ import java.util.Map;
 /**
  * @since 2022/1/30
  */
-public class ClassLoader {
+public class ClassMetaLoader {
 
     private Classpath classpath;
     private Map<String, ClassMeta> classMap;
     private boolean verboseFlag = false;
 
-    public static ClassLoader newClassLoader(Classpath classpath, boolean verboseFlag) {
-        ClassLoader classLoader = new ClassLoader();
-        classLoader.classpath = classpath;
-        classLoader.classMap = new HashMap<>();
-        classLoader.verboseFlag = verboseFlag;
+    public static ClassMetaLoader newClassLoader(Classpath classpath, boolean verboseFlag) {
+        ClassMetaLoader classMetaLoader = new ClassMetaLoader();
+        classMetaLoader.classpath = classpath;
+        classMetaLoader.classMap = new HashMap<>();
+        classMetaLoader.verboseFlag = verboseFlag;
         // 加载初始化基类对象
-        classLoader.loadBasicClasses();
+        classMetaLoader.loadBasicClasses();
         // 加载基本类型
-        classLoader.loadPrimitiveClasses();
-        return classLoader;
+        classMetaLoader.loadPrimitiveClasses();
+        return classMetaLoader;
     }
 
     /**

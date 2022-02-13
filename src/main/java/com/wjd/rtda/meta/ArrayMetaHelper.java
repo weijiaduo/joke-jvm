@@ -1,7 +1,6 @@
 package com.wjd.rtda.meta;
 
 import com.wjd.classfile.type.Uint8;
-import com.wjd.rtda.heap.ClassLoader;
 import com.wjd.rtda.heap.HeapObject;
 
 /**
@@ -74,7 +73,7 @@ public class ArrayMetaHelper {
     /**
      * 获取基本类型的数组类型
      */
-    public static ClassMeta getPrimitiveArrayClass(ClassLoader loader, Uint8 atype) {
+    public static ClassMeta getPrimitiveArrayClass(ClassMetaLoader loader, Uint8 atype) {
         int val = atype.value();
         switch (val) {
             case AType.AT_BOOLEAN:

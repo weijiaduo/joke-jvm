@@ -5,7 +5,7 @@ import com.wjd.naive.NativeMethod;
 import com.wjd.naive.NativeRegistry;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.stack.Frame;
-import com.wjd.rtda.heap.ClassLoader;
+import com.wjd.rtda.meta.ClassMetaLoader;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.StringPool;
 
@@ -34,8 +34,8 @@ public class Class implements NativeClass {
         public void execute(Frame frame) {
             HeapObject nameObj = frame.getLocalVars().getRef(0);
             java.lang.String name = StringPool.getRawString(nameObj);
-            ClassLoader classLoader = frame.getMethod().getClazz().getLoader();
-            HeapObject jClass = classLoader.loadClass(name).getjClass();
+            ClassMetaLoader classMetaLoader = frame.getMethod().getClazz().getLoader();
+            HeapObject jClass = classMetaLoader.loadClass(name).getjClass();
             frame.getOperandStack().pushRef(jClass);
         }
     }

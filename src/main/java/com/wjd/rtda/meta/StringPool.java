@@ -1,6 +1,5 @@
 package com.wjd.rtda.meta;
 
-import com.wjd.rtda.heap.ClassLoader;
 import com.wjd.rtda.heap.HeapObject;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public class StringPool {
     /**
      * 获取String对象
      */
-    public static HeapObject getObjString(ClassLoader loader, String string) {
+    public static HeapObject getObjString(ClassMetaLoader loader, String string) {
         if (internedStrings.containsKey(string)) {
             return internedStrings.get(string);
         }
