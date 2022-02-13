@@ -121,4 +121,97 @@ public class ArrayMetaHelper {
         }
     }
 
+    /**
+     * 验证数组是否可以复制
+     */
+    public static boolean checkArrayCopy(HeapObject src, HeapObject dest) {
+        ClassMeta srcClassMeta = src.getClazz();
+        ClassMeta destClassMeta = dest.getClazz();
+        if (!srcClassMeta.isArray() || !destClassMeta.isArray()) {
+            return false;
+        }
+        if (srcClassMeta.getComponentClass().isPrimitive()
+            || destClassMeta.getComponentClass().isPrimitive()) {
+            return srcClassMeta.getComponentClass() == destClassMeta.getComponentClass();
+        }
+        return true;
+    }
+
+    /**
+     * 复制数组
+     */
+    public static void arraycopy(HeapObject src, int srcPos, HeapObject dest, int destPos, int length) {
+        String dataType = src.getDataType();
+        switch (dataType) {
+            case "boolean[]":
+            {
+                boolean[] srcData = src.getBooleans();
+                boolean[] destData = dest.getBooleans();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "byte[]":
+            {
+                byte[] srcData = src.getBytes();
+                byte[] destData = dest.getBytes();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "char[]":
+            {
+                char[] srcData = src.getChars();
+                char[] destData = dest.getChars();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "short[]":
+            {
+                short[] srcData = src.getShorts();
+                short[] destData = dest.getShorts();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "int[]":
+            {
+                int[] srcData = src.getInts();
+                int[] destData = dest.getInts();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "long[]":
+            {
+                long[] srcData = src.getLongs();
+                long[] destData = dest.getLongs();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "float[]":
+            {
+                float[] srcData = src.getFloats();
+                float[] destData = dest.getFloats();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "double[]":
+            {
+                double[] srcData = src.getDoubles();
+                double[] destData = dest.getDoubles();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "HeapObject[]":
+            {
+                HeapObject[] srcData = src.getRefs();
+                HeapObject[] destData = dest.getRefs();
+                System.arraycopy(srcData, srcPos, destData, destPos, length);
+                break;
+            }
+            case "Slot[]":
+                System.out.println("Unsupported Copy Slots");
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown type: " + dataType);
+        }
+    }
+
 }

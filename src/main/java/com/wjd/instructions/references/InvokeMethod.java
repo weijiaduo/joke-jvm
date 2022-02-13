@@ -11,7 +11,7 @@ import com.wjd.rtda.meta.MethodMeta;
  */
 public class InvokeMethod extends Index16Instruction {
 
-    protected void invokeMethod(Frame frame, MethodMeta methodMeta) {
+    public static void invokeMethod(Frame frame, MethodMeta methodMeta) {
         Thread thread = frame.getThread();
         Frame newFrame = thread.newFrame(methodMeta);
         thread.pushFrame(newFrame);

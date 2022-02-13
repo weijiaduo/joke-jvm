@@ -51,8 +51,14 @@ public class NativeRegistry {
     private static boolean initRegistryNativeClass() {
         try {
             String basePackageName = "com.wjd.naive.";
+            // 使用Class.forName()可以让static执行注册
             Class.forName(basePackageName + "java.lang.Object");
             Class.forName(basePackageName + "java.lang.Class");
+            Class.forName(basePackageName + "java.lang.System");
+            Class.forName(basePackageName + "java.lang.Float");
+            Class.forName(basePackageName + "java.lang.Double");
+            Class.forName(basePackageName + "java.lang.String");
+            Class.forName(basePackageName + "sun.misc.VM");
             return true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

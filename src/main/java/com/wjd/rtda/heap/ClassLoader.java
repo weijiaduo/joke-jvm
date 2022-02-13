@@ -317,7 +317,7 @@ public class ClassLoader {
             case "Ljava/lang/String;":
             {
                 String val = ((StringConstant) constant).value();
-                HeapObject stringObj = StringPool.getJString(clazz.getLoader(), val);
+                HeapObject stringObj = StringPool.getObjString(clazz.getLoader(), val);
                 vars[slotId].setRef(stringObj);
                 break;
             }

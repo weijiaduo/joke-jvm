@@ -1,14 +1,14 @@
 package com.wjd.rtda.heap;
 
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.meta.FieldMeta;
 import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.FieldMeta;
 
 /**
  * 对象基类
  * @since 2022/1/30
  */
-public class HeapObject {
+public class HeapObject implements Cloneable {
 
     private ClassMeta clazz;
     private Object data;
@@ -88,27 +88,38 @@ public class HeapObject {
         return (HeapObject[]) data;
     }
 
+    public String getDataType() {
+        if (data == null) {
+            return null;
+        }
+        return data.getClass().getSimpleName();
+    }
+
     public int getArrayLength() {
-        if (data instanceof Slot[]) {
-            return getFields().length;
-        } else if (data instanceof boolean[]) {
-            return getBooleans().length;
-        } else if (data instanceof byte[]) {
-            return getBytes().length;
-        } else if (data instanceof char[]) {
-            return getChars().length;
-        } else if (data instanceof short[]) {
-            return getShorts().length;
-        } else if (data instanceof int[]) {
-            return getInts().length;
-        } else if (data instanceof long[]) {
-            return getLongs().length;
-        } else if (data instanceof float[]) {
-            return getFloats().length;
-        } else if (data instanceof double[]) {
-            return getDoubles().length;
-        } else if (data instanceof HeapObject[]) {
-            return getRefs().length;
+        String dataType = getDataType();
+        if (dataType == null) {
+            return -1;
+        }
+        switch (dataType) {
+            case "boolean[]":
+                return getBooleans().length;
+            case "byte[]":
+                return getBytes().length;
+            case "char[]":
+                return getChars().length;
+            case "short[]":
+                return getShorts().length;
+            case "int[]":
+                return getInts().length;
+            case "long[]":
+                return getLongs().length;
+            case "float[]":
+                return getFloats().length;
+            case "double[]":
+                return getDoubles().length;
+            case "HeapObject[]":
+                return getRefs().length;
+            default:
         }
         throw new IllegalStateException("Not array");
     }
@@ -118,14 +129,60 @@ public class HeapObject {
     }
 
     public void setRefVar(String name, String descriptor, HeapObject ref) {
-        FieldMeta fieldMeta = clazz.getField(name, descriptor, false);
+        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
         Slot[] slots = getFields();
         slots[fieldMeta.getSlotId()].setRef(ref);
     }
 
     public HeapObject getRefVar(String name, String descriptor) {
-        FieldMeta fieldMeta = clazz.getField(name, descriptor, false);
+        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
         Slot[] slots = getFields();
         return slots[fieldMeta.getSlotId()].getRef();
+    }
+
+    @Override
+    public HeapObject clone() throws CloneNotSupportedException {
+        HeapObject cloneObj = (HeapObject) super.clone();
+        if (data != null) {
+            cloneObj.data = cloneData();
+        }
+        return cloneObj;
+    }
+
+    private Object cloneData() {
+        String dataType = getDataType();
+        if (dataType == null) {
+            return null;
+        }
+        switch (dataType) {
+            case "boolean[]":
+                return getBooleans().clone();
+            case "byte[]":
+                return getBytes().clone();
+            case "char[]":
+                return getChars().clone();
+            case "short[]":
+                return getShorts().clone();
+            case "int[]":
+                return getInts().clone();
+            case "long[]":
+                return getLongs().clone();
+            case "float[]":
+                return getFloats().clone();
+            case "double[]":
+                return getDoubles().clone();
+            case "HeapObject[]":
+                return getRefs().clone();
+            default:
+            {
+                // Slot[]
+                Slot[] slots = getFields();
+                Slot[] newSlots = new Slot[slots.length];
+                for (int i = 0; i < newSlots.length; i++) {
+                    newSlots[i] = new Slot(slots[i]);
+                }
+                return newSlots;
+            }
+        }
     }
 }

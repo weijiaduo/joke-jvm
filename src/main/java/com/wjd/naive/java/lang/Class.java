@@ -21,6 +21,8 @@ public class Class implements NativeClass {
                 "()Ljava/lang/String;", new GetName0());
         NativeRegistry.registry("java/lang/Class", "desiredAssertionStatus0",
                 "(Ljava/lang/Class;)Z", new DesiredAssertionStatus0());
+        NativeRegistry.registry("java/lang/Class", "getClassLoader0",
+                "()Ljava/lang/ClassLoader;", new GetClassLoader0());
     }
 
 
@@ -31,7 +33,7 @@ public class Class implements NativeClass {
         @Override
         public void execute(Frame frame) {
             HeapObject nameObj = frame.getLocalVars().getRef(0);
-            String name = StringPool.getString(nameObj);
+            java.lang.String name = StringPool.getRawString(nameObj);
             ClassLoader classLoader = frame.getMethod().getClazz().getLoader();
             HeapObject jClass = classLoader.loadClass(name).getjClass();
             frame.getOperandStack().pushRef(jClass);
@@ -46,16 +48,29 @@ public class Class implements NativeClass {
         public void execute(Frame frame) {
             HeapObject that = frame.getLocalVars().getThis();
             ClassMeta classMeta = (ClassMeta) that.getExtra();
-            String name = classMeta.getJavaName();
-            HeapObject nameObj = StringPool.getJString(classMeta.getLoader(), name);
+            java.lang.String name = classMeta.getJavaName();
+            HeapObject nameObj = StringPool.getObjString(classMeta.getLoader(), name);
             frame.getOperandStack().pushRef(nameObj);
         }
     }
 
+    /**
+     * private static native boolean desiredAssertionStatus0(Class<?> clazz);
+     */
     static class DesiredAssertionStatus0 implements NativeMethod {
         @Override
         public void execute(Frame frame) {
             frame.getOperandStack().pushBoolean(false);
+        }
+    }
+
+    /**
+     * native ClassLoader getClassLoader0();
+     */
+    static class GetClassLoader0 implements NativeMethod {
+        @Override
+        public void execute(Frame frame) {
+            frame.getOperandStack().pushRef(null);
         }
     }
 

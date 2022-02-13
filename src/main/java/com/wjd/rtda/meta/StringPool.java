@@ -15,7 +15,10 @@ public class StringPool {
     /** 字符串常量 */
     private static Map<String, HeapObject> internedStrings = new HashMap<>();
 
-    public static HeapObject getJString(ClassLoader loader, String string) {
+    /**
+     * 获取String对象
+     */
+    public static HeapObject getObjString(ClassLoader loader, String string) {
         if (internedStrings.containsKey(string)) {
             return internedStrings.get(string);
         }
@@ -27,9 +30,24 @@ public class StringPool {
         return stringObj;
     }
 
-    public static String getString(HeapObject stringObj) {
+    /**
+     * 获取String对象对应的字符串
+     */
+    public static String getRawString(HeapObject stringObj) {
         HeapObject value = stringObj.getRefVar("value", "[C");
         char[] chars = value.getChars();
         return new String(chars);
+    }
+
+    /**
+     * 把String对象放入字符串常量池
+     */
+    public static HeapObject internString(HeapObject stringObj) {
+        String str = getRawString(stringObj);
+        if (internedStrings.containsKey(str)) {
+            return internedStrings.get(str);
+        }
+        internedStrings.put(str, stringObj);
+        return stringObj;
     }
 }

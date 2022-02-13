@@ -19,18 +19,19 @@ public class IInc implements Instruction {
     /**
      * 常量
      */
-    private Uint8 value;
+    private int value;
 
     @Override
     public void execute(Frame frame) {
         int val = frame.getLocalVars().getInt(index.value());
-        val += value.value();
+        val += value;
         frame.getLocalVars().setInt(index.value(), val);
     }
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
         index = reader.readUint8();
-        value = reader.readUint8();
+        // 注意这是一个8位的有符号整数
+        value = reader.readInt8();
     }
 }

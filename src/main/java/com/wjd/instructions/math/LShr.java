@@ -11,9 +11,10 @@ public class LShr extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        long val1 = frame.getOperandStack().popLong();
+        // 注意位移操作数是一个int类型的
+        int val1 = frame.getOperandStack().popInt();
         long val2 = frame.getOperandStack().popLong();
-        long val = val2 >> (val1 & 0x1f);
+        long val = val2 >> (val1 & 0x3f);
         frame.getOperandStack().pushLong(val);
     }
 }

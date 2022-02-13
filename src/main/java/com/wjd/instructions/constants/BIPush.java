@@ -1,6 +1,5 @@
 package com.wjd.instructions.constants;
 
-import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.stack.Frame;
@@ -13,7 +12,6 @@ import com.wjd.rtda.stack.Frame;
 public class BIPush implements Instruction {
 
     private int val;
-    private Uint8 source;
 
     @Override
     public void execute(Frame frame) {
@@ -22,7 +20,7 @@ public class BIPush implements Instruction {
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
-        source = reader.readUint8();
-        val = source.value();
+        // 注意是8位有符号整数
+        val = reader.readInt8();
     }
 }

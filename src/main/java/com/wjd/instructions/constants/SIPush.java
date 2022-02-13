@@ -1,6 +1,5 @@
 package com.wjd.instructions.constants;
 
-import com.wjd.classfile.type.Uint16;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.stack.Frame;
@@ -12,7 +11,6 @@ import com.wjd.rtda.stack.Frame;
 public class SIPush implements Instruction {
 
     private int val;
-    private Uint16 source;
 
     @Override
     public void execute(Frame frame) {
@@ -21,7 +19,7 @@ public class SIPush implements Instruction {
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
-        source = reader.readUint16();
-        val = source.value();
+        // 注意是16位有符号整数
+        val = reader.readInt16();
     }
 }

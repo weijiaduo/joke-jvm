@@ -82,7 +82,7 @@ public class InvokeVirtual extends InvokeMethod {
                 break;
             case "(Ljava/lang/String;)V":
                 HeapObject stringObj = stack.popRef();
-                System.out.println(StringPool.getString(stringObj));
+                System.out.println(StringPool.getRawString(stringObj));
                 break;
             default:
                 System.out.println("println: " + methodRef.getDescriptor());

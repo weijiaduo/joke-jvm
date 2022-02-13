@@ -36,6 +36,10 @@ public class ByteCodeReader {
         return buf.position();
     }
 
+    public byte readByte() {
+        return buf.get();
+    }
+
     public int readShort() {
         return buf.getShort();
     }
@@ -56,10 +60,18 @@ public class ByteCodeReader {
         return buf.getDouble();
     }
 
+    public int readInt8() {
+        return readByte();
+    }
+
     public Uint8 readUint8() {
         byte b = buf.get();
         int val = 0x0FF & b;
         return new Uint8(val);
+    }
+
+    public int readInt16() {
+        return readShort();
     }
 
     public Uint16 readUint16() {

@@ -12,7 +12,7 @@ public class Slot {
     /** 引用 */
     private HeapObject ref;
 
-    public Slot(){}
+    public Slot() {}
 
     public Slot(Slot slot) {
         setSlot(slot);

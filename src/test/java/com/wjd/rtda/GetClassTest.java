@@ -8,7 +8,7 @@ public class GetClassTest {
         System.out.println(void.class.getName()); // void
         System.out.println(boolean.class.getName()); // boolean
         System.out.println(byte.class.getName()); // byte
-        // System.out.println(char.class.getName()); // char
+        System.out.println(char.class.getName()); // char
         System.out.println(short.class.getName()); // short
         System.out.println(int.class.getName()); // int
         System.out.println(long.class.getName()); // long

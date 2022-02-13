@@ -16,7 +16,7 @@ public class Jvm {
                 "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes" };
         cmd.parse(testArgs);
 
-        String testClassName = "com\\wjd\\rtda\\GetClassTest";
+        String testClassName = "com\\wjd\\rtda\\BoxTest";
         Classpath classpath = new Classpath(cmd.getJreOption(), cmd.getCpOption());
         Classpath.verbosePath = cmd.isVerboseClassPathFlag();
 

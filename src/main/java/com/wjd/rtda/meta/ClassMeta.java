@@ -280,17 +280,12 @@ public class ClassMeta {
         }
     }
 
-    public FieldMeta getField(String name, String descriptor, boolean isStatic) {
-        for (ClassMeta c = this; c != null; c = c.getSuperClass()) {
-            for (FieldMeta fieldMeta : c.getFields()) {
-                if (fieldMeta.isStatic() == isStatic &&
-                        fieldMeta.getName().equals(name) &&
-                        fieldMeta.getDescriptor().equals(descriptor)) {
-                    return fieldMeta;
-                }
-            }
-        }
-        return null;
+    public boolean isArray() {
+        return ArrayMetaHelper.isArray(this);
+    }
+
+    public boolean isPrimitive() {
+        return PrimitiveMeta.primitiveTypes.containsKey(name);
     }
 
     public boolean isJlObject() {
@@ -306,12 +301,56 @@ public class ClassMeta {
     }
 
     /**
+     * 获取指定静态字段成员
+     */
+    public HeapObject getRefVar(String name, String descriptor) {
+        FieldMeta fieldMeta = getStaticField(name, descriptor);
+        return staticVars[fieldMeta.getSlotId()].getRef();
+    }
+
+    /**
+     * 获取静态字段
+     */
+    public FieldMeta getStaticField(String name, String descriptor) {
+        return getField(name, descriptor, true);
+    }
+
+    /**
+     * 获取实例字段
+     */
+    public FieldMeta getInstanceField(String name, String descriptor) {
+        return getField(name, descriptor, false);
+    }
+
+    /**
+     * 获取字段成员
+     * @param name 字段名称
+     * @param descriptor 字段描述符
+     * @param isStatic 是否是静态属性
+     */
+    private FieldMeta getField(String name, String descriptor, boolean isStatic) {
+        for (ClassMeta c = this; c != null; c = c.getSuperClass()) {
+            for (FieldMeta fieldMeta : c.getFields()) {
+                if (fieldMeta.isStatic() == isStatic &&
+                        fieldMeta.getName().equals(name) &&
+                        fieldMeta.getDescriptor().equals(descriptor)) {
+                    return fieldMeta;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * 获取类文件中的main方法
      */
     public MethodMeta getMainMethod() {
         return getStaticMethod("main", "([Ljava/lang/String;)V");
     }
 
+    /**
+     * 获取类初始化方法
+     */
     public MethodMeta getClinitMethod() {
         return getStaticMethod("<clinit>", "()V");
     }
@@ -320,16 +359,31 @@ public class ClassMeta {
      * 获取静态方法
      */
     public MethodMeta getStaticMethod(String name, String descriptor) {
+        return getMethod(name, descriptor, true);
+    }
+
+    /**
+     * 获取实例方法
+     */
+    public MethodMeta getInstanceMethod(String name, String descriptor) {
+        return getMethod(name, descriptor, false);
+    }
+
+    /**
+     * 获取方法成员
+     * @param name 字段名称
+     * @param descriptor 字段描述符
+     * @param isStatic 是否是静态属性
+     */
+    private MethodMeta getMethod(String name, String descriptor, boolean isStatic) {
         for (MethodMeta m : getMethods()) {
-            if (name.equals(m.getName()) && descriptor.equals(m.getDescriptor())) {
+            if (m.isStatic() == isStatic &&
+                    name.equals(m.getName()) &&
+                    descriptor.equals(m.getDescriptor())) {
                 return m;
             }
         }
         return null;
-    }
-
-    public boolean isArray() {
-        return ArrayMetaHelper.isArray(this);
     }
 
     /**

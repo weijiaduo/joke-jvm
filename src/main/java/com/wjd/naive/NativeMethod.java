@@ -8,6 +8,6 @@ import com.wjd.rtda.stack.Frame;
  */
 public interface NativeMethod {
 
-    void execute(Frame frame);
+    void execute(Frame frame) throws Exception;
 
 }

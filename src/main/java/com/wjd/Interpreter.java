@@ -30,7 +30,7 @@ public class Interpreter {
         HeapObject argsArray = stringClassMeta.getArrayClass().newArray(args.length);
         HeapObject[] refs = argsArray.getRefs();
         for (int i = 0; i < args.length; i++) {
-            refs[i] = StringPool.getJString(loader, args[i]);
+            refs[i] = StringPool.getObjString(loader, args[i]);
         }
         return argsArray;
     }

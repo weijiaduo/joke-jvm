@@ -23,7 +23,11 @@ public class InvokeNative extends NoOperandsInstruction {
             String methodInfo = className + "." + methodName + methodDescriptor;
             throw new UnsatisfiedLinkError(methodInfo);
         }
-        nativeMethod.execute(frame);
+        try {
+            nativeMethod.execute(frame);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
