@@ -2,7 +2,7 @@ package com.wjd.instructions.extended;
 
 import com.wjd.instructions.base.BranchInstruction;
 import com.wjd.instructions.base.ByteCodeReader;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * goto 跳转

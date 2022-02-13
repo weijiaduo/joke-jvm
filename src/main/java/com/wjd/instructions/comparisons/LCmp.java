@@ -1,7 +1,7 @@
 package com.wjd.instructions.comparisons;
 
 import com.wjd.instructions.constants.NoOperandsInstruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * long 比较

@@ -424,7 +424,7 @@ public class InstructionFactory {
             case 0xc9:
                 return null;
             case 0xfe:
-                return null;
+                return new InvokeNative();
             case 0xff:
                 return null;
             default:

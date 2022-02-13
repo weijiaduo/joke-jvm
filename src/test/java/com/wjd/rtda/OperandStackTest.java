@@ -1,8 +1,7 @@
 package com.wjd.rtda;
 
+import com.wjd.rtda.stack.OperandStack;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class OperandStackTest {
 

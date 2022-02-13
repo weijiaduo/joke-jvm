@@ -1,15 +1,12 @@
 package com.wjd.instructions.constants;
 
 import com.wjd.instructions.base.Index8Instruction;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.OperandStack;
-import com.wjd.rtda.heap.ConstantPool;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.stack.OperandStack;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.heap.StringPool;
-import com.wjd.rtda.heap.cons.Constant;
-import com.wjd.rtda.heap.cons.FloatConstant;
-import com.wjd.rtda.heap.cons.IntegerConstant;
-import com.wjd.rtda.heap.cons.StringConstant;
+import com.wjd.rtda.meta.StringPool;
+import com.wjd.rtda.meta.cons.*;
 
 /**
  * @since 2022/2/2
@@ -29,6 +26,9 @@ public class IDC extends Index8Instruction {
             String string = ((StringConstant) constant).value();
             HeapObject stringObj = StringPool.getJString(frame.getMethod().getClazz().getLoader(), string);
             stack.pushRef(stringObj);
+        } else if (constant instanceof ClassRef) {
+            HeapObject jClassObj = ((ClassRef) constant).resolvedClass().getjClass();
+            stack.pushRef(jClassObj);
         } else {
             System.out.println("Unsupported Type: " + constant);
         }

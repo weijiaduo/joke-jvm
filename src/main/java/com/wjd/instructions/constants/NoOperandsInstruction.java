@@ -2,7 +2,7 @@ package com.wjd.instructions.constants;
 
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * @since 2021/11/6

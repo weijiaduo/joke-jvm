@@ -1,7 +1,7 @@
 package com.wjd.instructions.base;
 
 import com.wjd.classfile.type.Uint8;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * @since 2021/12/1

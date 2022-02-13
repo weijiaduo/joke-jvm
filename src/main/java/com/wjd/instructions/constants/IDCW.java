@@ -1,12 +1,12 @@
 package com.wjd.instructions.constants;
 
 import com.wjd.instructions.base.Index16Instruction;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.OperandStack;
-import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.cons.Constant;
-import com.wjd.rtda.heap.cons.FloatConstant;
-import com.wjd.rtda.heap.cons.IntegerConstant;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.stack.OperandStack;
+import com.wjd.rtda.meta.ConstantPool;
+import com.wjd.rtda.meta.cons.Constant;
+import com.wjd.rtda.meta.cons.FloatConstant;
+import com.wjd.rtda.meta.cons.IntegerConstant;
 
 /**
  * @since 2022/2/2

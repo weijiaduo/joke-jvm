@@ -1,6 +1,6 @@
 package com.wjd.instructions.loads;
 
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * @since 2021/12/4

@@ -4,13 +4,12 @@ import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.OperandStack;
-import com.wjd.rtda.heap.Class;
-import com.wjd.rtda.heap.ClassLoader;
-import com.wjd.rtda.heap.ConstantPool;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.stack.OperandStack;
+import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.heap.cons.ClassRef;
+import com.wjd.rtda.meta.cons.ClassRef;
 
 import java.util.Arrays;
 
@@ -27,9 +26,9 @@ public class MultiANewArray implements Instruction {
     public void execute(Frame frame) {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index.value());
-        Class arrayClass = classRef.resolvedClass();
+        ClassMeta arrayClassMeta = classRef.resolvedClass();
         int[] counts = popAndCheckCounts(frame.getOperandStack(), dimension.value());
-        HeapObject arrayObject = newMultiDimensionalArray(counts, arrayClass);
+        HeapObject arrayObject = newMultiDimensionalArray(counts, arrayClassMeta);
         frame.getOperandStack().pushRef(arrayObject);
     }
 
@@ -51,14 +50,14 @@ public class MultiANewArray implements Instruction {
         return counts;
     }
 
-    private HeapObject newMultiDimensionalArray(int[] counts, Class arrayClass) {
+    private HeapObject newMultiDimensionalArray(int[] counts, ClassMeta arrayClassMeta) {
         int count = counts[0];
-        HeapObject arrayObject = arrayClass.newArray(count);
+        HeapObject arrayObject = arrayClassMeta.newArray(count);
         if (counts.length > 1) {
             int[] newCounts = Arrays.copyOfRange(counts, 1, counts.length);
             HeapObject[] refs = arrayObject.getRefs();
             for (int i = 0; i < refs.length; i++) {
-                refs[i] = newMultiDimensionalArray(newCounts, arrayClass.getComponentClass());
+                refs[i] = newMultiDimensionalArray(newCounts, arrayClassMeta.getComponentClass());
             }
         }
         return arrayObject;

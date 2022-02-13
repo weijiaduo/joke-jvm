@@ -1,6 +1,6 @@
 package com.wjd.instructions.constants;
 
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * 把 int 2 推入栈顶

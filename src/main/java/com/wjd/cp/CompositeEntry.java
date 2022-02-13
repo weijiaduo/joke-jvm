@@ -62,6 +62,8 @@ public class CompositeEntry implements Entry {
         for (String path : paths) {
             entries.add(EntryFactory.newEntry(path));
         }
-        System.out.println(string());
+        if (Classpath.verbosePath) {
+            System.out.println(string());
+        }
     }
 }

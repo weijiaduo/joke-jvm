@@ -13,6 +13,7 @@ public class Cmd {
         options.addOption(new Option("help", false, "print help message"));
         options.addOption(new Option("?", false, "print help message"));
         options.addOption(new Option("version", false, "print version and exit"));
+        options.addOption(new Option("verboseClassPath", false, "Displays path about class found."));
         options.addOption(new Option("verboseClass", false, "Displays information about each class loaded."));
         options.addOption(new Option("verboseInst", false, "Displays executed instructions."));
         options.addOption(Option.builder("Xjre")
@@ -32,6 +33,7 @@ public class Cmd {
     private String[] args;
     private boolean helpFlag = false;
     private boolean versionFlag = false;
+    private boolean verboseClassPathFlag = false;
     private boolean verboseClassFlag = false;
     private boolean verboseInstFlag = false;
     private String mainClass;
@@ -59,6 +61,11 @@ public class Cmd {
             if (line.hasOption("version")) {
                 versionFlag = true;
                 System.out.println("version 0.0.1");
+            }
+
+            // 打印类路径信息
+            if (line.hasOption("verboseClassPath")) {
+                verboseClassPathFlag = true;
             }
 
             // 打印类加载信息
@@ -91,6 +98,7 @@ public class Cmd {
             // 打印所有参数
             System.out.println("helpFlag = " + helpFlag);
             System.out.println("versionFlag = " + versionFlag);
+            System.out.println("verboseClassPathFlag = " + verboseClassPathFlag);
             System.out.println("verboseClassFlag = " + verboseClassFlag);
             System.out.println("verboseInstFlag = " + verboseInstFlag);
             System.out.println("mainClass = " + mainClass);
@@ -115,6 +123,10 @@ public class Cmd {
 
     public boolean isVersionFlag() {
         return versionFlag;
+    }
+
+    public boolean isVerboseClassPathFlag() {
+        return verboseClassPathFlag;
     }
 
     public boolean isVerboseClassFlag() {

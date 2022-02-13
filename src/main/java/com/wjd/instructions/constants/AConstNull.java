@@ -1,6 +1,6 @@
 package com.wjd.instructions.constants;
 
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * 把null推入栈顶

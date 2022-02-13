@@ -1,11 +1,11 @@
 package com.wjd.instructions.references;
 
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.heap.Class;
-import com.wjd.rtda.heap.ConstantPool;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.heap.cons.MethodRef;
-import com.wjd.rtda.heap.member.Method;
+import com.wjd.rtda.meta.cons.MethodRef;
+import com.wjd.rtda.meta.MethodMeta;
 
 /**
  * 执行实例方法（构造函数、私有方法、super调用方法）
@@ -15,51 +15,51 @@ public class InvokeSpecial extends InvokeMethod {
 
     @Override
     public void execute(Frame frame) {
-        Class currentClass = frame.getMethod().getClazz();
-        ConstantPool cp = currentClass.getConstantPool();
+        ClassMeta currentClassMeta = frame.getMethod().getClazz();
+        ConstantPool cp = currentClassMeta.getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
-        Class resolvedClass = methodRef.resolvedClass();
-        Method resolvedMethod = methodRef.resolvedMethod();
+        ClassMeta resolvedClassMeta = methodRef.resolvedClass();
+        MethodMeta resolvedMethodMeta = methodRef.resolvedMethod();
 
         // 构造方法验证
-        if ("<init>".equals(resolvedMethod.getName()) && resolvedMethod.getClazz() != resolvedClass) {
-            throw new NoSuchMethodError("Invoke special method: " + resolvedMethod.getName());
+        if ("<init>".equals(resolvedMethodMeta.getName()) && resolvedMethodMeta.getClazz() != resolvedClassMeta) {
+            throw new NoSuchMethodError("Invoke special method: " + resolvedMethodMeta.getName());
         }
-        if (resolvedMethod.isStatic()) {
-            throw new IncompatibleClassChangeError("Invoke special method: " + resolvedMethod.getName());
+        if (resolvedMethodMeta.isStatic()) {
+            throw new IncompatibleClassChangeError("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethodMeta.getParamSlotCount());
         if (ref == null) {
-            throw new NullPointerException("Invoke special method: " + resolvedMethod.getName());
+            throw new NullPointerException("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
         // 调用方法是protected时的权限验证
-        if (resolvedMethod.isProtected() &&
-                resolvedMethod.getClazz().isSuperClassOf(currentClass) &&
-                !resolvedMethod.getClazz().getPackageName().equals(currentClass.getPackageName()) &&
-                ref.getClazz() != currentClass &&
-                !ref.getClazz().isSubClassOf(currentClass)) {
-            throw new IllegalAccessError("Invoke special method: " + resolvedMethod.getName());
+        if (resolvedMethodMeta.isProtected() &&
+                resolvedMethodMeta.getClazz().isSuperClassOf(currentClassMeta) &&
+                !resolvedMethodMeta.getClazz().getPackageName().equals(currentClassMeta.getPackageName()) &&
+                ref.getClazz() != currentClassMeta &&
+                !ref.getClazz().isSubClassOf(currentClassMeta)) {
+            throw new IllegalAccessError("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
-        Method methodToBeInvoked = resolvedMethod;
+        MethodMeta methodMetaToBeInvoked = resolvedMethodMeta;
 
         // 调用super关键字
-        if (currentClass.isSuper() &&
-                resolvedClass.isSuperClassOf(currentClass) &&
-                !"<init>".equals(resolvedMethod.getName())) {
-            methodToBeInvoked = MethodRef.lookupMethodInClass(currentClass.getSuperClass(),
+        if (currentClassMeta.isSuper() &&
+                resolvedClassMeta.isSuperClassOf(currentClassMeta) &&
+                !"<init>".equals(resolvedMethodMeta.getName())) {
+            methodMetaToBeInvoked = MethodRef.lookupMethodInClass(currentClassMeta.getSuperClass(),
                     methodRef.getName(),
                     methodRef.getDescriptor());
         }
 
         // 未实现的抽象方法验证
-        if (methodToBeInvoked == null || methodToBeInvoked.isAbstract()) {
-            throw new AbstractMethodError("Invoke special method: " + resolvedMethod.getName());
+        if (methodMetaToBeInvoked == null || methodMetaToBeInvoked.isAbstract()) {
+            throw new AbstractMethodError("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
-        invokeMethod(frame, methodToBeInvoked);
+        invokeMethod(frame, methodMetaToBeInvoked);
     }
 }

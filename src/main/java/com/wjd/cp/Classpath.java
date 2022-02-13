@@ -26,6 +26,10 @@ public class Classpath {
      * 用户类路径选项
      */
     private String cpOptions;
+    /**
+     * 是否打印路径
+     */
+    public static boolean verbosePath;
 
     public Classpath(String jreOption, String cpOptions) {
         entries = new ArrayList<>();

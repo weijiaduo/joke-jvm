@@ -23,7 +23,9 @@ public class DirEntry implements Entry {
     public byte[] readClass(String className) throws IOException {
         Path path = Paths.get(absPath, className);
         if (Files.exists(path)) {
-            System.out.println(className + " found in " + string());
+            if (Classpath.verbosePath) {
+                System.out.println(className + " found in " + string());
+            }
             return Files.readAllBytes(path);
         }
         return null;

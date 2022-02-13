@@ -1,10 +1,10 @@
 package com.wjd.instructions.references;
 
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.heap.Class;
-import com.wjd.rtda.heap.ConstantPool;
-import com.wjd.rtda.heap.cons.MethodRef;
-import com.wjd.rtda.heap.member.Method;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.ConstantPool;
+import com.wjd.rtda.meta.cons.MethodRef;
+import com.wjd.rtda.meta.MethodMeta;
 
 /**
  * 执行静态方法
@@ -16,19 +16,19 @@ public class InvokeStatic extends InvokeMethod {
     public void execute(Frame frame) {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
-        Method method = methodRef.resolvedMethod();
+        MethodMeta methodMeta = methodRef.resolvedMethod();
 
         // 类初始化
-        Class methodClass = method.getClazz();
-        if (!methodClass.isInitStarted()) {
+        ClassMeta methodClassMeta = methodMeta.getClazz();
+        if (!methodClassMeta.isInitStarted()) {
             frame.revertNextPc();
-            InitClass.initClass(frame.getThread(), methodClass);
+            InitClass.initClass(frame.getThread(), methodClassMeta);
             return;
         }
 
-        if (!method.isStatic()) {
-            throw new IncompatibleClassChangeError("Invoke static method: " + method.getName());
+        if (!methodMeta.isStatic()) {
+            throw new IncompatibleClassChangeError("Invoke static method: " + methodMeta.getName());
         }
-        invokeMethod(frame, method);
+        invokeMethod(frame, methodMeta);
     }
 }

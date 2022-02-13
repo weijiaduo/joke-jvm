@@ -1,15 +1,15 @@
 package com.wjd.instructions.references;
 
 import com.wjd.instructions.base.Index16Instruction;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.OperandStack;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.stack.OperandStack;
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.heap.Class;
-import com.wjd.rtda.heap.ConstantPool;
+import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.heap.cons.FieldRef;
-import com.wjd.rtda.heap.member.Field;
-import com.wjd.rtda.heap.member.Method;
+import com.wjd.rtda.meta.cons.FieldRef;
+import com.wjd.rtda.meta.FieldMeta;
+import com.wjd.rtda.meta.MethodMeta;
 
 /**
  * @since 2022/2/1
@@ -18,23 +18,25 @@ public class PutField extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        Method currentMethod = frame.getMethod();
-        Class currentClass = currentMethod.getClazz();
-        ConstantPool cp = currentClass.getConstantPool();
+        MethodMeta currentMethodMeta = frame.getMethod();
+        ClassMeta currentClassMeta = currentMethodMeta.getClazz();
+        ConstantPool cp = currentClassMeta.getConstantPool();
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
-        Field field = fieldRef.resolvedField();
-        Class fieldClass = field.getClazz();
-        if (field.isStatic()) {
-            throw new IncompatibleClassChangeError("putfield field: " + field.getName());
+        FieldMeta fieldMeta = fieldRef.resolvedField();
+        ClassMeta fieldClassMeta = fieldMeta.getClazz();
+
+        if (fieldMeta.isStatic()) {
+            throw new IncompatibleClassChangeError("putfield field: " + fieldMeta.getName());
         }
-        if (field.isFinal()) {
-            if (currentClass != fieldClass || !"<clinit>".equals(currentMethod.getName())) {
-                throw new IllegalAccessError("putfield field: " + field.getName());
+        if (fieldMeta.isFinal()) {
+            // final 字段的初始化必须在构造函数中做
+            if (currentClassMeta != fieldClassMeta || !"<init>".equals(currentMethodMeta.getName())) {
+                throw new IllegalAccessError("putfield field: " + fieldMeta.getName());
             }
         }
 
-        String descriptor = field.getDescriptor();
-        int slotId = field.getSlotId();
+        String descriptor = fieldMeta.getDescriptor();
+        int slotId = fieldMeta.getSlotId();
         OperandStack stack = frame.getOperandStack();
         char d = descriptor.charAt(0);
         switch (d) {
@@ -47,7 +49,7 @@ public class PutField extends Index16Instruction {
                 int val = stack.popInt();
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("putfield Field: " + field.getName());
+                    throw new NullPointerException("putfield Field: " + fieldMeta.getName());
                 }
                 Slot[] slots = ref.getFields();
                 Slot.setInt(slots[slotId], val);
@@ -58,7 +60,7 @@ public class PutField extends Index16Instruction {
                 float val = stack.popFloat();
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("putfield Field: " + field.getName());
+                    throw new NullPointerException("putfield Field: " + fieldMeta.getName());
                 }
                 Slot[] slots = ref.getFields();
                 Slot.setFloat(slots[slotId], val);
@@ -69,7 +71,7 @@ public class PutField extends Index16Instruction {
                 long val = stack.popLong();
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("putfield Field: " + field.getName());
+                    throw new NullPointerException("putfield Field: " + fieldMeta.getName());
                 }
                 Slot[] slots = ref.getFields();
                 Slot.setLong(slots[slotId], slots[slotId + 1], val);
@@ -80,7 +82,7 @@ public class PutField extends Index16Instruction {
                 double val = stack.popDouble();
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("putfield Field: " + field.getName());
+                    throw new NullPointerException("putfield Field: " + fieldMeta.getName());
                 }
                 Slot[] slots = ref.getFields();
                 Slot.setDouble(slots[slotId], slots[slotId + 1], val);
@@ -92,7 +94,7 @@ public class PutField extends Index16Instruction {
                 HeapObject val = stack.popRef();
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("putfield Field: " + field.getName());
+                    throw new NullPointerException("putfield Field: " + fieldMeta.getName());
                 }
                 Slot[] slots = ref.getFields();
                 slots[slotId].setRef(val);

@@ -1,11 +1,11 @@
 package com.wjd.instructions.references;
 
 import com.wjd.instructions.base.Index16Instruction;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.heap.Class;
-import com.wjd.rtda.heap.ConstantPool;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.heap.cons.ClassRef;
+import com.wjd.rtda.meta.cons.ClassRef;
 
 /**
  * 创建引用类型数组对象
@@ -18,7 +18,7 @@ public class ANewArray extends Index16Instruction {
         // 数组元素类型
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
-        Class componentClass = classRef.resolvedClass();
+        ClassMeta componentClassMeta = classRef.resolvedClass();
 
         int count = frame.getOperandStack().popInt();
         if (count < 0) {
@@ -26,8 +26,8 @@ public class ANewArray extends Index16Instruction {
         }
 
         // 数组类型
-        Class arrayClass = componentClass.getArrayClass();
-        HeapObject arrayObject = arrayClass.newArray(count);
+        ClassMeta arrayClassMeta = componentClassMeta.getArrayClass();
+        HeapObject arrayObject = arrayClassMeta.newArray(count);
         frame.getOperandStack().pushRef(arrayObject);
     }
 

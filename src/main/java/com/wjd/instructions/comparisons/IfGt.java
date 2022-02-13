@@ -1,7 +1,7 @@
 package com.wjd.instructions.comparisons;
 
 import com.wjd.instructions.base.BranchInstruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * int 大于 0 跳转

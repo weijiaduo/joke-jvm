@@ -80,6 +80,8 @@ public class WildcardEntry implements Entry {
             String filePath = file.getAbsolutePath();
             entries.add(EntryFactory.newEntry(filePath));
         }
-        System.out.println(string());
+        if (Classpath.verbosePath) {
+            System.out.println(string());
+        }
     }
 }

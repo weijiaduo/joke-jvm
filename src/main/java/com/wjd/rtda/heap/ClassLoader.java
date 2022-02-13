@@ -4,9 +4,13 @@ import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.ClassReader;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.cp.Classpath;
+import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.heap.cons.*;
-import com.wjd.rtda.heap.member.Field;
+import com.wjd.rtda.meta.StringPool;
+import com.wjd.rtda.meta.cons.*;
+import com.wjd.rtda.meta.ConstantPool;
+import com.wjd.rtda.meta.FieldMeta;
+import com.wjd.rtda.meta.ClassMeta;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,8 +21,22 @@ import java.util.Map;
  */
 public class ClassLoader {
 
+    public static Map<String, String> primitiveTypes;
+    static {
+        primitiveTypes = new HashMap<>();
+        primitiveTypes.put("void", "java/lang/Void");
+        primitiveTypes.put("boolean", "java/lang/Boolean");
+        primitiveTypes.put("byte", "java/lang/Byte");
+        primitiveTypes.put("char", "java/lang/Character");
+        primitiveTypes.put("short", "java/lang/Short");
+        primitiveTypes.put("int", "java/lang/Integer");
+        primitiveTypes.put("long", "java/lang/Long");
+        primitiveTypes.put("float", "java/lang/Float");
+        primitiveTypes.put("double", "java/lang/Double");
+    }
+
     private Classpath classpath;
-    private Map<String, Class> classMap;
+    private Map<String, ClassMeta> classMap;
     private boolean verboseFlag = false;
 
     public static ClassLoader newClassLoader(Classpath classpath, boolean verboseFlag) {
@@ -26,24 +44,77 @@ public class ClassLoader {
         classLoader.classpath = classpath;
         classLoader.classMap = new HashMap<>();
         classLoader.verboseFlag = verboseFlag;
+        // 加载初始化基类对象
+        classLoader.loadBasicClasses();
+        // 加载基本类型
+        classLoader.loadPrimitiveClasses();
         return classLoader;
+    }
+
+    /**
+     * 加载基础类对象
+     */
+    private void loadBasicClasses() {
+        ClassMeta jlClassClass = loadClass("java/lang/Class");
+        for (String className : classMap.keySet()) {
+            ClassMeta classMeta = classMap.get(className);
+            if (classMeta.getjClass() == null) {
+                classMeta.setjClass(jlClassClass.newObject());
+                classMeta.getjClass().setExtra(classMeta);
+            }
+        }
+    }
+
+    /**
+     * 加载基本类型
+     */
+    private void loadPrimitiveClasses() {
+        for (String className : ClassMeta.primitiveTypes.keySet()) {
+            loadPrimitiveClass(className);
+        }
+    }
+
+    /**
+     * 加载基本类型
+     */
+    private void loadPrimitiveClass(String className) {
+        ClassMeta classMeta = new ClassMeta();
+        classMeta.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
+        classMeta.setName(className);
+        classMeta.setLoader(this);
+        classMeta.startInit();
+        classMeta.setjClass(loadClass("java/lang/Class").newObject());
+        classMeta.getjClass().setExtra(classMeta);
+        classMap.put(className, classMeta);
     }
 
     /**
      * 加载指定类
      * @param name 类名称
      */
-    public Class loadClass(String name) {
-        if (classMap.containsKey(name)) {
-            return classMap.get(name);
-        }
+    public ClassMeta loadClass(String name) {
         try {
-            // 数组类型
-            if (name.charAt(0) == '[') {
-                return loadArrayClass(name);
+            // 类已加载过
+            if (classMap.containsKey(name)) {
+                return classMap.get(name);
             }
-            // 非数组类型
-            return loadNonArrayClass(name);
+
+            ClassMeta classMeta;
+            if (name.charAt(0) == '[') {
+                // 数组类型
+                classMeta = loadArrayClass(name);
+            } else {
+                // 非数组类型
+                classMeta = loadNonArrayClass(name);
+            }
+
+            ClassMeta jlClassClass = classMap.get("java/lang/Class");
+            if (jlClassClass != null) {
+                // 为每个类型都生成一个java.lang.Class对象
+                classMeta.setjClass(jlClassClass.newObject());
+                classMeta.getjClass().setExtra(classMeta);
+            }
+            return classMeta;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Load class error: " + name);
@@ -53,28 +124,28 @@ public class ClassLoader {
     /**
      * 加载数组类型
      */
-    protected Class loadArrayClass(String name) {
-        Class arrayClass = new Class();
-        arrayClass.setLoader(this);
-        arrayClass.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
-        arrayClass.setName(name);
-        arrayClass.setSuperClass(this.loadClass("java/lang/Object"));
-        arrayClass.setInterfaces(new Class[]{
+    protected ClassMeta loadArrayClass(String name) {
+        ClassMeta arrayClassMeta = new ClassMeta();
+        arrayClassMeta.setLoader(this);
+        arrayClassMeta.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
+        arrayClassMeta.setName(name);
+        arrayClassMeta.setSuperClass(this.loadClass("java/lang/Object"));
+        arrayClassMeta.setInterfaces(new ClassMeta[] {
                 this.loadClass("java/lang/Cloneable"),
                 this.loadClass("java/io/Serializable")
         });
-        arrayClass.startInit();
-        classMap.put(name, arrayClass);
-        return arrayClass;
+        arrayClassMeta.startInit();
+        classMap.put(name, arrayClassMeta);
+        return arrayClassMeta;
     }
 
     /**
      * 加载非数组的基础类型
      * @param name 类名称
      */
-    protected Class loadNonArrayClass(String name) throws IOException {
+    protected ClassMeta loadNonArrayClass(String name) throws IOException {
         byte[] classBytes = readClass(name);
-        Class clazz = defineClass(classBytes);
+        ClassMeta clazz = defineClass(classBytes);
         link(clazz);
         if (verboseFlag) {
             System.out.println("Loaded Class: " + name);
@@ -95,8 +166,8 @@ public class ClassLoader {
      * @param classBytes class字节码
      * @return Class类
      */
-    protected Class defineClass(byte[] classBytes) {
-        Class clazz = parseClass(classBytes);
+    protected ClassMeta defineClass(byte[] classBytes) {
+        ClassMeta clazz = parseClass(classBytes);
         clazz.setLoader(this);
         resolveSuperClass(clazz);
         resolveInterfaces(clazz);
@@ -109,16 +180,16 @@ public class ClassLoader {
      * @param classBytes class字节码
      * @return Class类
      */
-    protected Class parseClass(byte[] classBytes) {
+    protected ClassMeta parseClass(byte[] classBytes) {
         ClassReader reader = new ClassReader(classBytes);
         ClassFile classFile = ClassFile.parse(reader);
-        return Class.newClass(classFile);
+        return ClassMeta.newClass(classFile);
     }
 
     /**
      * 加载父类
      */
-    protected void resolveSuperClass(Class clazz) {
+    protected void resolveSuperClass(ClassMeta clazz) {
         if ("java/lang/Object".equals(clazz.getName())) {
             return;
         }
@@ -128,12 +199,12 @@ public class ClassLoader {
     /**
      * 加载接口
      */
-    protected void resolveInterfaces(Class clazz) {
+    protected void resolveInterfaces(ClassMeta clazz) {
         String[] interfaceNames = clazz.getInterfaceNames();
         if (interfaceNames == null) {
             return;
         }
-        Class[] interfaces = new Class[interfaceNames.length];
+        ClassMeta[] interfaces = new ClassMeta[interfaceNames.length];
         for (int i = 0; i < interfaces.length; i++) {
             interfaces[i] = clazz.getLoader().loadClass(interfaceNames[i]);
         }
@@ -143,7 +214,7 @@ public class ClassLoader {
     /**
      * 链接阶段
      */
-    protected void link(Class clazz) {
+    protected void link(ClassMeta clazz) {
         verify(clazz);
         prepare(clazz);
     }
@@ -151,14 +222,14 @@ public class ClassLoader {
     /**
      * 验证阶段
      */
-    protected void verify(Class clazz) {
-        // do nothing
+    protected void verify(ClassMeta clazz) {
+        // TODO: 暂时什么都不做
     }
 
     /**
      * 准备阶段
      */
-    protected void prepare(Class clazz) {
+    protected void prepare(ClassMeta clazz) {
         calcInstanceFieldSlotIds(clazz);
         calcStaticFieldSlotIds(clazz);
         allocAndInitStaticVars(clazz);
@@ -167,18 +238,18 @@ public class ClassLoader {
     /**
      * 计算实例字段数量
      */
-    private void calcInstanceFieldSlotIds(Class clazz) {
+    private void calcInstanceFieldSlotIds(ClassMeta clazz) {
         int slotId = 0;
         // 父类的字段数量
         if (clazz.getSuperClass() != null) {
             slotId = clazz.getSuperClass().getInstanceSlotCount();
         }
         // 类实例字段数量
-        for (Field field : clazz.getFields()) {
-            if (!field.isStatic()) {
-                field.setSlotId(slotId);
+        for (FieldMeta fieldMeta : clazz.getFields()) {
+            if (!fieldMeta.isStatic()) {
+                fieldMeta.setSlotId(slotId);
                 slotId++;
-                if (field.isLongOrDouble()) {
+                if (fieldMeta.isLongOrDouble()) {
                     slotId++;
                 }
             }
@@ -189,13 +260,13 @@ public class ClassLoader {
     /**
      * 计算静态字段
      */
-    private void calcStaticFieldSlotIds(Class clazz) {
+    private void calcStaticFieldSlotIds(ClassMeta clazz) {
         int slotId = 0;
-        for (Field field : clazz.getFields()) {
-            if (field.isStatic()) {
-                field.setSlotId(slotId);
+        for (FieldMeta fieldMeta : clazz.getFields()) {
+            if (fieldMeta.isStatic()) {
+                fieldMeta.setSlotId(slotId);
                 slotId++;
-                if (field.isLongOrDouble()) {
+                if (fieldMeta.isLongOrDouble()) {
                     slotId++;
                 }
             }
@@ -206,15 +277,15 @@ public class ClassLoader {
     /**
      * 分配静态变量空间以及初始化静态常量值
      */
-    private void allocAndInitStaticVars(Class clazz) {
+    private void allocAndInitStaticVars(ClassMeta clazz) {
         Slot[] slots = new Slot[clazz.getStaticSlotCount()];
         for (int i = 0; i < slots.length; i++) {
             slots[i] = new Slot();
         }
         clazz.setStaticVars(slots);
-        for (Field field : clazz.getFields()) {
-            if (field.isStatic() && field.isFinal()) {
-                initStaticFinalVars(clazz, field);
+        for (FieldMeta fieldMeta : clazz.getFields()) {
+            if (fieldMeta.isStatic() && fieldMeta.isFinal()) {
+                initStaticFinalVars(clazz, fieldMeta);
             }
         }
     }
@@ -222,16 +293,16 @@ public class ClassLoader {
     /**
      * 初始化静态常量值
      */
-    private void initStaticFinalVars(Class clazz, Field field) {
+    private void initStaticFinalVars(ClassMeta clazz, FieldMeta fieldMeta) {
         Slot[] vars = clazz.getStaticVars();
         ConstantPool cp = clazz.getConstantPool();
-        Uint16 constValueIndex = field.getConstValueIndex();
+        Uint16 constValueIndex = fieldMeta.getConstValueIndex();
         if (constValueIndex == null) {
             return;
         }
-        int slotId = field.getSlotId();
+        int slotId = fieldMeta.getSlotId();
         Constant constant = cp.getConstant(constValueIndex.value());
-        switch (field.getDescriptor()) {
+        switch (fieldMeta.getDescriptor()) {
             case "Z":
             case "B":
             case "C":
@@ -268,7 +339,7 @@ public class ClassLoader {
                 break;
             }
             default:
-                System.out.println("Unknown field constant: " + field.getDescriptor());
+                System.out.println("Unknown field constant: " + fieldMeta.getDescriptor());
         }
     }
 

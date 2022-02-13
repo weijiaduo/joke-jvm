@@ -1,7 +1,7 @@
 package com.wjd.instructions.conversions;
 
 import com.wjd.instructions.constants.NoOperandsInstruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * float 转 double
@@ -11,8 +11,7 @@ public class F2D extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float f = frame.getOperandStack().popFloat();
-        double d = f;
+        double d = frame.getOperandStack().popFloat();
         frame.getOperandStack().pushDouble(d);
     }
 }

@@ -3,8 +3,8 @@ package com.wjd.instructions.references;
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.heap.Class;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.heap.ClassLoader;
 import com.wjd.rtda.heap.HeapObject;
 
@@ -24,8 +24,8 @@ public class NewArray implements Instruction {
         }
 
         ClassLoader classLoader = frame.getMethod().getClazz().getLoader();
-        Class arrayClass = Class.getPrimitiveArrayClass(classLoader, atype);
-        HeapObject arrayObject = arrayClass.newArray(count);
+        ClassMeta arrayClassMeta = ClassMeta.getPrimitiveArrayClass(classLoader, atype);
+        HeapObject arrayObject = arrayClassMeta.newArray(count);
         frame.getOperandStack().pushRef(arrayObject);
     }
 

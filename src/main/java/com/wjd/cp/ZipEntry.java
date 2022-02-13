@@ -36,7 +36,9 @@ public class ZipEntry implements Entry {
                 // 转成路径格式一样的才能对比得上完整名称
                 String entryPath = Paths.get(entry.getName()).toString();
                 if (entryPath.equals(className)) {
-                    System.out.println(className + " found in " + string());
+                    if (Classpath.verbosePath) {
+                        System.out.println(className + " found in " + string());
+                    }
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     IOUtils.copy(in, out);
                     return out.toByteArray();

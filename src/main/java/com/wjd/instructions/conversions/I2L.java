@@ -1,7 +1,7 @@
 package com.wjd.instructions.conversions;
 
 import com.wjd.instructions.constants.NoOperandsInstruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * int 转 long
@@ -11,8 +11,7 @@ public class I2L extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int i = frame.getOperandStack().popInt();
-        long l = i;
+        long l = frame.getOperandStack().popInt();
         frame.getOperandStack().pushLong(l);
     }
 }

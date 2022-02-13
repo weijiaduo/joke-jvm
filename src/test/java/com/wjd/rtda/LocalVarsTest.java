@@ -1,5 +1,6 @@
 package com.wjd.rtda;
 
+import com.wjd.rtda.stack.LocalVars;
 import org.junit.Test;
 
 public class LocalVarsTest {

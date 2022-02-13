@@ -1,6 +1,8 @@
 package com.wjd.rtda;
 
-import com.wjd.rtda.heap.member.Method;
+import com.wjd.rtda.meta.MethodMeta;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.stack.JvmStack;
 
 /**
  * 线程
@@ -43,8 +45,8 @@ public class Thread {
         return stack.top();
     }
 
-    public Frame newFrame(Method method) {
-        return new Frame(this, method);
+    public Frame newFrame(MethodMeta methodMeta) {
+        return new Frame(this, methodMeta);
     }
 
     public boolean isStackEmpty() {

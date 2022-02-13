@@ -1,7 +1,8 @@
 package com.wjd.rtda.heap;
 
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.heap.member.Field;
+import com.wjd.rtda.meta.FieldMeta;
+import com.wjd.rtda.meta.ClassMeta;
 
 /**
  * 对象基类
@@ -9,17 +10,18 @@ import com.wjd.rtda.heap.member.Field;
  */
 public class HeapObject {
 
-    private Class clazz;
+    private ClassMeta clazz;
     private Object data;
+    private Object extra;
 
-    public static HeapObject newObject(Class clazz) {
+    public static HeapObject newObject(ClassMeta clazz) {
         HeapObject obj = new HeapObject();
         obj.clazz = clazz;
         obj.newSlots();
         return obj;
     }
 
-    public static HeapObject newArray(Class clazz, Object data) {
+    public static HeapObject newArray(ClassMeta clazz, Object data) {
         HeapObject obj = new HeapObject();
         obj.clazz = clazz;
         obj.data = data;
@@ -34,8 +36,16 @@ public class HeapObject {
         data = fields;
     }
 
-    public Class getClazz() {
+    public ClassMeta getClazz() {
         return clazz;
+    }
+
+    public Object getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Object extra) {
+        this.extra = extra;
     }
 
     public Slot[] getFields() {
@@ -103,19 +113,19 @@ public class HeapObject {
         throw new IllegalStateException("Not array");
     }
 
-    public boolean isInstanceOf(Class cls) {
+    public boolean isInstanceOf(ClassMeta cls) {
         return cls.isAssignableFrom(clazz);
     }
 
     public void setRefVar(String name, String descriptor, HeapObject ref) {
-        Field field = clazz.getField(name, descriptor, false);
+        FieldMeta fieldMeta = clazz.getField(name, descriptor, false);
         Slot[] slots = getFields();
-        slots[field.getSlotId()].setRef(ref);
+        slots[fieldMeta.getSlotId()].setRef(ref);
     }
 
     public HeapObject getRefVar(String name, String descriptor) {
-        Field field = clazz.getField(name, descriptor, false);
+        FieldMeta fieldMeta = clazz.getField(name, descriptor, false);
         Slot[] slots = getFields();
-        return slots[field.getSlotId()].getRef();
+        return slots[fieldMeta.getSlotId()].getRef();
     }
 }

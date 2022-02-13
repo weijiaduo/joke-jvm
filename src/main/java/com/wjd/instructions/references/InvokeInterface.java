@@ -2,12 +2,12 @@ package com.wjd.instructions.references;
 
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
-import com.wjd.rtda.Frame;
-import com.wjd.rtda.heap.ConstantPool;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.heap.cons.InterfaceMethodRef;
-import com.wjd.rtda.heap.cons.MethodRef;
-import com.wjd.rtda.heap.member.Method;
+import com.wjd.rtda.meta.cons.InterfaceMethodRef;
+import com.wjd.rtda.meta.cons.MethodRef;
+import com.wjd.rtda.meta.MethodMeta;
 
 /**
  * 执行接口方法
@@ -24,32 +24,32 @@ public class InvokeInterface extends InvokeMethod {
     public void execute(Frame frame) {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         InterfaceMethodRef methodRef = (InterfaceMethodRef) cp.getConstant(index);
-        Method resolvedMethod = methodRef.resolvedInterfaceMethod();
+        MethodMeta resolvedMethodMeta = methodRef.resolvedInterfaceMethod();
 
-        if (resolvedMethod.isStatic() || resolvedMethod.isPrivate()) {
-            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethod.getName());
+        if (resolvedMethodMeta.isStatic() || resolvedMethodMeta.isPrivate()) {
+            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethodMeta.getName());
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethodMeta.getParamSlotCount());
         if (ref == null) {
-            throw new NullPointerException("Invoke interface method: " + resolvedMethod.getName());
+            throw new NullPointerException("Invoke interface method: " + resolvedMethodMeta.getName());
         }
 
         if (!ref.getClazz().isImplements(methodRef.resolvedClass())) {
-            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethod.getName());
+            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethodMeta.getName());
         }
 
         // 方法的多态性，运行时确定实际执行的方法
-        Method methodToBeInvoked = MethodRef.lookupMethod(ref.getClazz(),
+        MethodMeta methodMetaToBeInvoked = MethodRef.lookupMethod(ref.getClazz(),
                 methodRef.getName(), methodRef.getDescriptor());
 
         // 未实现的抽象方法验证
-        if (methodToBeInvoked == null || methodToBeInvoked.isAbstract()) {
-            throw new AbstractMethodError("Invoke interface method: " + resolvedMethod.getName());
+        if (methodMetaToBeInvoked == null || methodMetaToBeInvoked.isAbstract()) {
+            throw new AbstractMethodError("Invoke interface method: " + resolvedMethodMeta.getName());
         }
 
-        invokeMethod(frame, methodToBeInvoked);
+        invokeMethod(frame, methodMetaToBeInvoked);
     }
 
     @Override

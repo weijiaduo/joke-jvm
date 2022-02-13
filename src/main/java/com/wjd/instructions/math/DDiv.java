@@ -1,7 +1,7 @@
 package com.wjd.instructions.math;
 
 import com.wjd.instructions.constants.NoOperandsInstruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * 除法

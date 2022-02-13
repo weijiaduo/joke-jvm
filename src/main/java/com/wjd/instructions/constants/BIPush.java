@@ -3,7 +3,7 @@ package com.wjd.instructions.constants;
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
-import com.wjd.rtda.Frame;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * 读入字节 byte，转成整型 int 后，再推入栈顶
