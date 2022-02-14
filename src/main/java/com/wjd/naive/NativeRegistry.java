@@ -58,6 +58,7 @@ public class NativeRegistry {
             Class.forName(basePackageName + "java.lang.Float");
             Class.forName(basePackageName + "java.lang.Double");
             Class.forName(basePackageName + "java.lang.String");
+            Class.forName(basePackageName + "java.lang.Throwable");
             Class.forName(basePackageName + "sun.misc.VM");
             return true;
         } catch (ClassNotFoundException e) {

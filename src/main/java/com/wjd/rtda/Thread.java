@@ -49,7 +49,16 @@ public class Thread {
         return new Frame(this, methodMeta);
     }
 
+    public Frame[] getFrames() {
+        return stack.getFrames();
+    }
+
     public boolean isStackEmpty() {
         return stack.isEmpty();
     }
+
+    public void clearStack() {
+        stack.clear();
+    }
+
 }

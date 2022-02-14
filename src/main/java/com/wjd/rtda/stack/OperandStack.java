@@ -136,6 +136,13 @@ public class OperandStack {
         return slots[size -  1 - n].getRef();
     }
 
+    public void clear() {
+        size = 0;
+        for (Slot slot : slots) {
+            slot.setSlot(null);
+        }
+    }
+
     @Override
     public String toString() {
         return "OperandStack{" +

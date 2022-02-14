@@ -12,6 +12,9 @@ import com.wjd.rtda.heap.HeapObject;
  */
 public class ClassMeta {
 
+    /** 源文件名称 */
+    private String sourceFile;
+
     /** 访问标志 */
     private Uint16 accessFlags;
     /** 类完全限定名 */
@@ -53,6 +56,7 @@ public class ClassMeta {
 
     public static ClassMeta newClass(ClassFile classFile) {
         ClassMeta clazz = new ClassMeta();
+        clazz.sourceFile = classFile.getSourceFile();
         clazz.accessFlags = classFile.getAccessFlags();
         clazz.name = classFile.getClassName();
         clazz.superClassName = classFile.getSuperClassName();
@@ -61,6 +65,10 @@ public class ClassMeta {
         clazz.fields = FieldMeta.newFields(clazz, classFile.getFields());
         clazz.methods = MethodMeta.newMethods(clazz, classFile.getMethods());
         return clazz;
+    }
+
+    public String getSourceFile() {
+        return sourceFile;
     }
 
     public void setAccessFlags(Uint16 accessFlags) {

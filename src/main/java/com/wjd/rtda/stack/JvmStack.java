@@ -43,8 +43,23 @@ public class JvmStack {
         return top;
     }
 
+    public Frame[] getFrames() {
+        Frame[] frames = new Frame[size];
+        Frame frame = top;
+        for (int i = 0; i < frames.length; i++) {
+            frames[i] = frame;
+            frame = frame.getLower();
+        }
+        return frames;
+    }
+
     public boolean isEmpty() {
         return size == 0;
     }
 
+    public void clear() {
+        while (!isEmpty()) {
+            pop();
+        }
+    }
 }

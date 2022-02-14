@@ -1,6 +1,7 @@
 package com.wjd.rtda.meta;
 
 import com.wjd.classfile.attr.CodeAttributeInfo;
+import com.wjd.classfile.attr.LineNumberTableAttributeInfo;
 import com.wjd.classfile.member.MethodInfo;
 
 /**
@@ -15,6 +16,8 @@ public class MethodMeta extends MemberMeta {
     private int paramSlotCount;
     private int argSlotCount;
     private byte[] codes;
+    private ExceptionTable exceptionTable;
+    private LineNumberTableAttributeInfo lineNumberTable;
 
     public static MethodMeta[] newMethods(ClassMeta clazz, MethodInfo[] methodInfos) {
         MethodMeta[] methodMetas = new MethodMeta[methodInfos.length];
@@ -42,9 +45,14 @@ public class MethodMeta extends MemberMeta {
             maxStacks = codeAttr.getMaxStack().value();
             maxLocals = codeAttr.getMaxLocals().value();
             codes = codeAttr.getCodes();
+            exceptionTable = ExceptionTable.newExceptionTable(codeAttr.getExceptionInfoTable(), clazz.getConstantPool());
+            lineNumberTable = codeAttr.getLineNumberTableAttribute();
         }
     }
 
+    /**
+     * 计算参数的插槽数量
+     */
     private void calcArgSlotCount() {
         methodDescriptor = MethodDescriptorParser.parseMethodDescriptor(descriptor);
         paramSlotCount = methodDescriptor.getParamSlotCount();
@@ -82,6 +90,34 @@ public class MethodMeta extends MemberMeta {
                 codes = new byte[] {(byte) 0xfe, (byte) 0xac}; // ireturn
                 break;
         }
+    }
+
+    /**
+     * 寻找异常处理
+     * @param exClass 抛出异常的类
+     * @param pc 抛出异常的pc地址
+     * @return 异常处理的pc地址
+     */
+    public int findExceptionHandler(ClassMeta exClass, int pc) {
+        ExceptionHandler handler = exceptionTable.findExceptionHandler(exClass, pc);
+        if (handler != null) {
+            return handler.getHandlerPC();
+        }
+        return -1;
+    }
+
+    /**
+     * 获取代码行号
+     * @param pc 指定的pc地址
+     */
+    public int getLineNumber(int pc) {
+        if (isNative()) {
+            return -1;
+        }
+        if (lineNumberTable == null) {
+            return -1;
+        }
+        return lineNumberTable.getLineNumber(pc);
     }
 
     public int getMaxStacks() {

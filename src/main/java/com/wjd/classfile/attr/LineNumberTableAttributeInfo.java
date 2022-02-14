@@ -50,4 +50,13 @@ public class LineNumberTableAttributeInfo implements AttributeInfo {
     public LineNumberTableEntry[] getLineNumberEntries() {
         return lineNumberEntries;
     }
+
+    public int getLineNumber(int pc) {
+        for (int i = lineNumberEntries.length - 1; i >= 0; i--) {
+            if (pc >= lineNumberEntries[i].getStartPC().value()) {
+                return lineNumberEntries[i].getLineNumber().value();
+            }
+        }
+        return -1;
+    }
 }

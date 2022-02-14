@@ -402,7 +402,7 @@ public class InstructionFactory {
             case 0xbe:
                 return new ArrayLength();
             case 0xbf:
-                return null;
+                return new AThrow();
             case 0xc0:
                 return new CheckCast();
             case 0xc1:

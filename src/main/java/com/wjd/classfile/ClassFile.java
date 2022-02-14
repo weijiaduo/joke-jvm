@@ -1,5 +1,7 @@
 package com.wjd.classfile;
 
+import com.wjd.classfile.attr.AttributeInfo;
+import com.wjd.classfile.attr.SourceFileAttributeInfo;
 import com.wjd.classfile.cons.ClassConstantInfo;
 import com.wjd.classfile.cons.ConstantInfo;
 import com.wjd.classfile.member.FieldInfo;
@@ -130,6 +132,19 @@ public class ClassFile {
      */
     public String getUTF8String(Uint16 index) {
         return constantPool.getUTF8String(index);
+    }
+
+    /**
+     * 获取源文件
+     */
+    public String getSourceFile() {
+        AttributeInfo[] attrs = attributeInfoTable.getAttributes();
+        for (AttributeInfo attr : attrs) {
+            if (attr instanceof SourceFileAttributeInfo) {
+                return getUTF8String(((SourceFileAttributeInfo) attr).getNameIndex());
+            }
+        }
+        return "Unknown";
     }
 
     /**
