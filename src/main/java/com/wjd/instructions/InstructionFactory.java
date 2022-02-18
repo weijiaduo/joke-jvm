@@ -9,6 +9,8 @@ import com.wjd.instructions.extended.*;
 import com.wjd.instructions.loads.*;
 import com.wjd.instructions.math.*;
 import com.wjd.instructions.references.*;
+import com.wjd.instructions.reserved.Bootstrap;
+import com.wjd.instructions.reserved.InvokeNative;
 import com.wjd.instructions.stack.*;
 import com.wjd.instructions.stores.*;
 
@@ -408,9 +410,9 @@ public class InstructionFactory {
             case 0xc1:
                 return new InstanceOf();
             case 0xc2:
-                return null;
+                return new MonitorEnter();
             case 0xc3:
-                return null;
+                return new MonitorExit();
             case 0xc4:
                 return new Wide();
             case 0xc5:
@@ -426,7 +428,7 @@ public class InstructionFactory {
             case 0xfe:
                 return new InvokeNative();
             case 0xff:
-                return null;
+                return Bootstrap.getInstance(); // 启动类只要一个实例
             default:
                 System.out.println("Invalid opcode: " + opcode);
         }

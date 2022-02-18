@@ -1,5 +1,6 @@
 package com.wjd.classfile.attr;
 
+import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.ClassReader;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint32;
@@ -18,8 +19,12 @@ public class SignatureAttributeInfo implements AttributeInfo {
     private Uint32 length;
     private Uint16 signatureIndex;
 
+    private ClassFile classFile;
+
     @Override
     public void readFrom(ClassReader reader) {
+        classFile = reader.getClassFile();
+
         length = reader.readUint32();
         signatureIndex = reader.readUint16();
     }
@@ -30,5 +35,9 @@ public class SignatureAttributeInfo implements AttributeInfo {
 
     public Uint16 getSignatureIndex() {
         return signatureIndex;
+    }
+
+    public String getSignature() {
+        return classFile.getUTF8String(signatureIndex);
     }
 }

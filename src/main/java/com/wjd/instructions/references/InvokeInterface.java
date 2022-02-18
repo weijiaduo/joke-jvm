@@ -2,6 +2,7 @@ package com.wjd.instructions.references;
 
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
+import com.wjd.instructions.base.Index16Instruction;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
@@ -13,7 +14,7 @@ import com.wjd.rtda.meta.MethodMeta;
  * 执行接口方法
  * @since 2022/2/7
  */
-public class InvokeInterface extends InvokeMethod {
+public class InvokeInterface extends Index16Instruction {
 
     /** 参数个数 */
     private Uint8 count;
@@ -49,7 +50,7 @@ public class InvokeInterface extends InvokeMethod {
             throw new AbstractMethodError("Invoke interface method: " + resolvedMethodMeta.getName());
         }
 
-        invokeMethod(frame, methodMetaToBeInvoked);
+        frame.getThread().invokeMethod(methodMetaToBeInvoked);
     }
 
     @Override

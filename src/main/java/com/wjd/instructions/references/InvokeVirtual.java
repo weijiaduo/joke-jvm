@@ -1,19 +1,18 @@
 package com.wjd.instructions.references;
 
-import com.wjd.rtda.stack.Frame;
-import com.wjd.rtda.stack.OperandStack;
+import com.wjd.instructions.base.Index16Instruction;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.ConstantPool;
-import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.meta.StringPool;
-import com.wjd.rtda.meta.cons.MethodRef;
 import com.wjd.rtda.meta.MethodMeta;
+import com.wjd.rtda.meta.cons.MethodRef;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * 执行多态方法（运行时确定实际执行的方法）
  * @since 2022/2/2
  */
-public class InvokeVirtual extends InvokeMethod {
+public class InvokeVirtual extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
@@ -29,11 +28,6 @@ public class InvokeVirtual extends InvokeMethod {
         // 调用方法的this对象
         HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethodMeta.getParamSlotCount());
         if (ref == null) {
-            // FIXME: 临时方法
-            if ("println".equals(methodRef.getName())) {
-                println(frame, methodRef);
-                return;
-            }
             throw new NullPointerException("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
@@ -42,7 +36,8 @@ public class InvokeVirtual extends InvokeMethod {
                 resolvedMethodMeta.getClazz().isSuperClassOf(currentClassMeta) &&
                 !resolvedMethodMeta.getClazz().getPackageName().equals(currentClassMeta.getPackageName()) &&
                 ref.getClazz() != currentClassMeta &&
-                !ref.getClazz().isSubClassOf(currentClassMeta)) {
+                !ref.getClazz().isSubClassOf(currentClassMeta) &&
+                !ref.getClazz().isArray()) {
             throw new IllegalAccessError("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
@@ -56,37 +51,7 @@ public class InvokeVirtual extends InvokeMethod {
             throw new AbstractMethodError("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
-        invokeMethod(frame, methodMetaToBeInvoked);
+        frame.getThread().invokeMethod(methodMetaToBeInvoked);
     }
 
-    private void println(Frame frame, MethodRef methodRef) {
-        OperandStack stack = frame.getOperandStack();
-        switch (methodRef.getDescriptor()) {
-            case "(Z)V":
-                System.out.println(stack.popInt() != 0);
-                break;
-            case "(C)V":
-            case "(B)V":
-            case "(S)V":
-            case "(I)V":
-                System.out.println(stack.popInt());
-                break;
-            case "(J)V":
-                System.out.println(stack.popLong());
-                break;
-            case "(F)V":
-                System.out.println(stack.popFloat());
-                break;
-            case "(D)V":
-                System.out.println(stack.popDouble());
-                break;
-            case "(Ljava/lang/String;)V":
-                HeapObject stringObj = stack.popRef();
-                System.out.println(StringPool.getRawString(stringObj));
-                break;
-            default:
-                System.out.println("println: " + methodRef.getDescriptor());
-        }
-        stack.popRef();
-    }
 }

@@ -3,36 +3,16 @@ package com.wjd;
 import com.wjd.instructions.InstructionFactory;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
-import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.Thread;
-import com.wjd.rtda.meta.ClassMetaLoader;
-import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.meta.StringPool;
-import com.wjd.rtda.meta.MethodMeta;
-import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.stack.Frame;
 
 /**
  * @since 2022/1/29
  */
 public class Interpreter {
 
-    public void interpret(MethodMeta methodMeta, boolean logInst, String[] args) {
-        Thread thread = new Thread();
-        Frame frame = thread.newFrame(methodMeta);
-        thread.pushFrame(frame);
-        HeapObject argsObj = createArgsArray(methodMeta.getClazz().getLoader(), args);
-        frame.getLocalVars().setRef(0, argsObj);
+    public void interpret(Thread thread, boolean logInst) {
         loop(thread, logInst);
-    }
-
-    private HeapObject createArgsArray(ClassMetaLoader loader, String[] args) {
-        ClassMeta stringClassMeta = loader.loadClass("java/lang/String");
-        HeapObject argsArray = stringClassMeta.getArrayClass().newArray(args.length);
-        HeapObject[] refs = argsArray.getRefs();
-        for (int i = 0; i < args.length; i++) {
-            refs[i] = StringPool.getObjString(loader, args[i]);
-        }
-        return argsArray;
     }
 
     private void loop(Thread thread, boolean logInst) {
@@ -51,6 +31,7 @@ public class Interpreter {
                 int opcode = reader.readUint8().value();
                 Instruction instruction = InstructionFactory.newInstance(opcode);
                 if (instruction == null) {
+                    System.out.println("Instruction is null: " + opcode);
                     break;
                 }
 

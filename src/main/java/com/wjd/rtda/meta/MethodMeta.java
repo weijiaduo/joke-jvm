@@ -1,8 +1,13 @@
 package com.wjd.rtda.meta;
 
 import com.wjd.classfile.attr.CodeAttributeInfo;
+import com.wjd.classfile.attr.ExceptionsAttributeInfo;
 import com.wjd.classfile.attr.LineNumberTableAttributeInfo;
 import com.wjd.classfile.member.MethodInfo;
+import com.wjd.classfile.type.Uint16;
+import com.wjd.rtda.heap.HeapObject;
+import com.wjd.rtda.meta.cons.ClassRef;
+import com.wjd.util.ClassHelper;
 
 /**
  * 方法成员
@@ -10,14 +15,15 @@ import com.wjd.classfile.member.MethodInfo;
  */
 public class MethodMeta extends MemberMeta {
 
-    private int maxStacks;
-    private int maxLocals;
-    private MethodDescriptor methodDescriptor;
-    private int paramSlotCount;
-    private int argSlotCount;
-    private byte[] codes;
-    private ExceptionTable exceptionTable;
-    private LineNumberTableAttributeInfo lineNumberTable;
+    protected int maxStacks;
+    protected int maxLocals;
+    protected MethodDescriptor methodDescriptor;
+    protected int paramSlotCount;
+    protected int argSlotCount;
+    protected Uint16[] exIndexTable;
+    protected byte[] codes;
+    protected ExceptionTable exceptionTable;
+    protected LineNumberTableAttributeInfo lineNumberTable;
 
     public static MethodMeta[] newMethods(ClassMeta clazz, MethodInfo[] methodInfos) {
         MethodMeta[] methodMetas = new MethodMeta[methodInfos.length];
@@ -42,6 +48,10 @@ public class MethodMeta extends MemberMeta {
     private void copyAttributes(MethodInfo methodInfo) {
         CodeAttributeInfo codeAttr = methodInfo.getCodeAttributeInfo();
         if (codeAttr != null) {
+            ExceptionsAttributeInfo exAttributeInfo = methodInfo.getExceptionsAttributeInfo();
+            if (exAttributeInfo != null) {
+                exIndexTable = exAttributeInfo.getExceptionIndexTable();
+            }
             maxStacks = codeAttr.getMaxStack().value();
             maxLocals = codeAttr.getMaxLocals().value();
             codes = codeAttr.getCodes();
@@ -84,6 +94,7 @@ public class MethodMeta extends MemberMeta {
                 codes = new byte[] {(byte) 0xfe, (byte) 0xad}; // lreturn
                 break;
             case 'L':
+            case '[':
                 codes = new byte[] {(byte) 0xfe, (byte) 0xb0}; // areturn
                 break;
             default:
@@ -99,9 +110,11 @@ public class MethodMeta extends MemberMeta {
      * @return 异常处理的pc地址
      */
     public int findExceptionHandler(ClassMeta exClass, int pc) {
-        ExceptionHandler handler = exceptionTable.findExceptionHandler(exClass, pc);
-        if (handler != null) {
-            return handler.getHandlerPC();
+        if (exceptionTable != null) {
+            ExceptionHandler handler = exceptionTable.findExceptionHandler(exClass, pc);
+            if (handler != null) {
+                return handler.getHandlerPC();
+            }
         }
         return -1;
     }
@@ -118,6 +131,84 @@ public class MethodMeta extends MemberMeta {
             return -1;
         }
         return lineNumberTable.getLineNumber(pc);
+    }
+
+    /**
+     * 获取参数类型元数据
+     */
+    public ClassMeta[] getParameterTypes() {
+        if (paramSlotCount == 0) {
+            return new ClassMeta[0];
+        }
+        String[] paramTypes = methodDescriptor.getParameterTypes();
+        ClassMeta[] paramClasses = new ClassMeta[paramTypes.length];
+        for (int i = 0; i < paramClasses.length; i++) {
+            String paramClassName = ClassHelper.getClassName(paramTypes[i]);
+            paramClasses[i] = clazz.getLoader().loadClass(paramClassName);
+        }
+        return paramClasses;
+    }
+
+    /**
+     * 获取参数数组对象
+     */
+    public HeapObject getParameterTypeArr() {
+        ClassMeta[] paramTypes = getParameterTypes();
+        int paramCount = paramTypes.length;
+        ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
+        ClassMeta arrClass = jlClassClass.getArrayClass();
+        HeapObject arr = arrClass.newArray(paramCount);
+
+        if (paramCount > 0) {
+            HeapObject[] refs = arr.getRefs();
+            for (int i = 0; i < paramCount; i++) {
+                refs[i] = paramTypes[i].getjClass();
+            }
+        }
+
+        return arr;
+    }
+
+    /**
+     * 获取异常类型
+     */
+    public ClassMeta[] getExceptionTypes() {
+        if (exIndexTable == null) {
+            return null;
+        }
+
+        ConstantPool cp = clazz.constantPool;
+        ClassMeta[] handlerClasses = new ClassMeta[exIndexTable.length];
+        for (int i = 0; i < handlerClasses.length; i++) {
+            ClassRef exClass = (ClassRef) cp.getConstant(exIndexTable[i].value());
+            handlerClasses[i] = exClass.resolvedClass();
+        }
+
+        return handlerClasses;
+    }
+
+    /**
+     * 获取异常数组对象
+     */
+    public HeapObject getExceptionTypeArr() {
+        ClassMeta[] exClasses = getExceptionTypes();
+        if (exClasses == null) {
+            return null;
+        }
+
+        int count = exClasses.length;
+        ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
+        ClassMeta arrClass = jlClassClass.getArrayClass();
+        HeapObject arr = arrClass.newArray(count);
+
+        if (count > 0) {
+            HeapObject[] refs = arr.getRefs();
+            for (int i = 0; i < count; i++) {
+                refs[i] = exClasses[i].getjClass();
+            }
+        }
+
+        return arr;
     }
 
     public int getMaxStacks() {

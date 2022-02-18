@@ -1,4 +1,4 @@
-package com.wjd.instructions.references;
+package com.wjd.instructions.reserved;
 
 import com.wjd.instructions.constants.NoOperandsInstruction;
 import com.wjd.naive.NativeMethod;

@@ -1,12 +1,12 @@
 package com.wjd.instructions.constants;
 
 import com.wjd.instructions.base.Index16Instruction;
+import com.wjd.rtda.heap.HeapObject;
+import com.wjd.rtda.meta.StringPool;
+import com.wjd.rtda.meta.cons.*;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.stack.OperandStack;
 import com.wjd.rtda.meta.ConstantPool;
-import com.wjd.rtda.meta.cons.Constant;
-import com.wjd.rtda.meta.cons.FloatConstant;
-import com.wjd.rtda.meta.cons.IntegerConstant;
 
 /**
  * @since 2022/2/2
@@ -22,6 +22,13 @@ public class IDCW extends Index16Instruction {
             stack.pushInt(((IntegerConstant) constant).value());
         } else if (constant instanceof FloatConstant) {
             stack.pushFloat(((FloatConstant) constant).value());
+        } else if (constant instanceof StringConstant) {
+            String string = ((StringConstant) constant).value();
+            HeapObject stringObj = StringPool.getObjString(frame.getMethod().getClazz().getLoader(), string);
+            stack.pushRef(stringObj);
+        } else if (constant instanceof ClassRef) {
+            HeapObject jClassObj = ((ClassRef) constant).resolvedClass().getjClass();
+            stack.pushRef(jClassObj);
         } else {
             System.out.println("Unsupported Type: " + constant);
         }

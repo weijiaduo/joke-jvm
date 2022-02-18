@@ -39,6 +39,10 @@ public class Slot {
         this.ref = ref;
     }
 
+    public void setLong(long num) {
+        this.num = num;
+    }
+
     public static void setInt(Slot slot, int num) {
         slot.num = num;
     }

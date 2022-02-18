@@ -33,6 +33,9 @@ public class StringPool {
      * 获取String对象对应的字符串
      */
     public static String getRawString(HeapObject stringObj) {
+        if (stringObj == null) {
+            return null;
+        }
         HeapObject value = stringObj.getRefVar("value", "[C");
         char[] chars = value.getChars();
         return new String(chars);

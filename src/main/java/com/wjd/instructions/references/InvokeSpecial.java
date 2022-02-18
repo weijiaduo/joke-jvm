@@ -1,5 +1,6 @@
 package com.wjd.instructions.references;
 
+import com.wjd.instructions.base.Index16Instruction;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.ConstantPool;
@@ -11,7 +12,7 @@ import com.wjd.rtda.meta.MethodMeta;
  * 执行实例方法（构造函数、私有方法、super调用方法）
  * @since 2022/2/2
  */
-public class InvokeSpecial extends InvokeMethod {
+public class InvokeSpecial extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
@@ -60,6 +61,6 @@ public class InvokeSpecial extends InvokeMethod {
             throw new AbstractMethodError("Invoke special method: " + resolvedMethodMeta.getName());
         }
 
-        invokeMethod(frame, methodMetaToBeInvoked);
+        frame.getThread().invokeMethod(methodMetaToBeInvoked);
     }
 }

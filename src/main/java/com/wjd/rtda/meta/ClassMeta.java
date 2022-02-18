@@ -5,6 +5,10 @@ import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.HeapObject;
+import com.wjd.util.ArrayHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 类
@@ -12,40 +16,42 @@ import com.wjd.rtda.heap.HeapObject;
  */
 public class ClassMeta {
 
+    private static String constructorName = "<init>";
+
     /** 源文件名称 */
-    private String sourceFile;
+    protected String sourceFile;
 
     /** 访问标志 */
-    private Uint16 accessFlags;
+    protected Uint16 accessFlags;
     /** 类完全限定名 */
-    private String name;
+    protected String name;
     /** 父类完全限定名 */
-    private String superClassName;
+    protected String superClassName;
     /** 接口完全限定名 */
-    private String[] interfaceNames;
+    protected String[] interfaceNames;
     /** 常量池 */
-    private ConstantPool constantPool;
+    protected ConstantPool constantPool;
     /** 字段 */
-    private FieldMeta[] fields;
+    protected FieldMeta[] fields;
     /** 方法 */
-    private MethodMeta[] methods;
+    protected MethodMeta[] methods;
     /** 类加载器 */
-    private ClassMetaLoader loader;
+    protected ClassMetaLoader loader;
     /** 父类引用 */
-    private ClassMeta superClass;
+    protected ClassMeta superClass;
     /** 接口引用 */
-    private ClassMeta[] interfaces;
+    protected ClassMeta[] interfaces;
     /** 实例变量数量 */
-    private int instanceSlotCount;
+    protected int instanceSlotCount;
     /** 静态变量数量 */
-    private int staticSlotCount;
+    protected int staticSlotCount;
     /** 静态变量 */
-    private Slot[] staticVars;
+    protected Slot[] staticVars;
 
     /** 类是否已初始化 */
-    private boolean initStarted;
+    protected boolean initStarted;
     /** java.lang.Class实例 */
-    private HeapObject jClass;
+    protected HeapObject jClass;
 
     public ClassMeta() {
         interfaceNames = new String[0];
@@ -69,6 +75,10 @@ public class ClassMeta {
 
     public String getSourceFile() {
         return sourceFile;
+    }
+
+    public Uint16 getAccessFlags() {
+        return accessFlags;
     }
 
     public void setAccessFlags(Uint16 accessFlags) {
@@ -288,7 +298,7 @@ public class ClassMeta {
     }
 
     public boolean isArray() {
-        return ArrayMetaHelper.isArray(this);
+        return ArrayHelper.isArray(this);
     }
 
     public boolean isPrimitive() {
@@ -307,12 +317,44 @@ public class ClassMeta {
         return this == loader.loadClass("java/io/Serializable");
     }
 
+    public FieldMeta[] getFields(boolean publicOnly) {
+        if (!publicOnly) {
+            return fields;
+        }
+        List<FieldMeta> fs = new ArrayList<>();
+        for (FieldMeta fieldMeta : fields) {
+            if (fieldMeta.isPublic()) {
+                fs.add(fieldMeta);
+            }
+        }
+        return fs.toArray(new FieldMeta[0]);
+    }
+
     /**
      * 获取指定静态字段成员
      */
     public HeapObject getRefVar(String name, String descriptor) {
         FieldMeta fieldMeta = getStaticField(name, descriptor);
         return staticVars[fieldMeta.getSlotId()].getRef();
+    }
+
+    /**
+     * 设置静态字段成员值
+     */
+    public void setRefVar(String name, String descriptor, HeapObject ref) {
+        FieldMeta fieldMeta = getStaticField(name, descriptor);
+        staticVars[fieldMeta.getSlotId()].setRef(ref);
+    }
+
+    /**
+     * 设置静态字段的值
+     * @param name 字段名称
+     * @param descriptor 字段描述符
+     * @param value 字段值
+     */
+    public void setStaticValue(String name, String descriptor, Slot value) {
+        FieldMeta fieldMeta = getStaticField(name, descriptor);
+        fieldMeta.putStaticValue(value);
     }
 
     /**
@@ -359,7 +401,30 @@ public class ClassMeta {
      * 获取类初始化方法
      */
     public MethodMeta getClinitMethod() {
-        return getStaticMethod("<clinit>", "()V");
+        return getDeclaredMethod("<clinit>", "()V", true);
+    }
+
+    /**
+     * 获取所有构造器函数
+     * @param publicOnly 是否只要public的
+     */
+    public MethodMeta[] getConstructors(boolean publicOnly) {
+        List<MethodMeta> constructors = new ArrayList<>();
+        for (MethodMeta m : getMethods()) {
+            if (!m.isStatic() && m.getName().equals(constructorName)) {
+                if (!publicOnly || m.isPublic()) {
+                    constructors.add(m);
+                }
+            }
+        }
+        return constructors.toArray(new MethodMeta[0]);
+    }
+
+    /**
+     * 获取构造方法
+     */
+    public MethodMeta getConstructor(String descriptor) {
+        return getDeclaredMethod(constructorName, descriptor, false);
     }
 
     /**
@@ -383,6 +448,25 @@ public class ClassMeta {
      * @param isStatic 是否是静态属性
      */
     private MethodMeta getMethod(String name, String descriptor, boolean isStatic) {
+        for (ClassMeta c = this; c != null; c = c.getSuperClass()) {
+            for (MethodMeta m : getMethods()) {
+                if (m.isStatic() == isStatic &&
+                        name.equals(m.getName()) &&
+                        descriptor.equals(m.getDescriptor())) {
+                    return m;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 类自己本身声明的方法
+     * @param name 字段名称
+     * @param descriptor 字段描述符
+     * @param isStatic 是否是静态属性
+     */
+    private MethodMeta getDeclaredMethod(String name, String descriptor, boolean isStatic) {
         for (MethodMeta m : getMethods()) {
             if (m.isStatic() == isStatic &&
                     name.equals(m.getName()) &&
@@ -397,7 +481,7 @@ public class ClassMeta {
      * 获取当前类型对应的数组类型
      */
     public ClassMeta getArrayClass() {
-        String arrayClassName = ArrayMetaHelper.getArrayClassName(name);
+        String arrayClassName = ArrayHelper.getArrayClassName(name);
         return loader.loadClass(arrayClassName);
     }
 
@@ -405,7 +489,7 @@ public class ClassMeta {
      * 获取数组类型的元素类型
      */
     public ClassMeta getComponentClass() {
-        String componentClassName = ArrayMetaHelper.getComponentClassName(name);
+        String componentClassName = ArrayHelper.getComponentClassName(name);
         return loader.loadClass(componentClassName);
     }
 
@@ -417,7 +501,7 @@ public class ClassMeta {
         if (!isArray()) {
             throw new IllegalStateException("Not array class: " + name);
         }
-        return HeapObject.newArray(this, ArrayMetaHelper.makeArray(name, count));
+        return HeapObject.newArray(this, ArrayHelper.makeArray(name, count));
     }
 
 }

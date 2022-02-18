@@ -1,12 +1,15 @@
-package com.wjd.rtda.meta;
+package com.wjd.util;
 
 import com.wjd.classfile.type.Uint8;
 import com.wjd.rtda.heap.HeapObject;
+import com.wjd.rtda.meta.ClassMeta;
+import com.wjd.rtda.meta.ClassMetaLoader;
+import com.wjd.rtda.meta.PrimitiveMeta;
 
 /**
  * @since 2022/2/13
  */
-public class ArrayMetaHelper {
+public class ArrayHelper {
 
     private static class AType {
         public static final int AT_BOOLEAN = 4;
@@ -47,27 +50,9 @@ public class ArrayMetaHelper {
     public static String getComponentClassName(String className) {
         if (className.charAt(0) == '[') {
             String componentTypeDescriptor = className.substring(1);
-            return toClassName(componentTypeDescriptor);
+            return ClassHelper.getClassName(componentTypeDescriptor);
         }
         throw new IllegalArgumentException("Not Array: " + className);
-    }
-
-    private static String toClassName(String descriptor) {
-        // 数组类型
-        if (descriptor.charAt(0) == '[') {
-            return descriptor;
-        }
-        // 引用类型
-        if (descriptor.charAt(0) == 'L') {
-            return descriptor.substring(1, descriptor.length() - 1);
-        }
-        // 基本类型
-        for (String className : PrimitiveMeta.primitiveTypes.keySet()) {
-            if (descriptor.equals(PrimitiveMeta.primitiveTypes.get(className))) {
-                return className;
-            }
-        }
-        throw new IllegalArgumentException("Invalid descriptor: " + descriptor);
     }
 
     /**

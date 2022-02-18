@@ -19,6 +19,10 @@ public class Object implements NativeClass {
                 "()I", new HashCode());
         NativeRegistry.registry("java/lang/Object", "clone",
                 "()Ljava/lang/Object;", new Clone());
+        NativeRegistry.registry("java/lang/Object", "wait",
+                "(J)V", new Wait());
+        NativeRegistry.registry("java/lang/Object", "notifyAll",
+                "()V", new NotifyAll());
     }
 
     /**
@@ -61,6 +65,24 @@ public class Object implements NativeClass {
 
             // 克隆对象
             frame.getOperandStack().pushRef(that.clone());
+        }
+    }
+
+    /**
+     * public final native void wait(long timeout) throws InterruptedException;
+     */
+    static class Wait implements NativeMethod {
+        @Override
+        public void execute(Frame frame) throws Exception {
+        }
+    }
+
+    /**
+     * public final native void notifyAll();
+     */
+    static class NotifyAll implements NativeMethod {
+        @Override
+        public void execute(Frame frame) throws Exception {
         }
     }
 

@@ -53,6 +53,14 @@ public class JvmStack {
         return frames;
     }
 
+    public Frame getTopFrameN(int index) {
+        Frame frame = top;
+        for (int i = 0; i < index; i++) {
+            frame = frame.getLower();
+        }
+        return frame;
+    }
+
     public boolean isEmpty() {
         return size == 0;
     }

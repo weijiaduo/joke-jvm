@@ -34,6 +34,10 @@ public class LocalVars {
         slots[index].setSlot(slot);
     }
 
+    public boolean getBoolean(int index) {
+        return getInt(index) != 0;
+    }
+
     public void setInt(int index, int num) {
         Slot.setInt(slots[index], num);
     }

@@ -43,6 +43,10 @@ public class HeapObject implements Cloneable {
         return clazz;
     }
 
+    public Object getData() {
+        return data;
+    }
+
     public Object getExtra() {
         return extra;
     }
@@ -141,6 +145,18 @@ public class HeapObject implements Cloneable {
         FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
         Slot[] slots = getFields();
         return slots[fieldMeta.getSlotId()].getRef();
+    }
+
+    public void setFieldValue(String name, String descriptor, Slot slot) {
+        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
+        Slot[] slots = getFields();
+        slots[fieldMeta.getSlotId()].setSlot(slot);
+    }
+
+    public Slot getFieldValue(String name, String descriptor) {
+        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
+        Slot[] slots = getFields();
+        return slots[fieldMeta.getSlotId()];
     }
 
     @Override

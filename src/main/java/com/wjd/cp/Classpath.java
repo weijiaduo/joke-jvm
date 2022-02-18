@@ -14,6 +14,14 @@ import java.util.List;
 public class Classpath {
 
     /**
+     * 是否打印路径
+     */
+    public static boolean verbosePath;
+
+    private String cp;
+    private String jrePath;
+
+    /**
      * 查找入口
      */
     private List<Entry> entries;
@@ -26,10 +34,7 @@ public class Classpath {
      * 用户类路径选项
      */
     private String cpOptions;
-    /**
-     * 是否打印路径
-     */
-    public static boolean verbosePath;
+
 
     public Classpath(String jreOption, String cpOptions) {
         entries = new ArrayList<>();
@@ -75,10 +80,15 @@ public class Classpath {
         parseUserClasspath();
     }
 
+    public String getClassPath() {
+        return cp;
+    }
+
     /**
      * 解析启动类路径和扩展类路径
      */
     private void parseBootAndExtClasspath() {
+        cp = "";
         String jrePath = getJrePath();
 
         // 启动类路径（jre/lib/*）
@@ -86,12 +96,14 @@ public class Classpath {
         String bootDir = bootPath.toAbsolutePath() + File.separator + "*";
         Entry bootEntry = EntryFactory.newEntry(bootDir);
         entries.add(bootEntry);
+        cp += bootDir;
 
         // 扩展类路径（jre/lib/ext/*）
         Path extPath = Paths.get(jrePath, "lib", "ext");
         String extDir = extPath.toAbsolutePath() + File.separator + "*";
         Entry extEntry = EntryFactory.newEntry(extDir);
         entries.add(extEntry);
+        cp += ";" + extDir;
     }
 
     /**
@@ -104,6 +116,7 @@ public class Classpath {
         // 用户类路径（-classpath/-cp）
         Entry userEntry = EntryFactory.newEntry(cpOptions);
         entries.add(userEntry);
+        cp += ";" + cpOptions;
     }
 
     /**
@@ -111,7 +124,19 @@ public class Classpath {
      *
      * @return jre文件夹路径
      */
-    private String getJrePath() {
+    public String getJrePath() {
+        if (jrePath == null) {
+            jrePath = findJrePath();
+        }
+        return jrePath;
+    }
+
+    /**
+     * 获取jre文件夹路径
+     *
+     * @return jre文件夹路径
+     */
+    private String findJrePath() {
         Path path;
 
         // 用户自定义路径

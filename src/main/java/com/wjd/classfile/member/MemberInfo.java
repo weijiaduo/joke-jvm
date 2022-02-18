@@ -4,6 +4,7 @@ import com.wjd.classfile.AttributeInfoTable;
 import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.ClassReader;
 import com.wjd.classfile.attr.AttributeInfo;
+import com.wjd.classfile.attr.SignatureAttributeInfo;
 import com.wjd.classfile.type.Uint16;
 
 /**
@@ -58,5 +59,17 @@ public abstract class MemberInfo {
 
     public AttributeInfo[] getAttributes() {
         return attributeTable.getAttributes();
+    }
+
+    /**
+     * 获取签名属性
+     */
+    public SignatureAttributeInfo getSignatureAttributeInfo() {
+        for (AttributeInfo attr : attributeTable.getAttributes()) {
+            if (attr instanceof SignatureAttributeInfo) {
+                return (SignatureAttributeInfo) attr;
+            }
+        }
+        return null;
     }
 }

@@ -52,14 +52,26 @@ public class NativeRegistry {
         try {
             String basePackageName = "com.wjd.naive.";
             // 使用Class.forName()可以让static执行注册
+            Class.forName(basePackageName + "sun.misc.VM");
+            Class.forName(basePackageName + "sun.misc.Unsafe");
+            Class.forName(basePackageName + "sun.misc.Signal");
             Class.forName(basePackageName + "java.lang.Object");
             Class.forName(basePackageName + "java.lang.Class");
             Class.forName(basePackageName + "java.lang.System");
+            Class.forName(basePackageName + "java.lang.Thread");
             Class.forName(basePackageName + "java.lang.Float");
             Class.forName(basePackageName + "java.lang.Double");
             Class.forName(basePackageName + "java.lang.String");
             Class.forName(basePackageName + "java.lang.Throwable");
-            Class.forName(basePackageName + "sun.misc.VM");
+            Class.forName(basePackageName + "java.lang.ClassLoader$NativeLibrary");
+            Class.forName(basePackageName + "java.io.FileOutputStream");
+            Class.forName(basePackageName + "java.io.FileInputStream");
+            Class.forName(basePackageName + "java.io.FileDescriptor");
+            Class.forName(basePackageName + "java.io.WinNTFileSystem");
+            Class.forName(basePackageName + "java.security.AccessController");
+            Class.forName(basePackageName + "sun.reflect.Reflection");
+            Class.forName(basePackageName + "sun.reflect.NativeConstructorAccessorImpl");
+            Class.forName(basePackageName + "sun.io.Win32ErrorMode");
             return true;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

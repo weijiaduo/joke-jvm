@@ -1,5 +1,6 @@
 package com.wjd.rtda.meta;
 
+import com.wjd.classfile.attr.SignatureAttributeInfo;
 import com.wjd.classfile.member.MemberInfo;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.AccessFlags;
@@ -13,12 +14,17 @@ public abstract class MemberMeta {
     protected Uint16 accessFlags;
     protected String name;
     protected String descriptor;
+    protected String signature;
     protected ClassMeta clazz;
 
     public void copyMemberInfo(MemberInfo memberInfo) {
         accessFlags = memberInfo.getAccessFlags();
         name = memberInfo.getName();
         descriptor = memberInfo.getDescriptor();
+        SignatureAttributeInfo signatureAttributeInfo = memberInfo.getSignatureAttributeInfo();
+        if (signatureAttributeInfo != null) {
+            signature = memberInfo.getSignatureAttributeInfo().getSignature();
+        }
     }
 
     public Uint16 getAccessFlags() {
@@ -31,6 +37,10 @@ public abstract class MemberMeta {
 
     public String getDescriptor() {
         return descriptor;
+    }
+
+    public String getSignature() {
+        return signature;
     }
 
     public ClassMeta getClazz() {
