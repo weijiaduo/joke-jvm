@@ -21,6 +21,9 @@ public class InterfaceMethodRef extends MemberRef {
         return ref;
     }
 
+    /**
+     * 解析接口方法符号引用
+     */
     public MethodMeta resolvedInterfaceMethod() {
         if (methodMeta == null) {
             resolveInterfaceMethodRef();
@@ -28,22 +31,36 @@ public class InterfaceMethodRef extends MemberRef {
         return methodMeta;
     }
 
+    /**
+     * 解析接口方法符号引用
+     */
     private void resolveInterfaceMethodRef() {
-        ClassMeta currentClassMeta = constantPool.getClazz();
-        ClassMeta refClassMeta = resolvedClass();
+        ClassMeta currentClassMeta = constantPool.getClazz(); // 当前类
+        ClassMeta refClassMeta = resolvedClass(); // 方法所在接口
         if (!refClassMeta.isInterface()) {
             throw new IncompatibleClassChangeError("Class: " + refClassMeta);
         }
+
+        // 查找接口方法
         MethodMeta methodMeta = lookupInterfaceMethod(refClassMeta, name, descriptor);
         if (methodMeta == null) {
             throw new NoSuchMethodError("Method: " + name);
         }
+
+        // 验证访问权限
         if (!methodMeta.isAccessibleTo(currentClassMeta)) {
             throw new IllegalAccessError("Method: " + methodMeta + " can not access by Class: " + currentClassMeta);
         }
         this.methodMeta = methodMeta;
     }
 
+    /**
+     * 查找接口方法元数据
+     * @param clazz 类元数据
+     * @param name 接口方法名称
+     * @param descriptor 接口方法描述符
+     * @return 方法元数据
+     */
     public static MethodMeta lookupInterfaceMethod(ClassMeta clazz, String name, String descriptor) {
         for (MethodMeta methodMeta : clazz.getMethods()) {
             if (methodMeta.getName().equals(name) && methodMeta.getDescriptor().equals(descriptor)) {

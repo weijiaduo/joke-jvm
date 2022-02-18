@@ -3,7 +3,6 @@ package com.wjd.naive.java.lang;
 import com.wjd.naive.NativeClass;
 import com.wjd.naive.NativeMethod;
 import com.wjd.naive.NativeRegistry;
-import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.stack.Frame;
 
@@ -37,9 +36,7 @@ public class ClassLoader$NativeLibrary implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject that = frame.getLocalVars().getThis();
-            Slot slot = new Slot();
-            Slot.setInt(slot, 1);
-            that.setFieldValue("loaded", "Z", slot);
+            that.setIntVar("loaded", "Z", 1);
         }
     }
 

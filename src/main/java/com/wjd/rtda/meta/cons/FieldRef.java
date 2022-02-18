@@ -20,6 +20,9 @@ public class FieldRef extends MemberRef {
         return ref;
     }
 
+    /**
+     * 解析字段符号引用，返回字段元数据
+     */
     public FieldMeta resolvedField() {
         if (fieldMeta == null) {
             resolveFieldRef();
@@ -27,6 +30,9 @@ public class FieldRef extends MemberRef {
         return fieldMeta;
     }
 
+    /**
+     * 解析字段符号引用
+     */
     private void resolveFieldRef() {
         ClassMeta currentClassMeta = constantPool.getClazz();
         ClassMeta refClassMeta = resolvedClass();
@@ -40,12 +46,21 @@ public class FieldRef extends MemberRef {
         fieldMeta = refFieldMeta;
     }
 
+    /**
+     * 查找指定的字段元数据
+     * @param clazz 类元数据
+     * @param name 字段名称
+     * @param descriptor 字段描述符
+     * @return 字段元数据
+     */
     private static FieldMeta lookupField(ClassMeta clazz, String name, String descriptor) {
+        // 当前类声明的字段
         for (FieldMeta fieldMeta : clazz.getFields()) {
             if (fieldMeta.getName().equals(name) && fieldMeta.getDescriptor().equals(descriptor)) {
                 return fieldMeta;
             }
         }
+        // 接口声明的字段
         ClassMeta[] interfaces = clazz.getInterfaces();
         for (ClassMeta c : interfaces) {
             FieldMeta f = lookupField(c, name, descriptor);
@@ -53,6 +68,7 @@ public class FieldRef extends MemberRef {
                 return f;
             }
         }
+        // 父类声明的字段
         if (clazz.getSuperClass() != null) {
             return lookupField(clazz.getSuperClass(), name, descriptor);
         }

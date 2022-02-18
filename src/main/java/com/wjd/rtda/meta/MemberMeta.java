@@ -1,7 +1,7 @@
 package com.wjd.rtda.meta;
 
 import com.wjd.classfile.attr.SignatureAttributeInfo;
-import com.wjd.classfile.member.MemberInfo;
+import com.wjd.classfile.MemberInfo;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.AccessFlags;
 

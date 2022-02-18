@@ -14,6 +14,14 @@ public class Slot {
 
     public Slot() {}
 
+    public Slot(long num) {
+        this.num = num;
+    }
+
+    public Slot(HeapObject ref) {
+        this.ref = ref;
+    }
+
     public Slot(Slot slot) {
         setSlot(slot);
     }
@@ -31,16 +39,20 @@ public class Slot {
         }
     }
 
+    public long getNum() {
+        return num;
+    }
+
+    public void setNum(long num) {
+        this.num = num;
+    }
+
     public HeapObject getRef() {
         return ref;
     }
 
     public void setRef(HeapObject ref) {
         this.ref = ref;
-    }
-
-    public void setLong(long num) {
-        this.num = num;
     }
 
     public static void setInt(Slot slot, int num) {

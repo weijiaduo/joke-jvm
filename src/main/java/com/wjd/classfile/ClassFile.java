@@ -4,8 +4,6 @@ import com.wjd.classfile.attr.AttributeInfo;
 import com.wjd.classfile.attr.SourceFileAttributeInfo;
 import com.wjd.classfile.cons.ClassConstantInfo;
 import com.wjd.classfile.cons.ConstantInfo;
-import com.wjd.classfile.member.FieldInfo;
-import com.wjd.classfile.member.MethodInfo;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint32;
 
@@ -68,7 +66,13 @@ public class ClassFile {
      */
     private AttributeInfoTable attributeInfoTable;
 
-    public static ClassFile parse(ClassReader reader) {
+    /**
+     * 解析类文件字节码
+     * @param classBytes 类文件字节码
+     * @return ClassFile对象
+     */
+    public static ClassFile parse(byte[] classBytes) {
+        ClassReader reader = new ClassReader(classBytes);
         ClassFile classFile = new ClassFile();
         classFile.readFrom(reader);
         return classFile;

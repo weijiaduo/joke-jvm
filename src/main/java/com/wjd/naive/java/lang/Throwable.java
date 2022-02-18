@@ -7,7 +7,7 @@ import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.MethodMeta;
-import com.wjd.rtda.meta.StackTraceElement;
+import com.wjd.rtda.meta.ex.StackTraceElement;
 import com.wjd.rtda.stack.Frame;
 
 import java.util.Arrays;

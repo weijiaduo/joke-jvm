@@ -3,10 +3,12 @@ package com.wjd.rtda.meta;
 import com.wjd.classfile.attr.CodeAttributeInfo;
 import com.wjd.classfile.attr.ExceptionsAttributeInfo;
 import com.wjd.classfile.attr.LineNumberTableAttributeInfo;
-import com.wjd.classfile.member.MethodInfo;
+import com.wjd.classfile.MethodInfo;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.cons.ClassRef;
+import com.wjd.rtda.meta.ex.ExceptionHandler;
+import com.wjd.rtda.meta.ex.ExceptionTable;
 import com.wjd.util.ClassHelper;
 
 /**

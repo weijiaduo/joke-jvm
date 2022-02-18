@@ -11,27 +11,23 @@ import com.wjd.rtda.meta.FieldMeta;
 public class HeapObject implements Cloneable {
 
     /** 对象的元数据类型 */
-    private ClassMeta clazz;
+    ClassMeta clazz;
     /** 实例对象的数据 */
-    private Object data;
+    Object data;
     /** 目前是Class对象 */
-    private Object extra;
+    Object extra;
 
-    public static HeapObject newObject(ClassMeta clazz) {
-        HeapObject obj = new HeapObject();
-        obj.clazz = clazz;
-        obj.newSlots();
-        return obj;
+    HeapObject(ClassMeta clazz) {
+        this.clazz = clazz;
+        this.initSlots();
     }
 
-    public static HeapObject newArray(ClassMeta clazz, Object data) {
-        HeapObject obj = new HeapObject();
-        obj.clazz = clazz;
-        obj.data = data;
-        return obj;
+    HeapObject(ClassMeta clazz, Object data) {
+        this.clazz = clazz;
+        this.data = data;
     }
 
-    private void newSlots() {
+    void initSlots() {
         Slot[] fields = new Slot[clazz.getInstanceSlotCount()];
         for (int i = 0; i < fields.length; i++) {
             fields[i] = new Slot();
@@ -137,26 +133,38 @@ public class HeapObject implements Cloneable {
 
     public void setRefVar(String name, String descriptor, HeapObject ref) {
         FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        Slot[] slots = getFields();
-        slots[fieldMeta.getSlotId()].setRef(ref);
+        getFields()[fieldMeta.getSlotId()].setRef(ref);
     }
 
     public HeapObject getRefVar(String name, String descriptor) {
         FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        Slot[] slots = getFields();
-        return slots[fieldMeta.getSlotId()].getRef();
+        return getFields()[fieldMeta.getSlotId()].getRef();
     }
 
-    public void setFieldValue(String name, String descriptor, Slot slot) {
+    public int getIntVar(String name, String descriptor) {
         FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        Slot[] slots = getFields();
-        slots[fieldMeta.getSlotId()].setSlot(slot);
+        return (int) getFields()[fieldMeta.getSlotId()].getNum();
     }
 
-    public Slot getFieldValue(String name, String descriptor) {
+    public void setIntVar(String name, String descriptor, int val) {
+        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
+        getFields()[fieldMeta.getSlotId()].setNum(val);
+    }
+
+    public long getLongVar(String name, String descriptor) {
         FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
         Slot[] slots = getFields();
-        return slots[fieldMeta.getSlotId()];
+        Slot highSlot = slots[fieldMeta.getSlotId()];
+        Slot lowSlot = slots[fieldMeta.getSlotId() + 1];
+        return Slot.getLong(highSlot, lowSlot);
+    }
+
+    public void setLongVar(String name, String descriptor, long val) {
+        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
+        Slot[] slots = getFields();
+        Slot highSlot = slots[fieldMeta.getSlotId()];
+        Slot lowSlot = slots[fieldMeta.getSlotId() + 1];
+        Slot.setLong(highSlot, lowSlot, val);
     }
 
     @Override

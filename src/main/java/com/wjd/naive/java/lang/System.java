@@ -128,10 +128,8 @@ public class System implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject in = frame.getLocalVars().getRef(0);
-            ClassMeta classMeta = frame.getMethod().getClazz();
-            Slot inSlot = new Slot();
-            inSlot.setRef(in);
-            classMeta.setStaticValue("in", "Ljava/io/InputStream;", inSlot);
+            ClassMeta sysClass = frame.getMethod().getClazz();
+            sysClass.setRefVar("in", "Ljava/io/InputStream;", in);
         }
     }
 
@@ -143,9 +141,7 @@ public class System implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject err = frame.getLocalVars().getRef(0);
             ClassMeta sysClass = frame.getMethod().getClazz();
-            Slot slot = new Slot();
-            slot.setRef(err);
-            sysClass.setStaticValue("err", "Ljava/io/PrintStream;", slot);
+            sysClass.setRefVar("err", "Ljava/io/PrintStream;", err);
         }
     }
 

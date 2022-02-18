@@ -1,5 +1,6 @@
 package com.wjd.rtda.meta;
 
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 
 import java.util.HashMap;
@@ -21,8 +22,9 @@ public class StringPool {
         if (internedStrings.containsKey(string)) {
             return internedStrings.get(string);
         }
+
         char[] chars = string.toCharArray();
-        HeapObject charObj = HeapObject.newArray(loader.loadClass("[C"), chars);
+        HeapObject charObj = Heap.newObject(loader.loadClass("[C"), chars);
         HeapObject stringObj = loader.loadClass("java/lang/String").newObject();
         stringObj.setRefVar("value", "[C", charObj);
         internedStrings.put(string, stringObj);

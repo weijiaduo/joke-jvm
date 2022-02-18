@@ -1,7 +1,6 @@
 package com.wjd.rtda.meta;
 
 import com.wjd.classfile.ClassFile;
-import com.wjd.classfile.ClassReader;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.cp.Classpath;
 import com.wjd.rtda.AccessFlags;
@@ -18,8 +17,8 @@ import java.util.Map;
  */
 public class ClassMetaLoader {
 
-    private Classpath classpath;
     private Map<String, ClassMeta> classMap;
+    private Classpath classpath;
     private boolean verboseFlag = false;
 
     public static ClassMetaLoader newClassLoader(Classpath classpath, boolean verboseFlag) {
@@ -35,16 +34,28 @@ public class ClassMetaLoader {
     }
 
     /**
+     * 加载类元数据对应的java/lang/Class类
+     * @param clazz 类元数据
+     */
+    private void loadJClass(ClassMeta clazz) {
+        if (clazz.getjClass() != null) {
+            return;
+        }
+        ClassMeta jlClassClass = classMap.get("java/lang/Class");
+        if (jlClassClass != null) {
+            // 为每个类型都生成一个java.lang.Class对象
+            clazz.setjClass(jlClassClass.newObject());
+            clazz.getjClass().setExtra(clazz);
+        }
+    }
+
+    /**
      * 加载基础类对象
      */
     private void loadBasicClasses() {
-        ClassMeta jlClassClass = loadClass("java/lang/Class");
         for (String className : classMap.keySet()) {
-            ClassMeta classMeta = classMap.get(className);
-            if (classMeta.getjClass() == null) {
-                classMeta.setjClass(jlClassClass.newObject());
-                classMeta.getjClass().setExtra(classMeta);
-            }
+            ClassMeta clazz = classMap.get(className);
+            loadJClass(clazz);
         }
     }
 
@@ -59,16 +70,16 @@ public class ClassMetaLoader {
 
     /**
      * 加载基本类型
+     * 基本类型的类名就是boolean、int、long等
      */
     private void loadPrimitiveClass(String className) {
-        ClassMeta classMeta = new ClassMeta();
-        classMeta.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
-        classMeta.setName(className);
-        classMeta.setLoader(this);
-        classMeta.startInit();
-        classMeta.setjClass(loadClass("java/lang/Class").newObject());
-        classMeta.getjClass().setExtra(classMeta);
-        classMap.put(className, classMeta);
+        ClassMeta clazz = new ClassMeta();
+        clazz.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
+        clazz.setName(className);
+        clazz.setLoader(this);
+        clazz.startInit();
+        loadJClass(clazz);
+        classMap.put(className, clazz);
     }
 
     /**
@@ -78,26 +89,22 @@ public class ClassMetaLoader {
     public ClassMeta loadClass(String name) {
         try {
             // 类已加载过
-            if (classMap.containsKey(name)) {
-                return classMap.get(name);
+            ClassMeta clazz = classMap.get(name);
+            if (clazz != null) {
+                return clazz;
             }
 
-            ClassMeta classMeta;
             if (name.charAt(0) == '[') {
                 // 数组类型
-                classMeta = loadArrayClass(name);
+                clazz = loadArrayClass(name);
             } else {
                 // 非数组类型
-                classMeta = loadNonArrayClass(name);
+                clazz = loadNonArrayClass(name);
             }
 
-            ClassMeta jlClassClass = classMap.get("java/lang/Class");
-            if (jlClassClass != null) {
-                // 为每个类型都生成一个java.lang.Class对象
-                classMeta.setjClass(jlClassClass.newObject());
-                classMeta.getjClass().setExtra(classMeta);
-            }
-            return classMeta;
+            // 为每个类型都生成一个java.lang.Class对象
+            loadJClass(clazz);
+            return clazz;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Load class error: " + name);
@@ -108,18 +115,18 @@ public class ClassMetaLoader {
      * 加载数组类型
      */
     protected ClassMeta loadArrayClass(String name) {
-        ClassMeta arrayClassMeta = new ClassMeta();
-        arrayClassMeta.setLoader(this);
-        arrayClassMeta.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
-        arrayClassMeta.setName(name);
-        arrayClassMeta.setSuperClass(this.loadClass("java/lang/Object"));
-        arrayClassMeta.setInterfaces(new ClassMeta[] {
+        ClassMeta arrayClazz = new ClassMeta();
+        arrayClazz.setLoader(this);
+        arrayClazz.setAccessFlags(new Uint16(AccessFlags.ACCPUBLIC));
+        arrayClazz.setName(name);
+        arrayClazz.setSuperClass(this.loadClass("java/lang/Object"));
+        arrayClazz.setInterfaces(new ClassMeta[] {
                 this.loadClass("java/lang/Cloneable"),
                 this.loadClass("java/io/Serializable")
         });
-        arrayClassMeta.startInit();
-        classMap.put(name, arrayClassMeta);
-        return arrayClassMeta;
+        arrayClazz.startInit();
+        classMap.put(name, arrayClazz);
+        return arrayClazz;
     }
 
     /**
@@ -164,8 +171,7 @@ public class ClassMetaLoader {
      * @return Class类
      */
     protected ClassMeta parseClass(byte[] classBytes) {
-        ClassReader reader = new ClassReader(classBytes);
-        ClassFile classFile = ClassFile.parse(reader);
+        ClassFile classFile = ClassFile.parse(classBytes);
         return ClassMeta.newClass(classFile);
     }
 
@@ -228,11 +234,11 @@ public class ClassMetaLoader {
             slotId = clazz.getSuperClass().getInstanceSlotCount();
         }
         // 类实例字段数量
-        for (FieldMeta fieldMeta : clazz.getFields()) {
-            if (!fieldMeta.isStatic()) {
-                fieldMeta.setSlotId(slotId);
+        for (FieldMeta field : clazz.getFields()) {
+            if (!field.isStatic()) {
+                field.setSlotId(slotId);
                 slotId++;
-                if (fieldMeta.isLongOrDouble()) {
+                if (field.isLongOrDouble()) {
                     slotId++;
                 }
             }
@@ -245,11 +251,11 @@ public class ClassMetaLoader {
      */
     private void calcStaticFieldSlotIds(ClassMeta clazz) {
         int slotId = 0;
-        for (FieldMeta fieldMeta : clazz.getFields()) {
-            if (fieldMeta.isStatic()) {
-                fieldMeta.setSlotId(slotId);
+        for (FieldMeta field : clazz.getFields()) {
+            if (field.isStatic()) {
+                field.setSlotId(slotId);
                 slotId++;
-                if (fieldMeta.isLongOrDouble()) {
+                if (field.isLongOrDouble()) {
                     slotId++;
                 }
             }
@@ -266,9 +272,9 @@ public class ClassMetaLoader {
             slots[i] = new Slot();
         }
         clazz.setStaticVars(slots);
-        for (FieldMeta fieldMeta : clazz.getFields()) {
-            if (fieldMeta.isStatic() && fieldMeta.isFinal()) {
-                initStaticFinalVars(clazz, fieldMeta);
+        for (FieldMeta field : clazz.getFields()) {
+            if (field.isStatic() && field.isFinal()) {
+                initStaticFinalVars(clazz, field);
             }
         }
     }
@@ -276,16 +282,16 @@ public class ClassMetaLoader {
     /**
      * 初始化静态常量值
      */
-    private void initStaticFinalVars(ClassMeta clazz, FieldMeta fieldMeta) {
+    private void initStaticFinalVars(ClassMeta clazz, FieldMeta field) {
         Slot[] vars = clazz.getStaticVars();
         ConstantPool cp = clazz.getConstantPool();
-        Uint16 constValueIndex = fieldMeta.getConstValueIndex();
+        Uint16 constValueIndex = field.getConstValueIndex();
         if (constValueIndex == null) {
             return;
         }
-        int slotId = fieldMeta.getSlotId();
+        int slotId = field.getSlotId();
         Constant constant = cp.getConstant(constValueIndex.value());
-        switch (fieldMeta.getDescriptor()) {
+        switch (field.getDescriptor()) {
             case "Z":
             case "B":
             case "C":
@@ -322,7 +328,7 @@ public class ClassMetaLoader {
                 break;
             }
             default:
-                System.out.println("Unknown field constant: " + fieldMeta.getDescriptor());
+                System.out.println("Unknown field constant: " + field.getDescriptor());
         }
     }
 

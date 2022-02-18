@@ -1,8 +1,5 @@
-package com.wjd.classfile.member;
+package com.wjd.classfile;
 
-import com.wjd.classfile.AttributeInfoTable;
-import com.wjd.classfile.ClassFile;
-import com.wjd.classfile.ClassReader;
 import com.wjd.classfile.attr.AttributeInfo;
 import com.wjd.classfile.attr.SignatureAttributeInfo;
 import com.wjd.classfile.type.Uint16;

@@ -1,6 +1,6 @@
 package com.wjd.rtda.meta;
 
-import com.wjd.classfile.member.FieldInfo;
+import com.wjd.classfile.FieldInfo;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.Slot;
 import com.wjd.util.ClassHelper;

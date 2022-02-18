@@ -1,12 +1,9 @@
 package com.wjd.classfile;
 
 import com.wjd.cp.Classpath;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -21,13 +18,11 @@ public class ClassFileTest {
         Classpath classpath = new Classpath(jreOption, cpOption);
 
         byte[] bootClassBytes = classpath.readClass(bootClassName);
-        ClassReader bootReader = new ClassReader(bootClassBytes);
-        ClassFile bootClassFile = ClassFile.parse(bootReader);
+        ClassFile bootClassFile = ClassFile.parse(bootClassBytes);
         assertEquals("Class name error", "java/lang/Object", bootClassFile.getClassName());
 
         byte[] userClassBytes = classpath.readClass(userClassName);
-        ClassReader userReader = new ClassReader(userClassBytes);
-        ClassFile userClassFile = ClassFile.parse(userReader);
+        ClassFile userClassFile = ClassFile.parse(userClassBytes);
         assertEquals("Class name error", "com/wjd/classfile/ClassFileStructureTest", userClassFile.getClassName());
     }
 

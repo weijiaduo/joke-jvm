@@ -20,6 +20,9 @@ public abstract class SymbolRef extends Constant {
         return clazz;
     }
 
+    /**
+     * 解析类符号引用
+     */
     private void resolveClassRef() {
         ClassMeta currentClassMeta = constantPool.getClazz();
         ClassMeta refClassMeta = currentClassMeta.getLoader().loadClass(className);

@@ -1,4 +1,4 @@
-package com.wjd.classfile.member;
+package com.wjd.classfile;
 
 import com.wjd.classfile.attr.AttributeInfo;
 import com.wjd.classfile.attr.CodeAttributeInfo;

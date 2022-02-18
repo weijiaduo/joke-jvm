@@ -3,7 +3,6 @@ package com.wjd.naive.java.io;
 import com.wjd.naive.NativeClass;
 import com.wjd.naive.NativeMethod;
 import com.wjd.naive.NativeRegistry;
-import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.StringPool;
 import com.wjd.rtda.stack.Frame;
@@ -40,8 +39,7 @@ public class WinNTFileSystem implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject fileObj = frame.getLocalVars().getRef(1);
-            Slot pathSlot = fileObj.getFieldValue("path", "Ljava/lang/String;");
-            HeapObject pathObj = pathSlot.getRef();
+            HeapObject pathObj = fileObj.getRefVar("path", "Ljava/lang/String;");
             String pathStr = StringPool.getRawString(pathObj);
 
             Path path = Paths.get(pathStr);

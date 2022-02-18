@@ -1,4 +1,4 @@
-package com.wjd.rtda.meta;
+package com.wjd.rtda.meta.ex;
 
 /**
  * @since 2022/2/14

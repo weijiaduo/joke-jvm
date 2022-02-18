@@ -20,6 +20,9 @@ public class MethodRef extends MemberRef {
         return ref;
     }
 
+    /**
+     * 解析方法符号引用
+     */
     public MethodMeta resolvedMethod() {
         if (methodMeta == null) {
             resolveMethodRef();
@@ -27,22 +30,36 @@ public class MethodRef extends MemberRef {
         return methodMeta;
     }
 
+    /**
+     * 解析方法符号引用
+     */
     private void resolveMethodRef() {
-        ClassMeta currentClassMeta = constantPool.getClazz();
-        ClassMeta refClassMeta = resolvedClass();
+        ClassMeta currentClassMeta = constantPool.getClazz(); // 当前类
+        ClassMeta refClassMeta = resolvedClass(); // 方法所在类
         if (refClassMeta.isInterface()) {
             throw new IncompatibleClassChangeError("Class: " + refClassMeta);
         }
+
+        // 查找指定方法
         MethodMeta methodMeta = lookupMethod(refClassMeta, name, descriptor);
         if (methodMeta == null) {
             throw new NoSuchMethodError("Method: " + name);
         }
+
+        // 验证访问权限
         if (!methodMeta.isAccessibleTo(currentClassMeta)) {
             throw new IllegalAccessError("Method: " + methodMeta + " can not access by Class: " + currentClassMeta);
         }
         this.methodMeta = methodMeta;
     }
 
+    /**
+     * 寻找指定方法元数据
+     * @param clazz 类元数据
+     * @param name 方法名称
+     * @param descriptor 描述符
+     * @return 方法元数据
+     */
     public static MethodMeta lookupMethod(ClassMeta clazz, String name, String descriptor) {
         MethodMeta methodMeta = lookupMethodInClass(clazz, name, descriptor);
         if (methodMeta == null) {
@@ -51,6 +68,13 @@ public class MethodRef extends MemberRef {
         return methodMeta;
     }
 
+    /**
+     * 在类中查找指定方法
+     * @param clazz 类元数据
+     * @param name 方法名称
+     * @param descriptor 描述符
+     * @return 方法元数据
+     */
     public static MethodMeta lookupMethodInClass(ClassMeta clazz, String name, String descriptor) {
         for (ClassMeta c = clazz; c != null; c = c.getSuperClass()) {
             for (MethodMeta methodMeta : c.getMethods()) {
@@ -62,6 +86,13 @@ public class MethodRef extends MemberRef {
         return null;
     }
 
+    /**
+     * 在接口中查找指定方法
+     * @param interfaces 界面元数据
+     * @param name 方法名称
+     * @param descriptor 描述符
+     * @return 方法元数据
+     */
     private static MethodMeta lookupMethodInInterfaces(ClassMeta[] interfaces, String name, String descriptor) {
         for (ClassMeta iface : interfaces) {
             for (MethodMeta methodMeta : iface.getMethods()) {

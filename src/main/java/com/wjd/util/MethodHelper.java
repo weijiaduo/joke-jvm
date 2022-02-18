@@ -30,9 +30,9 @@ public final class MethodHelper {
         }
         HeapObject root;
         if (isConstructor) {
-            root = methodObj.getFieldValue("root", "Ljava/lang/reflect/Constructor;").getRef();
+            root = methodObj.getRefVar("root", "Ljava/lang/reflect/Constructor;");
         } else {
-            root = methodObj.getFieldValue("root", "Ljava/lang/reflect/Method;").getRef();
+            root = methodObj.getRefVar("root", "Ljava/lang/reflect/Method;");
         }
         return (MethodMeta) root.getExtra();
     }
@@ -51,7 +51,7 @@ public final class MethodHelper {
         Slot[] args = new Slot[method.getArgSlotCount()];
         int index = 0;
 
-        // 实例方法
+        // 实例方法，第一个参数是this
         if (!method.isStatic()) {
             Slot thisSlot = new Slot();
             thisSlot.setRef(that);
@@ -69,12 +69,31 @@ public final class MethodHelper {
             String typeName = argsType.getName();
             if (typeName.length() == 1) {
                 // 基本类型，自动拆箱
-                // TODO: 这里的long和double值有点不太对，应该占用2个Slot
-                Slot value = argsObj.getFieldValue("value", typeName);
-                Slot slot = new Slot(value);
-                args[index++] = slot;
-                if (typeName.equals("J") || typeName.equals("D")) {
-                    index++;
+                switch (typeName) {
+                    case "Z":
+                    case "B":
+                    case "C":
+                    case "S":
+                    case "I":
+                    case "F":
+                    {
+                        int val = argsObj.getIntVar("value", typeName);
+                        Slot slot = new Slot(val);
+                        args[index++] = slot;
+                        break;
+                    }
+                    case "J":
+                    case "D":
+                    {
+                        long val = argsObj.getLongVar("value", typeName);
+                        Slot highSlot = new Slot();
+                        Slot lowSlot = new Slot();
+                        Slot.setLong(highSlot, lowSlot, val);
+                        args[index++] = highSlot;
+                        args[index++] = lowSlot;
+                    }
+                    default:
+                        System.out.println("Unknown box type: " + typeName);
                 }
             } else {
                 // 引用类型

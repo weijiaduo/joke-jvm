@@ -82,6 +82,12 @@ public class ArrayHelper {
         }
     }
 
+    /**
+     * 创建指定类型的数组对象
+     * @param name 指定类型
+     * @param count 数组长度
+     * @return 数组对象
+     */
     public static Object makeArray(String name, int count) {
         switch (name) {
             case "[Z":

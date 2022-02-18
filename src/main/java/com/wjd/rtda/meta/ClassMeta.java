@@ -4,6 +4,7 @@ import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.util.ArrayHelper;
 
@@ -177,6 +178,46 @@ public class ClassMeta {
         this.jClass = jClass;
     }
 
+    /**
+     * 获取当前类型对应的数组类型
+     */
+    public ClassMeta getArrayClass() {
+        String arrayClassName = ArrayHelper.getArrayClassName(name);
+        return loader.loadClass(arrayClassName);
+    }
+
+    /**
+     * 获取数组类型的元素类型
+     */
+    public ClassMeta getComponentClass() {
+        String componentClassName = ArrayHelper.getComponentClassName(name);
+        return loader.loadClass(componentClassName);
+    }
+
+    /**
+     * 获取包名
+     */
+    public String getPackageName() {
+        String packageName = "";
+        int index = name.lastIndexOf("/");
+        if (index > 0) {
+            packageName = name.substring(0, index);
+        }
+        return packageName;
+    }
+
+    /**
+     * Java类名，小数点.分割
+     */
+    public String getJavaName() {
+        return name.replaceAll("/", ".");
+    }
+
+    /**
+     * 是否可以被其他类访问
+     * @param other 其他类
+     * @return true/false
+     */
     public boolean isAccessibleTo(ClassMeta other) {
         // 公开权限/包权限
         return isPublic() || getPackageName().equals(other.getPackageName());
@@ -204,19 +245,6 @@ public class ClassMeta {
 
     public boolean isSuper() {
         return AccessFlags.isSuper(accessFlags);
-    }
-
-    public String getJavaName() {
-        return name.replaceAll("/", ".");
-    }
-
-    public String getPackageName() {
-        String packageName = "";
-        int index = name.lastIndexOf("/");
-        if (index > 0) {
-            packageName = name.substring(0, index);
-        }
-        return packageName;
     }
 
     public boolean isSuperClassOf(ClassMeta child) {
@@ -328,33 +356,6 @@ public class ClassMeta {
             }
         }
         return fs.toArray(new FieldMeta[0]);
-    }
-
-    /**
-     * 获取指定静态字段成员
-     */
-    public HeapObject getRefVar(String name, String descriptor) {
-        FieldMeta fieldMeta = getStaticField(name, descriptor);
-        return staticVars[fieldMeta.getSlotId()].getRef();
-    }
-
-    /**
-     * 设置静态字段成员值
-     */
-    public void setRefVar(String name, String descriptor, HeapObject ref) {
-        FieldMeta fieldMeta = getStaticField(name, descriptor);
-        staticVars[fieldMeta.getSlotId()].setRef(ref);
-    }
-
-    /**
-     * 设置静态字段的值
-     * @param name 字段名称
-     * @param descriptor 字段描述符
-     * @param value 字段值
-     */
-    public void setStaticValue(String name, String descriptor, Slot value) {
-        FieldMeta fieldMeta = getStaticField(name, descriptor);
-        fieldMeta.putStaticValue(value);
     }
 
     /**
@@ -478,30 +479,37 @@ public class ClassMeta {
     }
 
     /**
-     * 获取当前类型对应的数组类型
+     * 创建对象
      */
-    public ClassMeta getArrayClass() {
-        String arrayClassName = ArrayHelper.getArrayClassName(name);
-        return loader.loadClass(arrayClassName);
+    public HeapObject newObject() {
+        return Heap.newObject(this);
     }
 
     /**
-     * 获取数组类型的元素类型
+     * 创建数组
+     * @param count 数组长度
      */
-    public ClassMeta getComponentClass() {
-        String componentClassName = ArrayHelper.getComponentClassName(name);
-        return loader.loadClass(componentClassName);
-    }
-
-    public HeapObject newObject() {
-        return HeapObject.newObject(this);
-    }
-
     public HeapObject newArray(int count) {
         if (!isArray()) {
             throw new IllegalStateException("Not array class: " + name);
         }
-        return HeapObject.newArray(this, ArrayHelper.makeArray(name, count));
+        return Heap.newObject(this, ArrayHelper.makeArray(name, count));
+    }
+
+    /**
+     * 获取指定静态字段成员
+     */
+    public HeapObject getRefVar(String name, String descriptor) {
+        FieldMeta fieldMeta = getStaticField(name, descriptor);
+        return staticVars[fieldMeta.getSlotId()].getRef();
+    }
+
+    /**
+     * 设置静态字段成员值
+     */
+    public void setRefVar(String name, String descriptor, HeapObject ref) {
+        FieldMeta fieldMeta = getStaticField(name, descriptor);
+        staticVars[fieldMeta.getSlotId()].setRef(ref);
     }
 
 }

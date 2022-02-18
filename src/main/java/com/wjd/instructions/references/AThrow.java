@@ -3,7 +3,7 @@ package com.wjd.instructions.references;
 import com.wjd.instructions.constants.NoOperandsInstruction;
 import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.meta.StackTraceElement;
+import com.wjd.rtda.meta.ex.StackTraceElement;
 import com.wjd.rtda.meta.StringPool;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.stack.OperandStack;

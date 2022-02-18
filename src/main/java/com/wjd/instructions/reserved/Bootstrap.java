@@ -2,7 +2,6 @@ package com.wjd.instructions.reserved;
 
 import com.wjd.instructions.constants.NoOperandsInstruction;
 import com.wjd.instructions.references.InitClass;
-import com.wjd.rtda.Slot;
 import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
@@ -105,9 +104,7 @@ public class Bootstrap extends NoOperandsInstruction {
 
             ClassMeta threadClass = loader.loadClass("java/lang/Thread");
             HeapObject mainThreadObj = threadClass.newObject();
-            Slot prioritySlot = new Slot();
-            Slot.setInt(prioritySlot, 1);
-            mainThreadObj.setFieldValue("priority", "I", prioritySlot);
+            mainThreadObj.setIntVar("priority", "I", 1);
             thread.setjThread(mainThreadObj);
 
             MethodMeta initMethod = threadClass.getConstructor("(Ljava/lang/ThreadGroup;Ljava/lang/String;)V");
