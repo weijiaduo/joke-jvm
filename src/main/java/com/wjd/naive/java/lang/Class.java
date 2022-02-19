@@ -51,7 +51,7 @@ public class Class implements NativeClass {
             java.lang.String name = StringPool.getRawString(nameObj);
             ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
             HeapObject jClass = loader.loadClass(name).getjClass();
-            frame.getOperandStack().pushRef(jClass);
+            frame.getOpStack().pushRef(jClass);
         }
     }
 
@@ -66,7 +66,7 @@ public class Class implements NativeClass {
             ClassMeta clazz = (ClassMeta) that.getExtra();
             java.lang.String name = clazz.getJavaName();
             HeapObject nameObj = StringPool.getStringObj(clazz.getLoader(), name);
-            frame.getOperandStack().pushRef(nameObj);
+            frame.getOpStack().pushRef(nameObj);
         }
     }
 
@@ -76,7 +76,7 @@ public class Class implements NativeClass {
     static class DesiredAssertionStatus0 implements NativeMethod {
         @Override
         public void execute(Frame frame) {
-            frame.getOperandStack().pushBoolean(false);
+            frame.getOpStack().pushBoolean(false);
         }
     }
 
@@ -86,7 +86,7 @@ public class Class implements NativeClass {
     static class GetClassLoader0 implements NativeMethod {
         @Override
         public void execute(Frame frame) {
-            frame.getOperandStack().pushRef(null);
+            frame.getOpStack().pushRef(null);
         }
     }
 
@@ -110,7 +110,7 @@ public class Class implements NativeClass {
             ClassMeta fieldArrClass = fieldClass.getArrayClass();
             HeapObject fieldArr = fieldArrClass.newArray(fieldCount);
 
-            frame.getOperandStack().pushRef(fieldArr);
+            frame.getOpStack().pushRef(fieldArr);
 
             if (fieldCount > 0) {
                 HeapObject[] fieldObjs = fieldArr.getRefs();
@@ -179,7 +179,7 @@ public class Class implements NativeClass {
             HeapObject that = frame.getLocalVars().getThis();
             // 注意这里取的是Class<T>中的T
             ClassMeta clazz = (ClassMeta) that.getExtra();
-            frame.getOperandStack().pushBoolean(clazz.isPrimitive());
+            frame.getOpStack().pushBoolean(clazz.isPrimitive());
         }
     }
 
@@ -205,7 +205,7 @@ public class Class implements NativeClass {
                 frame.getThread().revertNextPc();
                 InitClass.initClass(frame.getThread(), clazz);
             } else {
-                frame.getOperandStack().pushRef(jClass);
+                frame.getOpStack().pushRef(jClass);
             }
         }
     }
@@ -219,7 +219,7 @@ public class Class implements NativeClass {
             HeapObject that = frame.getLocalVars().getThis();
             // 注意这里取的是Class<T>中的T
             ClassMeta clazz = (ClassMeta) that.getExtra();
-            frame.getOperandStack().pushBoolean(clazz.isInterface());
+            frame.getOpStack().pushBoolean(clazz.isInterface());
         }
     }
 
@@ -243,7 +243,7 @@ public class Class implements NativeClass {
             ClassMeta constructorArrClass = constructorClass.getArrayClass();
             HeapObject constructorArr = constructorArrClass.newArray(count);
 
-            frame.getOperandStack().pushRef(constructorArr);
+            frame.getOpStack().pushRef(constructorArr);
 
             if (count > 0) {
                 HeapObject[] constructorObjs = constructorArr.getRefs();
@@ -317,7 +317,7 @@ public class Class implements NativeClass {
             HeapObject that = frame.getLocalVars().getThis();
             // 注意这里取的是Class<T>中的T
             ClassMeta classMeta = (ClassMeta) that.getExtra();
-            frame.getOperandStack().pushInt(classMeta.getAccessFlags().value());
+            frame.getOpStack().pushInt(classMeta.getAccessFlags().value());
         }
     }
 
@@ -332,9 +332,9 @@ public class Class implements NativeClass {
             ClassMeta classMeta = (ClassMeta) that.getExtra();
             ClassMeta superClassMeta = classMeta.getSuperClass();
             if (superClassMeta != null) {
-                frame.getOperandStack().pushRef(superClassMeta.getjClass());
+                frame.getOpStack().pushRef(superClassMeta.getjClass());
             } else {
-                frame.getOperandStack().pushRef(null);
+                frame.getOpStack().pushRef(null);
             }
         }
     }

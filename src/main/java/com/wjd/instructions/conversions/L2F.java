@@ -11,8 +11,8 @@ public class L2F extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        long l = frame.getOperandStack().popLong();
+        long l = frame.getOpStack().popLong();
         float f = (float) l;
-        frame.getOperandStack().pushFloat(f);
+        frame.getOpStack().pushFloat(f);
     }
 }

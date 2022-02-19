@@ -44,7 +44,7 @@ public class Unsafe implements NativeClass {
     static class ArrayBaseOffset implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushInt(0);
+            frame.getOpStack().pushInt(0);
         }
     }
 
@@ -54,7 +54,7 @@ public class Unsafe implements NativeClass {
     static class ArrayIndexScale implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushInt(1);
+            frame.getOpStack().pushInt(1);
         }
     }
 
@@ -64,7 +64,7 @@ public class Unsafe implements NativeClass {
     static class AddressSize implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushInt(8);
+            frame.getOpStack().pushInt(8);
         }
     }
 
@@ -76,7 +76,7 @@ public class Unsafe implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject jField = frame.getLocalVars().getRef(1);
             int offset = jField.getIntVar("slot", "I");
-            frame.getOperandStack().pushLong(offset);
+            frame.getOpStack().pushLong(offset);
         }
     }
 
@@ -96,12 +96,12 @@ public class Unsafe implements NativeClass {
                 // 对象
                 Slot[] fields = (Slot[]) data;
                 boolean swapped = casObj(obj, fields, offset, expected, update);
-                frame.getOperandStack().pushBoolean(swapped);
+                frame.getOpStack().pushBoolean(swapped);
             } else if (data instanceof HeapObject[]) {
                 // 数组
                 HeapObject[] arr = (HeapObject[]) data;
                 boolean swapped = casArr(arr, offset, expected, update);
-                frame.getOperandStack().pushBoolean(swapped);
+                frame.getOpStack().pushBoolean(swapped);
             } else {
                 throw new IllegalArgumentException("CompareAndSwapObject data type: " + data);
             }
@@ -144,11 +144,11 @@ public class Unsafe implements NativeClass {
             if (data instanceof Slot[]) {
                 // Object
                 Slot[] slots = (Slot[]) data;
-                frame.getOperandStack().pushInt(Slot.getInt(slots[index]));
+                frame.getOpStack().pushInt(Slot.getInt(slots[index]));
             } else if (data instanceof int[]) {
                 // int[]
                 int[] ints = (int[]) data;
-                frame.getOperandStack().pushInt(ints[index]);
+                frame.getOpStack().pushInt(ints[index]);
             } else {
                 throw new IllegalArgumentException("Not int type: " + data);
             }
@@ -171,12 +171,12 @@ public class Unsafe implements NativeClass {
                 // 对象
                 Slot[] fields = (Slot[]) data;
                 boolean swapped = casObj(obj, fields, offset, expected, update);
-                frame.getOperandStack().pushBoolean(swapped);
+                frame.getOpStack().pushBoolean(swapped);
             } else if (data instanceof int[]) {
                 // 数组
                 int[] arr = (int[]) data;
                 boolean swapped = casArr(arr, offset, expected, update);
-                frame.getOperandStack().pushBoolean(swapped);
+                frame.getOpStack().pushBoolean(swapped);
             } else {
                 throw new IllegalArgumentException("CompareAndSwapInt data type: " + data);
             }
@@ -213,7 +213,7 @@ public class Unsafe implements NativeClass {
         public void execute(Frame frame) throws Exception {
             long bytes = frame.getLocalVars().getLong(1);
             long address = Memory.allocate(bytes);
-            frame.getOperandStack().pushLong(address);
+            frame.getOpStack().pushLong(address);
         }
     }
 
@@ -236,7 +236,7 @@ public class Unsafe implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             long address = frame.getLocalVars().getLong(1);
-            frame.getOperandStack().pushInt(Memory.getByte(address));
+            frame.getOpStack().pushInt(Memory.getByte(address));
         }
     }
 

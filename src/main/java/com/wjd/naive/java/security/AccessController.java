@@ -23,7 +23,7 @@ public class AccessController implements NativeClass {
 
     static void doPrivileged0(Frame frame) {
         HeapObject action = frame.getLocalVars().getRef(0);
-        frame.getOperandStack().pushRef(action);
+        frame.getOpStack().pushRef(action);
 
         MethodMeta method = action.getClazz().getInstanceMethod("run", "()Ljava/lang/Object;");
         frame.getThread().invokeMethod(method);
@@ -55,7 +55,7 @@ public class AccessController implements NativeClass {
     static class GetStackAccessControlContext implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushRef(null);
+            frame.getOpStack().pushRef(null);
         }
     }
 

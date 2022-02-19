@@ -11,9 +11,9 @@ public class ICmp extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int v2 = frame.getOperandStack().popInt();
-        int v1 = frame.getOperandStack().popInt();
+        int v2 = frame.getOpStack().popInt();
+        int v1 = frame.getOpStack().popInt();
         int v = CmpUtil.cmpInt(v1, v2);
-        frame.getOperandStack().pushInt(v);
+        frame.getOpStack().pushInt(v);
     }
 }

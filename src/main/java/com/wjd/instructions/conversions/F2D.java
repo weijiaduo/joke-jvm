@@ -11,7 +11,7 @@ public class F2D extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double d = frame.getOperandStack().popFloat();
-        frame.getOperandStack().pushDouble(d);
+        double d = frame.getOpStack().popFloat();
+        frame.getOpStack().pushDouble(d);
     }
 }

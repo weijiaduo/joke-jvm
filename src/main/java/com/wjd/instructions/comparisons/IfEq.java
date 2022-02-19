@@ -11,7 +11,7 @@ public class IfEq extends BranchInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int v1 = frame.getOperandStack().popInt();
+        int v1 = frame.getOpStack().popInt();
         if (v1 == 0) {
             branch(frame);
         }

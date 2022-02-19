@@ -11,8 +11,8 @@ public class D2F extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double d = frame.getOperandStack().popDouble();
+        double d = frame.getOpStack().popDouble();
         float f = (float) d;
-        frame.getOperandStack().pushFloat(f);
+        frame.getOpStack().pushFloat(f);
     }
 }

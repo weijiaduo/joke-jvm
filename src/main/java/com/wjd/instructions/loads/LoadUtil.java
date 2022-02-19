@@ -11,26 +11,26 @@ public final class LoadUtil {
 
     public static void iload(Frame frame, int index) {
         int val = frame.getLocalVars().getInt(index);
-        frame.getOperandStack().pushInt(val);
+        frame.getOpStack().pushInt(val);
     }
 
     public static void lload(Frame frame, int index) {
         long val = frame.getLocalVars().getLong(index);
-        frame.getOperandStack().pushLong(val);
+        frame.getOpStack().pushLong(val);
     }
 
     public static void fload(Frame frame, int index) {
         float val = frame.getLocalVars().getFloat(index);
-        frame.getOperandStack().pushFloat(val);
+        frame.getOpStack().pushFloat(val);
     }
 
     public static void dload(Frame frame, int index) {
         double val = frame.getLocalVars().getDouble(index);
-        frame.getOperandStack().pushDouble(val);
+        frame.getOpStack().pushDouble(val);
     }
 
     public static void aload(Frame frame, int index) {
-        frame.getOperandStack().pushRef(frame.getLocalVars().getRef(index));
+        frame.getOpStack().pushRef(frame.getLocalVars().getRef(index));
     }
 
 }

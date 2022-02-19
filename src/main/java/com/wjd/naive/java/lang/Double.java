@@ -25,7 +25,7 @@ public class Double implements NativeClass {
         public void execute(Frame frame) {
             double val = frame.getLocalVars().getDouble(0);
             long bits = java.lang.Double.doubleToRawLongBits(val);
-            frame.getOperandStack().pushLong(bits);
+            frame.getOpStack().pushLong(bits);
         }
     }
 
@@ -37,7 +37,7 @@ public class Double implements NativeClass {
         public void execute(Frame frame) {
             long bits = frame.getLocalVars().getLong(0);
             double val = java.lang.Double.longBitsToDouble(bits);
-            frame.getOperandStack().pushDouble(val);
+            frame.getOpStack().pushDouble(val);
         }
     }
 

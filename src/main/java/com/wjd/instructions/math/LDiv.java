@@ -11,9 +11,9 @@ public class LDiv extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        long val1 = frame.getOperandStack().popLong();
-        long val2 = frame.getOperandStack().popLong();
+        long val1 = frame.getOpStack().popLong();
+        long val2 = frame.getOpStack().popLong();
         long val = val2 / val1;
-        frame.getOperandStack().pushLong(val);
+        frame.getOpStack().pushLong(val);
     }
 }

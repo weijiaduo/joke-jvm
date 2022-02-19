@@ -25,7 +25,7 @@ public class Float implements NativeClass {
         public void execute(Frame frame) {
             float val = frame.getLocalVars().getFloat(0);
             int bits = java.lang.Float.floatToIntBits(val);
-            frame.getOperandStack().pushInt(bits);
+            frame.getOpStack().pushInt(bits);
         }
     }
 
@@ -37,7 +37,7 @@ public class Float implements NativeClass {
         public void execute(Frame frame) {
             int bits = frame.getLocalVars().getInt(0);
             float val = java.lang.Float.intBitsToFloat(bits);
-            frame.getOperandStack().pushFloat(val);
+            frame.getOpStack().pushFloat(val);
         }
     }
 

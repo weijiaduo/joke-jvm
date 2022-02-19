@@ -27,9 +27,9 @@ public class MultiANewArray implements Instruction {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index.value());
         ClassMeta arrayClazz = classRef.resolvedClass();
-        int[] counts = popAndCheckCounts(frame.getOperandStack(), dimension.value());
+        int[] counts = popAndCheckCounts(frame.getOpStack(), dimension.value());
         HeapObject arrayObject = newMultiDimensionalArray(counts, arrayClazz);
-        frame.getOperandStack().pushRef(arrayObject);
+        frame.getOpStack().pushRef(arrayObject);
     }
 
     @Override

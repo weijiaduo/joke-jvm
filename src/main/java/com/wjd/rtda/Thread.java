@@ -94,7 +94,7 @@ public class Thread {
         Frame frame = new Frame(this, method);
         if (args != null) {
             for (Slot slot : args) {
-                frame.getOperandStack().pushSlot(slot);
+                frame.getOpStack().pushSlot(slot);
             }
         }
         return frame;
@@ -128,7 +128,7 @@ public class Thread {
      */
     private void passArgs(Frame from, Frame to, int argsSlotCount) {
         for (int i = argsSlotCount - 1; i >= 0; i--) {
-            Slot slot = from.getOperandStack().popSlot();
+            Slot slot = from.getOpStack().popSlot();
             to.getLocalVars().setSlot(i, slot);
         }
     }

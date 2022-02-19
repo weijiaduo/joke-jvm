@@ -11,7 +11,7 @@ public class DNeg extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double val = -frame.getOperandStack().popDouble();
-        frame.getOperandStack().pushDouble(val);
+        double val = -frame.getOpStack().popDouble();
+        frame.getOpStack().pushDouble(val);
     }
 }

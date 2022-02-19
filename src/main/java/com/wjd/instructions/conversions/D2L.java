@@ -11,8 +11,8 @@ public class D2L extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double d = frame.getOperandStack().popDouble();
+        double d = frame.getOpStack().popDouble();
         long l = (long) d;
-        frame.getOperandStack().pushLong(l);
+        frame.getOpStack().pushLong(l);
     }
 }

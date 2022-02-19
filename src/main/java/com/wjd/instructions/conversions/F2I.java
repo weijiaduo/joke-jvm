@@ -11,8 +11,8 @@ public class F2I extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float f = frame.getOperandStack().popFloat();
+        float f = frame.getOpStack().popFloat();
         int i = (int) f;
-        frame.getOperandStack().pushInt(i);
+        frame.getOpStack().pushInt(i);
     }
 }

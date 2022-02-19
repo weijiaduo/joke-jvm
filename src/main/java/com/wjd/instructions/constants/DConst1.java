@@ -11,7 +11,7 @@ public class DConst1 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushDouble(1.0);
+        frame.getOpStack().pushDouble(1.0);
     }
 
 }

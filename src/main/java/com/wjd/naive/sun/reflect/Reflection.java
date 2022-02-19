@@ -30,7 +30,7 @@ public class Reflection implements NativeClass {
             // top2 is the caller of method
             Frame callerFrame = frame.getThread().getTopFrameN(2);
             HeapObject callerClass = callerFrame.getMethod().getClazz().getjClass();
-            frame.getOperandStack().pushRef(callerClass);
+            frame.getOpStack().pushRef(callerClass);
         }
     }
 
@@ -42,7 +42,7 @@ public class Reflection implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject type = frame.getLocalVars().getRef(0);
             ClassMeta clazz = (ClassMeta) type.getExtra();
-            frame.getOperandStack().pushInt(clazz.getAccessFlags().value());
+            frame.getOpStack().pushInt(clazz.getAccessFlags().value());
         }
     }
 

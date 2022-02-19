@@ -1,6 +1,5 @@
 package com.wjd.naive.java.lang;
 
-import com.wjd.Interpreter;
 import com.wjd.naive.NativeClass;
 import com.wjd.naive.NativeMethod;
 import com.wjd.naive.NativeRegistry;
@@ -30,7 +29,7 @@ public class Thread implements NativeClass {
     static class CurrentThread implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushRef(frame.getThread().getjThread());
+            frame.getOpStack().pushRef(frame.getThread().getjThread());
         }
     }
 
@@ -52,7 +51,7 @@ public class Thread implements NativeClass {
             HeapObject that = frame.getLocalVars().getThis();
             java.lang.Object extra = that.getExtra();
             boolean isAlive = extra instanceof com.wjd.rtda.Thread;
-            frame.getOperandStack().pushBoolean(isAlive);
+            frame.getOpStack().pushBoolean(isAlive);
         }
     }
 

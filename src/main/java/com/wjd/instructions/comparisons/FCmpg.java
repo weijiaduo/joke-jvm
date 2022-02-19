@@ -11,9 +11,9 @@ public class FCmpg extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float v2 = frame.getOperandStack().popFloat();
-        float v1 = frame.getOperandStack().popFloat();
+        float v2 = frame.getOpStack().popFloat();
+        float v1 = frame.getOpStack().popFloat();
         int v = CmpUtil.cmpFloat(v1, v2, true);
-        frame.getOperandStack().pushInt(v);
+        frame.getOpStack().pushInt(v);
     }
 }

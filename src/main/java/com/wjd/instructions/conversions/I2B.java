@@ -11,8 +11,8 @@ public class I2B extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int i = frame.getOperandStack().popInt();
+        int i = frame.getOpStack().popInt();
         byte b = (byte) i;
-        frame.getOperandStack().pushInt(b);
+        frame.getOpStack().pushInt(b);
     }
 }

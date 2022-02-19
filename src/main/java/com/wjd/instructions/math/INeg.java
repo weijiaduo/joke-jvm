@@ -11,7 +11,7 @@ public class INeg extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int val = -frame.getOperandStack().popInt();
-        frame.getOperandStack().pushInt(val);
+        int val = -frame.getOpStack().popInt();
+        frame.getOpStack().pushInt(val);
     }
 }

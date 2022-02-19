@@ -33,7 +33,7 @@ public class Object implements NativeClass {
         public void execute(Frame frame) {
             HeapObject that = frame.getLocalVars().getThis();
             HeapObject jClassObj = that.getClazz().getjClass();
-            frame.getOperandStack().pushRef(jClassObj);
+            frame.getOpStack().pushRef(jClassObj);
         }
     }
 
@@ -45,7 +45,7 @@ public class Object implements NativeClass {
         public void execute(Frame frame) {
             HeapObject that = frame.getLocalVars().getThis();
             int hashcode = that.hashCode();
-            frame.getOperandStack().pushInt(hashcode);
+            frame.getOpStack().pushInt(hashcode);
         }
     }
 
@@ -64,7 +64,7 @@ public class Object implements NativeClass {
             }
 
             // 克隆对象
-            frame.getOperandStack().pushRef(that.clone());
+            frame.getOpStack().pushRef(that.clone());
         }
     }
 

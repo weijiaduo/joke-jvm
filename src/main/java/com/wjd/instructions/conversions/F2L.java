@@ -11,8 +11,8 @@ public class F2L extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float f = frame.getOperandStack().popFloat();
+        float f = frame.getOpStack().popFloat();
         long l = (int) f;
-        frame.getOperandStack().pushLong(l);
+        frame.getOpStack().pushLong(l);
     }
 }

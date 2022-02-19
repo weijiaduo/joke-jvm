@@ -25,7 +25,7 @@ public class ClassLoader$NativeLibrary implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject nameObj = frame.getLocalVars().getRef(0);
-            frame.getOperandStack().pushRef(nameObj);
+            frame.getOpStack().pushRef(nameObj);
         }
     }
 

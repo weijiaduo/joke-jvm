@@ -13,9 +13,9 @@ public class AAStore extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        HeapObject val = frame.getOperandStack().popRef();
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        HeapObject val = frame.getOpStack().popRef();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("AAStore");
         }

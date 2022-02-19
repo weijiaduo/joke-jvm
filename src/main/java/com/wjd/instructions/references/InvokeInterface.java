@@ -3,12 +3,12 @@ package com.wjd.instructions.references;
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Index16Instruction;
-import com.wjd.rtda.stack.Frame;
-import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.meta.cons.InterfaceMethodRef;
-import com.wjd.rtda.meta.cons.MethodRef;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.meta.MethodMeta;
+import com.wjd.rtda.meta.cons.InterfaceMethodRef;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.util.MethodHelper;
 
 /**
  * 执行接口方法
@@ -32,7 +32,7 @@ public class InvokeInterface extends Index16Instruction {
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOpStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
             throw new NullPointerException("Invoke interface method: " + resolvedMethod.getName());
         }
@@ -42,7 +42,7 @@ public class InvokeInterface extends Index16Instruction {
         }
 
         // 方法的多态性，运行时确定实际执行的方法
-        MethodMeta methodToBeInvoked = MethodRef.lookupMethod(ref.getClazz(),
+        MethodMeta methodToBeInvoked = MethodHelper.lookupMethod(ref.getClazz(),
                 methodRef.getName(), methodRef.getDescriptor());
 
         // 未实现的抽象方法验证

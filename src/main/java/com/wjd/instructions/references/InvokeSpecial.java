@@ -1,12 +1,13 @@
 package com.wjd.instructions.references;
 
 import com.wjd.instructions.base.Index16Instruction;
-import com.wjd.rtda.stack.Frame;
+import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.ConstantPool;
-import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.meta.cons.MethodRef;
 import com.wjd.rtda.meta.MethodMeta;
+import com.wjd.rtda.meta.cons.MethodRef;
+import com.wjd.rtda.stack.Frame;
+import com.wjd.util.MethodHelper;
 
 /**
  * 执行实例方法（构造函数、私有方法、super调用方法）
@@ -31,7 +32,7 @@ public class InvokeSpecial extends Index16Instruction {
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOpStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
             throw new NullPointerException("Invoke special method: " + resolvedMethod.getName());
         }
@@ -51,7 +52,7 @@ public class InvokeSpecial extends Index16Instruction {
         if (currentClazz.isSuper() &&
                 resolvedClazz.isSuperClassOf(currentClazz) &&
                 !"<init>".equals(resolvedMethod.getName())) {
-            methodToBeInvoked = MethodRef.lookupMethodInClass(currentClazz.getSuperClass(),
+            methodToBeInvoked = MethodHelper.lookupMethodInClass(currentClazz.getSuperClass(),
                     methodRef.getName(),
                     methodRef.getDescriptor());
         }

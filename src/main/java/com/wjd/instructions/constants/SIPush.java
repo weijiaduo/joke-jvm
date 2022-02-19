@@ -14,7 +14,7 @@ public class SIPush implements Instruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushInt(val);
+        frame.getOpStack().pushInt(val);
     }
 
     @Override

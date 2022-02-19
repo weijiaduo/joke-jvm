@@ -93,7 +93,7 @@ public class Bootstrap extends NoOperandsInstruction {
             thread.setjThreadGroup(mainThreadGroupObj);
 
             MethodMeta initMethod = threadGroupClass.getConstructor("()V");
-            frame.getOperandStack().pushRef(mainThreadGroupObj); // this
+            frame.getOpStack().pushRef(mainThreadGroupObj); // this
             thread.invokeMethod(initMethod);
             return false;
         }
@@ -108,9 +108,9 @@ public class Bootstrap extends NoOperandsInstruction {
             thread.setjThread(mainThreadObj);
 
             MethodMeta initMethod = threadClass.getConstructor("(Ljava/lang/ThreadGroup;Ljava/lang/String;)V");
-            frame.getOperandStack().pushRef(mainThreadObj);                           // this
-            frame.getOperandStack().pushRef(thread.getjThreadGroup());                // group
-            frame.getOperandStack().pushRef(StringPool.getStringObj(loader, "main")); // name
+            frame.getOpStack().pushRef(mainThreadObj);                           // this
+            frame.getOpStack().pushRef(thread.getjThreadGroup());                // group
+            frame.getOpStack().pushRef(StringPool.getStringObj(loader, "main")); // name
             thread.invokeMethod(initMethod);
             return false;
         }

@@ -11,7 +11,7 @@ public class IfNonNull extends BranchInstruction {
 
     @Override
     public void execute(Frame frame) {
-        Object v1 = frame.getOperandStack().popRef();
+        Object v1 = frame.getOpStack().popRef();
         if (v1 != null) {
             branch(frame);
         }

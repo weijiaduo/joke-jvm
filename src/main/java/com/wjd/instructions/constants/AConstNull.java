@@ -11,7 +11,7 @@ public class AConstNull extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushRef(null);
+        frame.getOpStack().pushRef(null);
     }
 
 }

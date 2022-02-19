@@ -16,7 +16,7 @@ public class AReturn extends NoOperandsInstruction {
         Thread thread = frame.getThread();
         Frame currentFrame = thread.popFrame();
         Frame invokeFrame = thread.topFrame();
-        HeapObject returnVal = currentFrame.getOperandStack().popRef();
-        invokeFrame.getOperandStack().pushRef(returnVal);
+        HeapObject returnVal = currentFrame.getOpStack().popRef();
+        invokeFrame.getOpStack().pushRef(returnVal);
     }
 }

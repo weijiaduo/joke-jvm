@@ -11,7 +11,7 @@ public class LConst0 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushLong(0L);
+        frame.getOpStack().pushLong(0L);
     }
 
 }

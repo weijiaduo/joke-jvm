@@ -11,9 +11,9 @@ public class DCmpg extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double v2 = frame.getOperandStack().popDouble();
-        double v1 = frame.getOperandStack().popDouble();
+        double v2 = frame.getOpStack().popDouble();
+        double v1 = frame.getOpStack().popDouble();
         int v = CmpUtil.cmpDouble(v1, v2, true);
-        frame.getOperandStack().pushInt(v);
+        frame.getOpStack().pushInt(v);
     }
 }

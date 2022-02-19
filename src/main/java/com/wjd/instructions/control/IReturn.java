@@ -15,7 +15,7 @@ public class IReturn extends NoOperandsInstruction {
         Thread thread = frame.getThread();
         Frame currentFrame = thread.popFrame();
         Frame invokeFrame = thread.topFrame();
-        int returnVal = currentFrame.getOperandStack().popInt();
-        invokeFrame.getOperandStack().pushInt(returnVal);
+        int returnVal = currentFrame.getOpStack().popInt();
+        invokeFrame.getOpStack().pushInt(returnVal);
     }
 }

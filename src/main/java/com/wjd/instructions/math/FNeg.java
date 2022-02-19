@@ -11,7 +11,7 @@ public class FNeg extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float val = -frame.getOperandStack().popFloat();
-        frame.getOperandStack().pushFloat(val);
+        float val = -frame.getOpStack().popFloat();
+        frame.getOpStack().pushFloat(val);
     }
 }

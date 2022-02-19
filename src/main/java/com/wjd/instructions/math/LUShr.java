@@ -12,9 +12,9 @@ public class LUShr extends NoOperandsInstruction {
     @Override
     public void execute(Frame frame) {
         // 注意位移操作数是一个int类型的
-        int val1 = frame.getOperandStack().popInt();
-        long val2 = frame.getOperandStack().popLong();
+        int val1 = frame.getOpStack().popInt();
+        long val2 = frame.getOpStack().popLong();
         long val = val2 >>> (val1 & 0x3f);
-        frame.getOperandStack().pushLong(val);
+        frame.getOpStack().pushLong(val);
     }
 }

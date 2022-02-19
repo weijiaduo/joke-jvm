@@ -23,7 +23,7 @@ public class Signal implements NativeClass {
     static class FindSignal implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushInt(0);
+            frame.getOpStack().pushInt(0);
         }
     }
 
@@ -33,7 +33,7 @@ public class Signal implements NativeClass {
     static class Handle0 implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushLong(0);
+            frame.getOpStack().pushLong(0);
         }
     }
 

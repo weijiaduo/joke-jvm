@@ -10,6 +10,6 @@ public class Pop extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().popSlot();
+        frame.getOpStack().popSlot();
     }
 }

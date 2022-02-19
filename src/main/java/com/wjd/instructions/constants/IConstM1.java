@@ -11,7 +11,7 @@ public class IConstM1 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushInt(-1);
+        frame.getOpStack().pushInt(-1);
     }
 
 }

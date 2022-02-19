@@ -88,7 +88,7 @@ public class System implements NativeClass {
             Thread thread = frame.getThread();
 
             HeapObject propsObj = frame.getLocalVars().getRef(0);
-            frame.getOperandStack().pushRef(propsObj);
+            frame.getOpStack().pushRef(propsObj);
 
             MethodMeta setPropMethod = propsObj.getClazz().getInstanceMethod("setProperty",
                     "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;");
@@ -152,7 +152,7 @@ public class System implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject libName = frame.getLocalVars().getRef(0);
-            frame.getOperandStack().pushRef(libName);
+            frame.getOpStack().pushRef(libName);
         }
     }
 

@@ -20,7 +20,7 @@ public class ANewArray extends Index16Instruction {
         ClassRef classRef = (ClassRef) cp.getConstant(index);
         ClassMeta componentClazz = classRef.resolvedClass();
 
-        int count = frame.getOperandStack().popInt();
+        int count = frame.getOpStack().popInt();
         if (count < 0) {
             throw new NegativeArraySizeException("NewArray count: " + count);
         }
@@ -28,7 +28,7 @@ public class ANewArray extends Index16Instruction {
         // 数组类型
         ClassMeta arrayClazz = componentClazz.getArrayClass();
         HeapObject arrayObject = arrayClazz.newArray(count);
-        frame.getOperandStack().pushRef(arrayObject);
+        frame.getOpStack().pushRef(arrayObject);
     }
 
 }

@@ -11,8 +11,8 @@ public class I2S extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int i = frame.getOperandStack().popInt();
+        int i = frame.getOpStack().popInt();
         short s = (short) i;
-        frame.getOperandStack().pushInt(s);
+        frame.getOpStack().pushInt(s);
     }
 }

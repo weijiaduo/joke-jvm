@@ -11,9 +11,9 @@ public class IMul extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int val1 = frame.getOperandStack().popInt();
-        int val2 = frame.getOperandStack().popInt();
+        int val1 = frame.getOpStack().popInt();
+        int val2 = frame.getOpStack().popInt();
         int val = val2 * val1;
-        frame.getOperandStack().pushInt(val);
+        frame.getOpStack().pushInt(val);
     }
 }

@@ -11,9 +11,9 @@ public class DDiv extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double val1 = frame.getOperandStack().popDouble();
-        double val2 = frame.getOperandStack().popDouble();
+        double val1 = frame.getOpStack().popDouble();
+        double val2 = frame.getOpStack().popDouble();
         double val = val2 / val1;
-        frame.getOperandStack().pushDouble(val);
+        frame.getOpStack().pushDouble(val);
     }
 }

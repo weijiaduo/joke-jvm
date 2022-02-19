@@ -13,9 +13,9 @@ public class LAStore extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        long val = frame.getOperandStack().popLong();
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        long val = frame.getOpStack().popLong();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("LAStore");
         }

@@ -34,7 +34,7 @@ public class TableSwitch extends BranchInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int index = frame.getOperandStack().popInt();
+        int index = frame.getOpStack().popInt();
         if (index >= low && index <= high) {
             offset = jumpOffsets[index - low];
         } else {

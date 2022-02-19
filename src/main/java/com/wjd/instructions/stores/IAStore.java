@@ -13,9 +13,9 @@ public class IAStore extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int val = frame.getOperandStack().popInt();
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        int val = frame.getOpStack().popInt();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("IAStore");
         }

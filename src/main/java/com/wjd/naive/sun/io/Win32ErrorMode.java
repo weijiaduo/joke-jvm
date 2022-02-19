@@ -21,7 +21,7 @@ public class Win32ErrorMode implements NativeClass {
     static class SetErrorMode implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushLong(0);
+            frame.getOpStack().pushLong(0);
         }
     }
 

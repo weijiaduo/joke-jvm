@@ -15,7 +15,7 @@ public class IDCW extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        OperandStack stack = frame.getOperandStack();
+        OperandStack stack = frame.getOpStack();
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         Constant constant = cp.getConstant(index);
         if(constant instanceof IntegerConstant) {

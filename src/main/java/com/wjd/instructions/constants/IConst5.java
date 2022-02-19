@@ -11,7 +11,7 @@ public class IConst5 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushInt(5);
+        frame.getOpStack().pushInt(5);
     }
 
 }

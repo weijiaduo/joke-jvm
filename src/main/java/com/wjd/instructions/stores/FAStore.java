@@ -13,9 +13,9 @@ public class FAStore extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float val = frame.getOperandStack().popFloat();
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        float val = frame.getOpStack().popFloat();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("FAStore");
         }

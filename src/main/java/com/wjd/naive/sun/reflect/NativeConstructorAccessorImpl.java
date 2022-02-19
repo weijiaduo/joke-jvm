@@ -44,7 +44,7 @@ public class NativeConstructorAccessorImpl implements NativeClass {
 
             // 创建实例
             HeapObject obj = constructorClass.newObject();
-            frame.getOperandStack().pushRef(obj);
+            frame.getOpStack().pushRef(obj);
 
             // 执行<init>方法
             Slot[] args = MethodHelper.convertArgs(obj, argsArr, constructorMethod);

@@ -15,7 +15,7 @@ public class LReturn extends NoOperandsInstruction {
         Thread thread = frame.getThread();
         Frame currentFrame = thread.popFrame();
         Frame invokeFrame = thread.topFrame();
-        long returnVal = currentFrame.getOperandStack().popLong();
-        invokeFrame.getOperandStack().pushLong(returnVal);
+        long returnVal = currentFrame.getOpStack().popLong();
+        invokeFrame.getOpStack().pushLong(returnVal);
     }
 }

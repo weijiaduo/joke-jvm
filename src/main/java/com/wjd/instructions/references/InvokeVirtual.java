@@ -7,6 +7,7 @@ import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.meta.MethodMeta;
 import com.wjd.rtda.meta.cons.MethodRef;
 import com.wjd.rtda.stack.Frame;
+import com.wjd.util.MethodHelper;
 
 /**
  * 执行多态方法（运行时确定实际执行的方法）
@@ -26,7 +27,7 @@ public class InvokeVirtual extends Index16Instruction {
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
+        HeapObject ref = frame.getOpStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
             throw new NullPointerException("Invoke special method: " + resolvedMethod.getName());
         }
@@ -42,7 +43,7 @@ public class InvokeVirtual extends Index16Instruction {
         }
 
         // 方法的多态性，运行时确定实际执行的方法
-        MethodMeta methodToBeInvoked = MethodRef.lookupMethodInClass(ref.getClazz(),
+        MethodMeta methodToBeInvoked = MethodHelper.lookupMethodInClass(ref.getClazz(),
                 methodRef.getName(),
                 methodRef.getDescriptor());
 

@@ -32,7 +32,7 @@ public class FileDescriptor implements NativeClass {
     static class Set implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOperandStack().pushLong(0);
+            frame.getOpStack().pushLong(0);
         }
     }
 

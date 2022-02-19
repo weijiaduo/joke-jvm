@@ -12,7 +12,7 @@ public class MonitorExit extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        HeapObject that = frame.getOperandStack().popRef();
+        HeapObject that = frame.getOpStack().popRef();
         if (that == null) {
             throw new NullPointerException("MonitorEnter object is null!");
         }

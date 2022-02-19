@@ -15,7 +15,7 @@ public class DReturn extends NoOperandsInstruction {
         Thread thread = frame.getThread();
         Frame currentFrame = thread.popFrame();
         Frame invokeFrame = thread.topFrame();
-        double returnVal = currentFrame.getOperandStack().popDouble();
-        invokeFrame.getOperandStack().pushDouble(returnVal);
+        double returnVal = currentFrame.getOpStack().popDouble();
+        invokeFrame.getOpStack().pushDouble(returnVal);
     }
 }

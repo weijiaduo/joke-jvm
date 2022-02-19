@@ -13,9 +13,9 @@ public class DAStore extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double val = frame.getOperandStack().popDouble();
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        double val = frame.getOpStack().popDouble();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("DAStore");
         }

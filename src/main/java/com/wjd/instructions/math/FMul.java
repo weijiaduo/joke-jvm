@@ -11,9 +11,9 @@ public class FMul extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        float val1 = frame.getOperandStack().popFloat();
-        float val2 = frame.getOperandStack().popFloat();
+        float val1 = frame.getOpStack().popFloat();
+        float val2 = frame.getOpStack().popFloat();
         float val = val2 * val1;
-        frame.getOperandStack().pushFloat(val);
+        frame.getOpStack().pushFloat(val);
     }
 }

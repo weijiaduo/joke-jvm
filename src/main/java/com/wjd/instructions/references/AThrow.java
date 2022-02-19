@@ -16,7 +16,7 @@ public class AThrow extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        HeapObject ex = frame.getOperandStack().popRef();
+        HeapObject ex = frame.getOpStack().popRef();
         if (ex == null) {
             throw new NullPointerException("AThrow exception is null!");
         }
@@ -35,7 +35,7 @@ public class AThrow extends NoOperandsInstruction {
             int pc = frame.getNextPc() - 1;
             int handlerPc = frame.getMethod().findExceptionHandler(ex.getClazz(), pc);
             if (handlerPc > 0) {
-                OperandStack stack = frame.getOperandStack();
+                OperandStack stack = frame.getOpStack();
                 stack.clear();
                 stack.pushRef(ex);
                 frame.setNextPc(handlerPc);

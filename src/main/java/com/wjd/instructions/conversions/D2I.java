@@ -11,8 +11,8 @@ public class D2I extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        double d = frame.getOperandStack().popDouble();
+        double d = frame.getOpStack().popDouble();
         int i = (int) d;
-        frame.getOperandStack().pushInt(i);
+        frame.getOpStack().pushInt(i);
     }
 }

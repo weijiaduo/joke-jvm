@@ -37,7 +37,7 @@ public class PutField extends Index16Instruction {
 
         String descriptor = field.getDescriptor();
         int slotId = field.getSlotId();
-        OperandStack stack = frame.getOperandStack();
+        OperandStack stack = frame.getOpStack();
         char d = descriptor.charAt(0);
         switch (d) {
             case 'Z':

@@ -22,7 +22,7 @@ public class Frame {
     /** 局部变量表 */
     private LocalVars localVars;
     /** 操作数栈 */
-    private OperandStack operandStack;
+    private OperandStack opStack;
     /** 下一条执行的指令索引 */
     private int nextPc;
 
@@ -32,7 +32,7 @@ public class Frame {
         maxLocals = method.getMaxLocals();
         maxStack = method.getMaxStacks();
         localVars = new LocalVars(maxLocals);
-        operandStack = new OperandStack(maxStack);
+        opStack = new OperandStack(maxStack);
     }
 
     public Thread getThread() {
@@ -55,8 +55,8 @@ public class Frame {
         return localVars;
     }
 
-    public OperandStack getOperandStack() {
-        return operandStack;
+    public OperandStack getOpStack() {
+        return opStack;
     }
 
     public int getNextPc() {
@@ -75,7 +75,7 @@ public class Frame {
     public String toString() {
         return "Frame{" +
                 "localVars=" + localVars +
-                ", operandStack=" + operandStack +
+                ", operandStack=" + opStack +
                 ", nextPc=" + nextPc +
                 '}';
     }

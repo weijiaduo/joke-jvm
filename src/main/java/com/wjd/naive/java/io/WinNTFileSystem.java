@@ -53,7 +53,7 @@ public class WinNTFileSystem implements NativeClass {
                 attribute |= 0x04;
             }
 
-            frame.getOperandStack().pushInt(attribute);
+            frame.getOpStack().pushInt(attribute);
         }
     }
 }

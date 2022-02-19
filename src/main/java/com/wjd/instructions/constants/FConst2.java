@@ -11,7 +11,7 @@ public class FConst2 extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        frame.getOperandStack().pushFloat(2.0f);
+        frame.getOpStack().pushFloat(2.0f);
     }
 
 }

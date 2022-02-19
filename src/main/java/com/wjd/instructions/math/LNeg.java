@@ -11,7 +11,7 @@ public class LNeg extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        long val = -frame.getOperandStack().popLong();
-        frame.getOperandStack().pushLong(val);
+        long val = -frame.getOpStack().popLong();
+        frame.getOpStack().pushLong(val);
     }
 }

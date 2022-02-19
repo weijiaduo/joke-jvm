@@ -106,4 +106,59 @@ public final class MethodHelper {
         return args;
     }
 
+    /**
+     * 寻找指定方法元数据
+     * @param clazz 类元数据
+     * @param name 方法名称
+     * @param descriptor 描述符
+     * @return 方法元数据
+     */
+    public static MethodMeta lookupMethod(ClassMeta clazz, String name, String descriptor) {
+        MethodMeta method = lookupMethodInClass(clazz, name, descriptor);
+        if (method == null) {
+            method = lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
+        }
+        return method;
+    }
+
+    /**
+     * 在类中查找指定方法
+     * @param clazz 类元数据
+     * @param name 方法名称
+     * @param descriptor 描述符
+     * @return 方法元数据
+     */
+    public static MethodMeta lookupMethodInClass(ClassMeta clazz, String name, String descriptor) {
+        for (ClassMeta c = clazz; c != null; c = c.getSuperClass()) {
+            for (MethodMeta method : c.getMethods()) {
+                if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 在接口中查找指定方法
+     * @param interfaces 界面元数据
+     * @param name 方法名称
+     * @param descriptor 描述符
+     * @return 方法元数据
+     */
+    public static MethodMeta lookupMethodInInterfaces(ClassMeta[] interfaces, String name, String descriptor) {
+        for (ClassMeta iface : interfaces) {
+            for (MethodMeta method : iface.getMethods()) {
+                if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                    return method;
+                }
+            }
+            MethodMeta methodMeta = lookupMethodInInterfaces(iface.getInterfaces(), name, descriptor);
+            if (methodMeta != null) {
+                return methodMeta;
+            }
+        }
+        return null;
+    }
+
 }

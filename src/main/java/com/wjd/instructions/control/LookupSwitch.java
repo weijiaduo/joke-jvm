@@ -15,7 +15,7 @@ public class LookupSwitch extends BranchInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int key = frame.getOperandStack().popInt();
+        int key = frame.getOpStack().popInt();
         offset = defaultOffset;
         for (int i = 0; i < npairs * 2; i += 2) {
             if (matchOffsets[i] == key) {

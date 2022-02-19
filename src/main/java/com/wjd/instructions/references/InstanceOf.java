@@ -15,7 +15,7 @@ public class InstanceOf extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        OperandStack stack = frame.getOperandStack();
+        OperandStack stack = frame.getOpStack();
         HeapObject ref = stack.popRef();
         if (ref == null) {
             stack.pushInt(0);

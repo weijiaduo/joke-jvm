@@ -25,7 +25,7 @@ public class String implements NativeClass {
         public void execute(Frame frame) {
             HeapObject that = frame.getLocalVars().getThis();
             HeapObject internString = StringPool.internString(that);
-            frame.getOperandStack().pushRef(internString);
+            frame.getOpStack().pushRef(internString);
         }
     }
 

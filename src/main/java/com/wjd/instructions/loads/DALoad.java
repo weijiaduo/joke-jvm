@@ -13,15 +13,15 @@ public class DALoad extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("DALoad");
         }
         if (index < 0 || index > arrayObject.getArrayLength()) {
             throw new ArrayIndexOutOfBoundsException("DALoad");
         }
-        frame.getOperandStack().pushDouble(arrayObject.getDoubles()[index]);
+        frame.getOpStack().pushDouble(arrayObject.getDoubles()[index]);
     }
 
 }

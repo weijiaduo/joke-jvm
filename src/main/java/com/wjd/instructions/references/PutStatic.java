@@ -43,7 +43,7 @@ public class PutStatic extends Index16Instruction {
         String descriptor = field.getDescriptor();
         int slotId = field.getSlotId();
         Slot[] slots = fieldClazz.getStaticVars();
-        OperandStack stack = frame.getOperandStack();
+        OperandStack stack = frame.getOpStack();
         char d = descriptor.charAt(0);
         switch (d) {
             case 'Z':

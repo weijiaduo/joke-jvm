@@ -29,7 +29,7 @@ public class Throwable implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject that = frame.getLocalVars().getThis();
-            frame.getOperandStack().pushRef(that);
+            frame.getOpStack().pushRef(that);
             StackTraceElement[] stacks = createStackTraceElements(that, frame.getThread());
             that.setExtra(stacks);
         }

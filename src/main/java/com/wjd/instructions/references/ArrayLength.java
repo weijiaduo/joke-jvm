@@ -12,12 +12,12 @@ public class ArrayLength extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("Array Length");
         }
         int len = arrayObject.getArrayLength();
-        frame.getOperandStack().pushInt(len);
+        frame.getOpStack().pushInt(len);
     }
 
 }

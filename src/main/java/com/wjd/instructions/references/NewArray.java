@@ -19,7 +19,7 @@ public class NewArray implements Instruction {
 
     @Override
     public void execute(Frame frame) {
-        int count = frame.getOperandStack().popInt();
+        int count = frame.getOpStack().popInt();
         if (count < 0) {
             throw new NegativeArraySizeException("NewArray count: " + count);
         }
@@ -27,7 +27,7 @@ public class NewArray implements Instruction {
         ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
         ClassMeta arrayClazz = ArrayHelper.getPrimitiveArrayClass(loader, atype);
         HeapObject arrayObject = arrayClazz.newArray(count);
-        frame.getOperandStack().pushRef(arrayObject);
+        frame.getOpStack().pushRef(arrayObject);
     }
 
     @Override

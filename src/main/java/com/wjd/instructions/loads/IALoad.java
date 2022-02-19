@@ -13,15 +13,15 @@ public class IALoad extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("IALoad");
         }
         if (index < 0 || index > arrayObject.getArrayLength()) {
             throw new ArrayIndexOutOfBoundsException("IALoad");
         }
-        frame.getOperandStack().pushInt(arrayObject.getInts()[index]);
+        frame.getOpStack().pushInt(arrayObject.getInts()[index]);
     }
 
 }

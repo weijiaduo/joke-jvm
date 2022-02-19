@@ -13,15 +13,15 @@ public class BALoad extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        int index = frame.getOperandStack().popInt();
-        HeapObject arrayObject = frame.getOperandStack().popRef();
+        int index = frame.getOpStack().popInt();
+        HeapObject arrayObject = frame.getOpStack().popRef();
         if (arrayObject == null) {
             throw new NullPointerException("BALoad");
         }
         if (index < 0 || index > arrayObject.getArrayLength()) {
             throw new ArrayIndexOutOfBoundsException("BALoad");
         }
-        frame.getOperandStack().pushInt(arrayObject.getBytes()[index]);
+        frame.getOpStack().pushInt(arrayObject.getBytes()[index]);
     }
 
 }

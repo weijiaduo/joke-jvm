@@ -15,7 +15,7 @@ public class FReturn extends NoOperandsInstruction {
         Thread thread = frame.getThread();
         Frame currentFrame = thread.popFrame();
         Frame invokeFrame = thread.topFrame();
-        float returnVal = currentFrame.getOperandStack().popFloat();
-        invokeFrame.getOperandStack().pushFloat(returnVal);
+        float returnVal = currentFrame.getOpStack().popFloat();
+        invokeFrame.getOpStack().pushFloat(returnVal);
     }
 }

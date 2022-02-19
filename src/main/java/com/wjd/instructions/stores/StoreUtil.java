@@ -10,28 +10,28 @@ public final class StoreUtil {
     private StoreUtil(){}
 
     public static void istore(Frame frame, int index) {
-        int val = frame.getOperandStack().popInt();
+        int val = frame.getOpStack().popInt();
         frame.getLocalVars().setInt(index, val);
     }
 
     public static void lstore(Frame frame, int index) {
-        long val = frame.getOperandStack().popLong();
+        long val = frame.getOpStack().popLong();
         frame.getLocalVars().setLong(index, val);
 
     }
 
     public static void fstore(Frame frame, int index) {
-        float val = frame.getOperandStack().popFloat();
+        float val = frame.getOpStack().popFloat();
         frame.getLocalVars().setFloat(index, val);
     }
 
     public static void dstore(Frame frame, int index) {
-        double val = frame.getOperandStack().popDouble();
+        double val = frame.getOpStack().popDouble();
         frame.getLocalVars().setDouble(index, val);
     }
 
     public static void astore(Frame frame, int index) {
-        frame.getLocalVars().setRef(index, frame.getOperandStack().popRef());
+        frame.getLocalVars().setRef(index, frame.getOpStack().popRef());
     }
 
 }
