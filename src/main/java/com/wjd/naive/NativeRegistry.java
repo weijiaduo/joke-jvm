@@ -1,20 +1,18 @@
 package com.wjd.naive;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @since 2022/2/12
  */
 public class NativeRegistry {
 
+    private static Set<String> loadedClass = new HashSet<>();
     private static Map<String, NativeMethod> registry = new HashMap<>();
     private static NativeMethod emptyMethod = new EmptyNativeMethod();
-
-    private static boolean initRegistry;
-    static {
-        initRegistry = initRegistryNativeClass();
-    }
 
     /**
      * 注册本地方法
@@ -28,6 +26,7 @@ public class NativeRegistry {
      * 查找指定的本地方法实现
      */
     public static NativeMethod findNativeMethod(String className, String methodName, String methodDescriptor) {
+        loadNativeClass(className);
         String key = getKey(className, methodName, methodDescriptor);
         NativeMethod method = registry.get(key);
         if (method != null) {
@@ -45,38 +44,24 @@ public class NativeRegistry {
     }
 
     /**
-     * FIXME: 临时方法
-     * 注册本地方法类
+     * 加载本地类
+     * @param className 类名称
      */
-    private static boolean initRegistryNativeClass() {
+    private static void loadNativeClass(String className) {
+        if (loadedClass.contains(className)) {
+            return;
+        }
         try {
-            String basePackageName = "com.wjd.naive.";
+            // 先添加到集合，避免异常
+            loadedClass.add(className);
+            className = className.replaceAll("/", ".");
+            String basePackage = NativeRegistry.class.getPackage().getName();
+
             // 使用Class.forName()可以让static执行注册
-            Class.forName(basePackageName + "sun.misc.VM");
-            Class.forName(basePackageName + "sun.misc.Unsafe");
-            Class.forName(basePackageName + "sun.misc.Signal");
-            Class.forName(basePackageName + "java.lang.Object");
-            Class.forName(basePackageName + "java.lang.Class");
-            Class.forName(basePackageName + "java.lang.System");
-            Class.forName(basePackageName + "java.lang.Thread");
-            Class.forName(basePackageName + "java.lang.Float");
-            Class.forName(basePackageName + "java.lang.Double");
-            Class.forName(basePackageName + "java.lang.String");
-            Class.forName(basePackageName + "java.lang.Throwable");
-            Class.forName(basePackageName + "java.lang.ClassLoader$NativeLibrary");
-            Class.forName(basePackageName + "java.io.FileOutputStream");
-            Class.forName(basePackageName + "java.io.FileInputStream");
-            Class.forName(basePackageName + "java.io.FileDescriptor");
-            Class.forName(basePackageName + "java.io.WinNTFileSystem");
-            Class.forName(basePackageName + "java.security.AccessController");
-            Class.forName(basePackageName + "sun.reflect.Reflection");
-            Class.forName(basePackageName + "sun.reflect.NativeConstructorAccessorImpl");
-            Class.forName(basePackageName + "sun.io.Win32ErrorMode");
-            return true;
+            Class.forName(basePackage + "." + className);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
 }
