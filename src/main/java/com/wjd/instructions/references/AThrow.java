@@ -51,7 +51,7 @@ public class AThrow extends NoOperandsInstruction {
      */
     private void handleUncaughtException(Thread thread, HeapObject ex) {
         thread.clearStack();
-        HeapObject msgObj = ex.getRefVar("detailMessage", "Ljava/lang/String;");
+        HeapObject msgObj = ex.getFieldRef("detailMessage", "Ljava/lang/String;");
         String msg = StringPool.getRawString(msgObj);
         System.out.println("Exception in " + ex.getClazz().getJavaName() + ": " + msg);
         Object extra = ex.getExtra();

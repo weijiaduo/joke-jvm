@@ -25,8 +25,8 @@ public class StringPool {
 
         char[] chars = string.toCharArray();
         HeapObject charObj = Heap.newObject(loader.loadClass("[C"), chars);
-        HeapObject stringObj = loader.loadClass("java/lang/String").newObject();
-        stringObj.setRefVar("value", "[C", charObj);
+        HeapObject stringObj = Heap.newObject(loader.loadClass("java/lang/String"));
+        stringObj.setFieldRef("value", "[C", charObj);
         internedStrings.put(string, stringObj);
         return stringObj;
     }
@@ -38,7 +38,7 @@ public class StringPool {
         if (stringObj == null) {
             return null;
         }
-        HeapObject value = stringObj.getRefVar("value", "[C");
+        HeapObject value = stringObj.getFieldRef("value", "[C");
         char[] chars = value.getChars();
         return new String(chars);
     }
@@ -60,7 +60,7 @@ public class StringPool {
      */
     public static HeapObject createStringArray(ClassMetaLoader loader, String[] args) {
         ClassMeta stringClazz = loader.loadClass("java/lang/String");
-        HeapObject argsArray = stringClazz.getArrayClass().newArray(args.length);
+        HeapObject argsArray = Heap.newArray(stringClazz.getArrayClass(), args.length);
         HeapObject[] refs = argsArray.getRefs();
         for (int i = 0; i < args.length; i++) {
             refs[i] = StringPool.getStringObj(loader, args[i]);

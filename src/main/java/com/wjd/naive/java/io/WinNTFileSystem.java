@@ -39,7 +39,7 @@ public class WinNTFileSystem implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject fileObj = frame.getLocalVars().getRef(1);
-            HeapObject pathObj = fileObj.getRefVar("path", "Ljava/lang/String;");
+            HeapObject pathObj = fileObj.getFieldRef("path", "Ljava/lang/String;");
             String pathStr = StringPool.getRawString(pathObj);
 
             Path path = Paths.get(pathStr);

@@ -5,6 +5,7 @@ import com.wjd.classfile.attr.ExceptionsAttributeInfo;
 import com.wjd.classfile.attr.LineNumberTableAttributeInfo;
 import com.wjd.classfile.MethodInfo;
 import com.wjd.classfile.type.Uint16;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.cons.ClassRef;
 import com.wjd.rtda.meta.ex.ExceptionHandler;
@@ -163,7 +164,7 @@ public class MethodMeta extends MemberMeta {
         int paramCount = paramTypes.length;
         ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
         ClassMeta arrClass = jlClassClass.getArrayClass();
-        HeapObject arr = arrClass.newArray(paramCount);
+        HeapObject arr = Heap.newArray(arrClass, paramCount);
 
         if (paramCount > 0) {
             HeapObject[] refs = arr.getRefs();
@@ -205,7 +206,7 @@ public class MethodMeta extends MemberMeta {
         int count = exClasses.length;
         ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
         ClassMeta arrClass = jlClassClass.getArrayClass();
-        HeapObject arr = arrClass.newArray(count);
+        HeapObject arr = Heap.newArray(arrClass, count);
 
         if (count > 0) {
             HeapObject[] refs = arr.getRefs();

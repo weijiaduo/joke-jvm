@@ -6,7 +6,7 @@ package com.wjd.rtda.stack;
 public class JvmStack {
 
     /** 最大栈深度 */
-    private int maxSize;
+    private final int maxSize;
     /** 当前栈深度 */
     private int size;
     /** 栈顶对象 */

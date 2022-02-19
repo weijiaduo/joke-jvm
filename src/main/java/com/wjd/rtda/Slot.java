@@ -3,7 +3,7 @@ package com.wjd.rtda;
 import com.wjd.rtda.heap.HeapObject;
 
 /**
- * 局部变量插槽
+ * 变量插槽
  */
 public class Slot {
 

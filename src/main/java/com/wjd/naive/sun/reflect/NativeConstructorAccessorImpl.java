@@ -5,6 +5,7 @@ import com.wjd.naive.NativeClass;
 import com.wjd.naive.NativeMethod;
 import com.wjd.naive.NativeRegistry;
 import com.wjd.rtda.Slot;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.MethodMeta;
@@ -43,7 +44,7 @@ public class NativeConstructorAccessorImpl implements NativeClass {
             }
 
             // 创建实例
-            HeapObject obj = constructorClass.newObject();
+            HeapObject obj = Heap.newObject(constructorClass);
             frame.getOpStack().pushRef(obj);
 
             // 执行<init>方法

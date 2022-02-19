@@ -5,12 +5,16 @@ package com.wjd;
  */
 public class JvmOptions {
 
+    /** 最大栈深度 */
+    private static final int defaultMaxStackSize = 1024;
+
     private String mainClass;
     private String classpath;
     private boolean verboseClass;
     private String xJre;
     private String absJavaHome;
     private String absJreLib;
+    private int maxStackSize;
 
     public String getMainClass() {
         return mainClass;
@@ -36,11 +40,11 @@ public class JvmOptions {
         this.verboseClass = verboseClass;
     }
 
-    public String getxJre() {
+    public String getXJre() {
         return xJre;
     }
 
-    public void setxJre(String xJre) {
+    public void setXJre(String xJre) {
         this.xJre = xJre;
     }
 
@@ -58,5 +62,16 @@ public class JvmOptions {
 
     public void setAbsJreLib(String absJreLib) {
         this.absJreLib = absJreLib;
+    }
+
+    public int getMaxStackSize() {
+        if (maxStackSize <= 0) {
+            return defaultMaxStackSize;
+        }
+        return maxStackSize;
+    }
+
+    public void setMaxStackSize(int maxStackSize) {
+        this.maxStackSize = maxStackSize;
     }
 }

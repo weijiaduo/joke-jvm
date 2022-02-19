@@ -1,6 +1,7 @@
 package com.wjd.instructions.references;
 
 import com.wjd.instructions.base.Index16Instruction;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.ConstantPool;
@@ -27,7 +28,7 @@ public class ANewArray extends Index16Instruction {
 
         // 数组类型
         ClassMeta arrayClazz = componentClazz.getArrayClass();
-        HeapObject arrayObject = arrayClazz.newArray(count);
+        HeapObject arrayObject = Heap.newArray(arrayClazz, count);
         frame.getOpStack().pushRef(arrayObject);
     }
 

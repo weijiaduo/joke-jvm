@@ -5,6 +5,7 @@ import com.wjd.classfile.type.Uint16;
 import com.wjd.cp.Classpath;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.cons.*;
 
@@ -44,7 +45,7 @@ public class ClassMetaLoader {
         ClassMeta jlClassClass = classMap.get("java/lang/Class");
         if (jlClassClass != null) {
             // 为每个类型都生成一个java.lang.Class对象
-            clazz.setjClass(jlClassClass.newObject());
+            clazz.setjClass(Heap.newObject(jlClassClass));
             clazz.getjClass().setExtra(clazz);
         }
     }

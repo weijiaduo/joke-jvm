@@ -51,7 +51,7 @@ public class PutField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 Slot.setInt(slots[slotId], val);
                 break;
             }
@@ -62,7 +62,7 @@ public class PutField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 Slot.setFloat(slots[slotId], val);
                 break;
             }
@@ -73,7 +73,7 @@ public class PutField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 Slot.setLong(slots[slotId], slots[slotId + 1], val);
                 break;
             }
@@ -84,7 +84,7 @@ public class PutField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 Slot.setDouble(slots[slotId], slots[slotId + 1], val);
                 break;
             }
@@ -96,7 +96,7 @@ public class PutField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("putfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 slots[slotId].setRef(val);
                 break;
             }

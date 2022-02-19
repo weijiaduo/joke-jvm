@@ -75,7 +75,7 @@ public class System implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject outObj = frame.getLocalVars().getRef(0);
             ClassMeta sysClass = frame.getMethod().getClazz();
-            sysClass.setRefVar("out", "Ljava/io/PrintStream;", outObj);
+            sysClass.setFieldRef("out", "Ljava/io/PrintStream;", outObj);
         }
     }
 
@@ -129,7 +129,7 @@ public class System implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject in = frame.getLocalVars().getRef(0);
             ClassMeta sysClass = frame.getMethod().getClazz();
-            sysClass.setRefVar("in", "Ljava/io/InputStream;", in);
+            sysClass.setFieldRef("in", "Ljava/io/InputStream;", in);
         }
     }
 
@@ -141,7 +141,7 @@ public class System implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject err = frame.getLocalVars().getRef(0);
             ClassMeta sysClass = frame.getMethod().getClazz();
-            sysClass.setRefVar("err", "Ljava/io/PrintStream;", err);
+            sysClass.setFieldRef("err", "Ljava/io/PrintStream;", err);
         }
     }
 

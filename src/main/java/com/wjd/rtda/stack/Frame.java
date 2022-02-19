@@ -35,20 +35,20 @@ public class Frame {
         opStack = new OperandStack(maxStack);
     }
 
-    public Thread getThread() {
-        return thread;
-    }
-
-    public MethodMeta getMethod() {
-        return method;
-    }
-
     public Frame getLower() {
         return lower;
     }
 
     public void setLower(Frame lower) {
         this.lower = lower;
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public MethodMeta getMethod() {
+        return method;
     }
 
     public LocalVars getLocalVars() {

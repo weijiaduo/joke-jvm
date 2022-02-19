@@ -30,9 +30,9 @@ public final class MethodHelper {
         }
         HeapObject root;
         if (isConstructor) {
-            root = methodObj.getRefVar("root", "Ljava/lang/reflect/Constructor;");
+            root = methodObj.getFieldRef("root", "Ljava/lang/reflect/Constructor;");
         } else {
-            root = methodObj.getRefVar("root", "Ljava/lang/reflect/Method;");
+            root = methodObj.getFieldRef("root", "Ljava/lang/reflect/Method;");
         }
         return (MethodMeta) root.getExtra();
     }
@@ -77,7 +77,7 @@ public final class MethodHelper {
                     case "I":
                     case "F":
                     {
-                        int val = argsObj.getIntVar("value", typeName);
+                        int val = argsObj.getFieldInt("value", typeName);
                         Slot slot = new Slot(val);
                         args[index++] = slot;
                         break;
@@ -85,7 +85,7 @@ public final class MethodHelper {
                     case "J":
                     case "D":
                     {
-                        long val = argsObj.getLongVar("value", typeName);
+                        long val = argsObj.getFieldLong("value", typeName);
                         Slot highSlot = new Slot();
                         Slot lowSlot = new Slot();
                         Slot.setLong(highSlot, lowSlot, val);

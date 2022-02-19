@@ -3,6 +3,7 @@ package com.wjd.instructions.reserved;
 import com.wjd.instructions.constants.NoOperandsInstruction;
 import com.wjd.instructions.references.InitClass;
 import com.wjd.rtda.Thread;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.ClassMetaLoader;
@@ -16,7 +17,7 @@ import com.wjd.rtda.stack.Frame;
  */
 public class Bootstrap extends NoOperandsInstruction {
 
-    private static Bootstrap instance = new Bootstrap();
+    private static final Bootstrap instance = new Bootstrap();
 
     public static Bootstrap getInstance() {
         return instance;
@@ -84,13 +85,13 @@ public class Bootstrap extends NoOperandsInstruction {
         Frame frame = thread.currentFrame();
         ClassMetaLoader loader = bootLoader;
 
-        if (thread.getjThreadGroup() == null) {
+        if (thread.getJThreadGroup() == null) {
             // java/lang/ThreadGroup
             thread.revertNextPc();
 
             ClassMeta threadGroupClass = loader.loadClass("java/lang/ThreadGroup");
-            HeapObject mainThreadGroupObj = threadGroupClass.newObject();
-            thread.setjThreadGroup(mainThreadGroupObj);
+            HeapObject mainThreadGroupObj = Heap.newObject(threadGroupClass);
+            thread.setJThreadGroup(mainThreadGroupObj);
 
             MethodMeta initMethod = threadGroupClass.getConstructor("()V");
             frame.getOpStack().pushRef(mainThreadGroupObj); // this
@@ -98,18 +99,18 @@ public class Bootstrap extends NoOperandsInstruction {
             return false;
         }
 
-        if (thread.getjThread() == null) {
+        if (thread.getJThread() == null) {
             // java/lang/Thread
             thread.revertNextPc();
 
             ClassMeta threadClass = loader.loadClass("java/lang/Thread");
-            HeapObject mainThreadObj = threadClass.newObject();
-            mainThreadObj.setIntVar("priority", "I", 1);
-            thread.setjThread(mainThreadObj);
+            HeapObject mainThreadObj = Heap.newObject(threadClass);
+            mainThreadObj.setFieldInt("priority", "I", 1);
+            thread.setJThread(mainThreadObj);
 
             MethodMeta initMethod = threadClass.getConstructor("(Ljava/lang/ThreadGroup;Ljava/lang/String;)V");
             frame.getOpStack().pushRef(mainThreadObj);                           // this
-            frame.getOpStack().pushRef(thread.getjThreadGroup());                // group
+            frame.getOpStack().pushRef(thread.getJThreadGroup());                // group
             frame.getOpStack().pushRef(StringPool.getStringObj(loader, "main")); // name
             thread.invokeMethod(initMethod);
             return false;
@@ -123,7 +124,7 @@ public class Bootstrap extends NoOperandsInstruction {
      */
     private boolean initSystem(Thread thread) {
         ClassMeta sysClass = bootLoader.loadClass("java/lang/System");
-        HeapObject props = sysClass.getRefVar("props", "Ljava/util/Properties;");
+        HeapObject props = sysClass.getFieldRef("props", "Ljava/util/Properties;");
         if (props == null) {
             thread.revertNextPc();
             MethodMeta initSysMethod = sysClass.getStaticMethod("initializeSystemClass", "()V");

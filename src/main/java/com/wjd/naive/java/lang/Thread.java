@@ -29,7 +29,7 @@ public class Thread implements NativeClass {
     static class CurrentThread implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            frame.getOpStack().pushRef(frame.getThread().getjThread());
+            frame.getOpStack().pushRef(frame.getThread().getJThread());
         }
     }
 
@@ -62,9 +62,8 @@ public class Thread implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject that = frame.getLocalVars().getThis();
-            com.wjd.rtda.Thread newThread = new com.wjd.rtda.Thread();
-            newThread.setjThread(that);
-            newThread.setJvmOptions(frame.getThread().getJvmOptions());
+            com.wjd.rtda.Thread newThread = new com.wjd.rtda.Thread(frame.getThread().getJvmOptions());
+            newThread.setJThread(that);
 
             MethodMeta runMethod = that.getClazz().getInstanceMethod("run", "()V");
             Frame newFrame = newThread.newFrame(runMethod);

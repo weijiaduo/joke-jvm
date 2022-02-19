@@ -51,7 +51,7 @@ public class HeapObject implements Cloneable {
         this.extra = extra;
     }
 
-    public Slot[] getFields() {
+    public Slot[] getSlots() {
         return (Slot[]) data;
     }
 
@@ -131,37 +131,37 @@ public class HeapObject implements Cloneable {
         return cls.isAssignableFrom(clazz);
     }
 
-    public void setRefVar(String name, String descriptor, HeapObject ref) {
+    public void setFieldRef(String name, String descriptor, HeapObject ref) {
         FieldMeta field = clazz.getInstanceField(name, descriptor);
-        getFields()[field.getSlotId()].setRef(ref);
+        getSlots()[field.getSlotId()].setRef(ref);
     }
 
-    public HeapObject getRefVar(String name, String descriptor) {
+    public HeapObject getFieldRef(String name, String descriptor) {
         FieldMeta field = clazz.getInstanceField(name, descriptor);
-        return getFields()[field.getSlotId()].getRef();
+        return getSlots()[field.getSlotId()].getRef();
     }
 
-    public int getIntVar(String name, String descriptor) {
+    public int getFieldInt(String name, String descriptor) {
         FieldMeta field = clazz.getInstanceField(name, descriptor);
-        return (int) getFields()[field.getSlotId()].getNum();
+        return (int) getSlots()[field.getSlotId()].getNum();
     }
 
-    public void setIntVar(String name, String descriptor, int val) {
+    public void setFieldInt(String name, String descriptor, int val) {
         FieldMeta field = clazz.getInstanceField(name, descriptor);
-        getFields()[field.getSlotId()].setNum(val);
+        getSlots()[field.getSlotId()].setNum(val);
     }
 
-    public long getLongVar(String name, String descriptor) {
+    public long getFieldLong(String name, String descriptor) {
         FieldMeta field = clazz.getInstanceField(name, descriptor);
-        Slot[] slots = getFields();
+        Slot[] slots = getSlots();
         Slot highSlot = slots[field.getSlotId()];
         Slot lowSlot = slots[field.getSlotId() + 1];
         return Slot.getLong(highSlot, lowSlot);
     }
 
-    public void setLongVar(String name, String descriptor, long val) {
+    public void setFieldLong(String name, String descriptor, long val) {
         FieldMeta field = clazz.getInstanceField(name, descriptor);
-        Slot[] slots = getFields();
+        Slot[] slots = getSlots();
         Slot highSlot = slots[field.getSlotId()];
         Slot lowSlot = slots[field.getSlotId() + 1];
         Slot.setLong(highSlot, lowSlot, val);
@@ -203,7 +203,7 @@ public class HeapObject implements Cloneable {
             default:
             {
                 // Slot[]
-                Slot[] slots = getFields();
+                Slot[] slots = getSlots();
                 Slot[] newSlots = new Slot[slots.length];
                 for (int i = 0; i < newSlots.length; i++) {
                     newSlots[i] = new Slot(slots[i]);

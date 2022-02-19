@@ -479,27 +479,9 @@ public class ClassMeta {
     }
 
     /**
-     * 创建对象
-     */
-    public HeapObject newObject() {
-        return Heap.newObject(this);
-    }
-
-    /**
-     * 创建数组
-     * @param count 数组长度
-     */
-    public HeapObject newArray(int count) {
-        if (!isArray()) {
-            throw new IllegalStateException("Not array class: " + name);
-        }
-        return Heap.newObject(this, ArrayHelper.makeArray(name, count));
-    }
-
-    /**
      * 获取指定静态字段成员
      */
-    public HeapObject getRefVar(String name, String descriptor) {
+    public HeapObject getFieldRef(String name, String descriptor) {
         FieldMeta field = getStaticField(name, descriptor);
         return staticVars[field.getSlotId()].getRef();
     }
@@ -507,7 +489,7 @@ public class ClassMeta {
     /**
      * 设置静态字段成员值
      */
-    public void setRefVar(String name, String descriptor, HeapObject ref) {
+    public void setFieldRef(String name, String descriptor, HeapObject ref) {
         FieldMeta field = getStaticField(name, descriptor);
         staticVars[field.getSlotId()].setRef(ref);
     }

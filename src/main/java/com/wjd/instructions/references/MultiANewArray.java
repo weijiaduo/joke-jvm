@@ -4,6 +4,7 @@ import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint8;
 import com.wjd.instructions.base.ByteCodeReader;
 import com.wjd.instructions.base.Instruction;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.stack.OperandStack;
 import com.wjd.rtda.meta.ClassMeta;
@@ -52,7 +53,7 @@ public class MultiANewArray implements Instruction {
 
     private HeapObject newMultiDimensionalArray(int[] counts, ClassMeta arrayClazz) {
         int count = counts[0];
-        HeapObject arrayObject = arrayClazz.newArray(count);
+        HeapObject arrayObject = Heap.newArray(arrayClazz, count);
         if (counts.length > 1) {
             int[] newCounts = Arrays.copyOfRange(counts, 1, counts.length);
             HeapObject[] refs = arrayObject.getRefs();

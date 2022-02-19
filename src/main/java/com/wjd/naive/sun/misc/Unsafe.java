@@ -75,7 +75,7 @@ public class Unsafe implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject jField = frame.getLocalVars().getRef(1);
-            int offset = jField.getIntVar("slot", "I");
+            int offset = jField.getFieldInt("slot", "I");
             frame.getOpStack().pushLong(offset);
         }
     }

@@ -38,7 +38,7 @@ public class GetField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("getfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 stack.pushInt(Slot.getInt(slots[slotId]));
                 break;
             }
@@ -48,7 +48,7 @@ public class GetField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("getfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 stack.pushFloat(Slot.getFloat(slots[slotId]));
                 break;
             }
@@ -58,7 +58,7 @@ public class GetField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("getfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 stack.pushLong(Slot.getLong(slots[slotId], slots[slotId + 1]));
                 break;
             }
@@ -68,7 +68,7 @@ public class GetField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("getfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 stack.pushDouble(Slot.getDouble(slots[slotId], slots[slotId + 1]));
                 break;
             }
@@ -79,7 +79,7 @@ public class GetField extends Index16Instruction {
                 if (ref == null) {
                     throw new NullPointerException("getfield Field: " + field.getName());
                 }
-                Slot[] slots = ref.getFields();
+                Slot[] slots = ref.getSlots();
                 stack.pushRef(slots[slotId].getRef());
                 break;
             }

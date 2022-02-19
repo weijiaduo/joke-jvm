@@ -36,7 +36,7 @@ public class ClassLoader$NativeLibrary implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject that = frame.getLocalVars().getThis();
-            that.setIntVar("loaded", "Z", 1);
+            that.setFieldInt("loaded", "Z", 1);
         }
     }
 

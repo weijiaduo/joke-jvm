@@ -24,18 +24,15 @@ public class Jvm {
                 "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes"
         };
 
-        Jvm jvm = newJvm(testArgs);
+        Jvm jvm = new Jvm(testArgs);
         jvm.start();
     }
 
-    public static Jvm newJvm(String[] args) {
-        Jvm jvm = new Jvm();
-        jvm.cmd = Cmd.parseFrom(args);
-        Classpath.verbosePath = jvm.cmd.isVerboseClassPathFlag();
-        jvm.classpath = new Classpath(jvm.cmd.getJreOption(), jvm.cmd.getCpOption());
-        jvm.loader = ClassMetaLoader.newClassLoader(jvm.classpath, jvm.cmd.isVerboseClassFlag());
-        jvm.mainThread = new Thread();
-        return jvm;
+    public Jvm(String[] args) {
+        cmd = Cmd.parseFrom(args);
+        Classpath.verbosePath = cmd.isVerboseClassPathFlag();
+        classpath = new Classpath(cmd.getJreOption(), cmd.getCpOption());
+        loader = ClassMetaLoader.newClassLoader(classpath, cmd.isVerboseClassFlag());
     }
 
     /**
@@ -51,7 +48,7 @@ public class Jvm {
      */
     private void initVM() {
         initOptions();
-        mainThread.setJvmOptions(jvmOptions);
+        mainThread = new Thread(jvmOptions);
     }
 
     /**
@@ -74,7 +71,7 @@ public class Jvm {
         String[] args = cmd.getArgs();
         HeapObject argsObj = StringPool.createStringArray(loader, args);
 
-        // 调用bootstrap命令
+        // 初始化启动线程栈帧，调用bootstrap命令
         MethodMeta bootstrapMethod = ShimClassMeta.getInstance().getBootStrapMethod();
         bootstrapMethod.getClazz().setLoader(loader);
         Frame frame = mainThread.newFrame(bootstrapMethod);
@@ -82,6 +79,7 @@ public class Jvm {
         frame.getLocalVars().setRef(0, mainClassObj);
         frame.getLocalVars().setRef(1, argsObj);
 
+        // 解释执行字节码指令
         Interpreter.interpret(mainThread, cmd.isVerboseInstFlag());
     }
 

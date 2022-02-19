@@ -12,30 +12,26 @@ import com.wjd.rtda.stack.JvmStack;
  */
 public class Thread {
 
-    /** 最大栈深度 */
-    private static int maxStackSize = 1024;
-
+    /** 线程组对象java/lang/ThreadGroup */
     private HeapObject jThreadGroup;
+    /** 线程对象java/lang/Thread */
     private HeapObject jThread;
-    private int priority;
 
     /** 虚拟机启动配置 */
     private JvmOptions jvmOptions;
+
     /** 程序计数器  */
     private int pc;
     /** 虚拟机栈 */
     private JvmStack stack;
 
-    public Thread() {
-        stack = new JvmStack(maxStackSize);
+    public Thread(JvmOptions jvmOptions) {
+        this.jvmOptions = jvmOptions;
+        stack = new JvmStack(jvmOptions.getMaxStackSize());
     }
 
     public JvmOptions getJvmOptions() {
         return jvmOptions;
-    }
-
-    public void setJvmOptions(JvmOptions jvmOptions) {
-        this.jvmOptions = jvmOptions;
     }
 
     public int getPc() {
@@ -100,6 +96,11 @@ public class Thread {
         return frame;
     }
 
+    /**
+     * 调用方法后，执行一个空的return方法
+     * @param method 方法
+     * @param args 参数
+     */
     public void invokeMethodWithShim(MethodMeta method, Slot[] args) {
         Frame shimFrame = newShimFrame(args);
         this.pushFrame(shimFrame);
@@ -133,27 +134,19 @@ public class Thread {
         }
     }
 
-    public HeapObject getjThreadGroup() {
+    public HeapObject getJThreadGroup() {
         return jThreadGroup;
     }
 
-    public void setjThreadGroup(HeapObject jThreadGroup) {
+    public void setJThreadGroup(HeapObject jThreadGroup) {
         this.jThreadGroup = jThreadGroup;
     }
 
-    public HeapObject getjThread() {
+    public HeapObject getJThread() {
         return jThread;
     }
 
-    public void setjThread(HeapObject jThread) {
+    public void setJThread(HeapObject jThread) {
         this.jThread = jThread;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 }

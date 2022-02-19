@@ -5,6 +5,7 @@ import com.wjd.naive.NativeClass;
 import com.wjd.naive.NativeMethod;
 import com.wjd.naive.NativeRegistry;
 import com.wjd.rtda.Slot;
+import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.*;
 import com.wjd.rtda.stack.Frame;
@@ -108,7 +109,7 @@ public class Class implements NativeClass {
 
             ClassMeta fieldClass = clazz.getLoader().loadClass("java/lang/reflect/Field");
             ClassMeta fieldArrClass = fieldClass.getArrayClass();
-            HeapObject fieldArr = fieldArrClass.newArray(fieldCount);
+            HeapObject fieldArr = Heap.newArray(fieldArrClass, fieldCount);
 
             frame.getOpStack().pushRef(fieldArr);
 
@@ -123,7 +124,7 @@ public class Class implements NativeClass {
                         "[B)V";
                 MethodMeta fieldConstructor = fieldClass.getConstructor(fieldConstructorDescriptor);
                 for (int i = 0; i < fieldObjs.length; i++) {
-                    fieldObjs[i] = fieldClass.newObject();
+                    fieldObjs[i] = Heap.newObject(fieldClass);
                     fieldObjs[i].setExtra(fields[i]);
 
                     // this
@@ -241,7 +242,7 @@ public class Class implements NativeClass {
 
             ClassMeta constructorClass = clazz.getLoader().loadClass("java/lang/reflect/Constructor");
             ClassMeta constructorArrClass = constructorClass.getArrayClass();
-            HeapObject constructorArr = constructorArrClass.newArray(count);
+            HeapObject constructorArr = Heap.newArray(constructorArrClass, count);
 
             frame.getOpStack().pushRef(constructorArr);
 
@@ -257,7 +258,7 @@ public class Class implements NativeClass {
                 MethodMeta constructorMethod = constructorClass.getConstructor(constructorDescriptor);
                 for (int i = 0; i < constructorObjs.length; i++) {
                     MethodMeta constructorMeta = constructorMetas[i];
-                    constructorObjs[i] = constructorClass.newObject();
+                    constructorObjs[i] = Heap.newObject(constructorClass);
                     constructorObjs[i].setExtra(constructorMeta);
 
                     // this
@@ -293,7 +294,7 @@ public class Class implements NativeClass {
                     // 注解参数
                     Slot paramAnnotationSlot = null;
                     frame.getThread().invokeMethodWithShim(constructorMethod, new Slot[] {
-                            constructorSlot,     // this
+                            constructorSlot,    // this
                             classObjSlot,       // class
                             paramSlot,          // name
                             exSlot,             // modifiers
