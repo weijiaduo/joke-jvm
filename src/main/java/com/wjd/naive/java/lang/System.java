@@ -99,9 +99,9 @@ public class System implements NativeClass {
                 Slot propsSlot = new Slot();
                 propsSlot.setRef(propsObj);
                 Slot keySlot = new Slot();
-                keySlot.setRef(StringPool.getObjString(loader, key));
+                keySlot.setRef(StringPool.getStringObj(loader, key));
                 Slot valSlot = new Slot();
-                valSlot.setRef(StringPool.getObjString(loader, props.get(key)));
+                valSlot.setRef(StringPool.getStringObj(loader, props.get(key)));
                 Slot[] slots = new Slot[] { propsSlot, keySlot, valSlot };
                 thread.invokeMethodWithShim(setPropMethod, slots);
             }

@@ -14,7 +14,7 @@ public class Frame {
     /** 所属线程 */
     private Thread thread;
     /** 所属方法 */
-    private MethodMeta methodMeta;
+    private MethodMeta method;
     /** 最大本地变量数量 */
     private int maxLocals;
     /** 方法栈深度 */
@@ -26,11 +26,11 @@ public class Frame {
     /** 下一条执行的指令索引 */
     private int nextPc;
 
-    public Frame(Thread thread, MethodMeta methodMeta) {
+    public Frame(Thread thread, MethodMeta method) {
         this.thread = thread;
-        this.methodMeta = methodMeta;
-        maxLocals = methodMeta.getMaxLocals();
-        maxStack = methodMeta.getMaxStacks();
+        this.method = method;
+        maxLocals = method.getMaxLocals();
+        maxStack = method.getMaxStacks();
         localVars = new LocalVars(maxLocals);
         operandStack = new OperandStack(maxStack);
     }
@@ -40,7 +40,7 @@ public class Frame {
     }
 
     public MethodMeta getMethod() {
-        return methodMeta;
+        return method;
     }
 
     public Frame getLower() {

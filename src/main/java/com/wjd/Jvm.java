@@ -18,25 +18,22 @@ public class Jvm {
     private JvmOptions jvmOptions;
 
     public static void main(String[] args) {
-        Cmd cmd = new Cmd();
-        cmd.printHelp();
-
+        Cmd.printHelp();
         String[] testArgs = new String[] {
-                "com.wjd.rtda.HelloWorld", "-classpath",
+                "com.wjd.rtda.BoxTest", "-classpath",
                 "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes"
         };
-        cmd.parse(testArgs);
 
-        Jvm jvm = newJvm(cmd);
+        Jvm jvm = newJvm(testArgs);
         jvm.start();
     }
 
-    public static Jvm newJvm(Cmd cmd) {
+    public static Jvm newJvm(String[] args) {
         Jvm jvm = new Jvm();
-        jvm.cmd = cmd;
-        Classpath.verbosePath = cmd.isVerboseClassPathFlag();
-        jvm.classpath = new Classpath(cmd.getJreOption(), cmd.getCpOption());
-        jvm.loader = ClassMetaLoader.newClassLoader(jvm.classpath, cmd.isVerboseClassFlag());
+        jvm.cmd = Cmd.parseFrom(args);
+        Classpath.verbosePath = jvm.cmd.isVerboseClassPathFlag();
+        jvm.classpath = new Classpath(jvm.cmd.getJreOption(), jvm.cmd.getCpOption());
+        jvm.loader = ClassMetaLoader.newClassLoader(jvm.classpath, jvm.cmd.isVerboseClassFlag());
         jvm.mainThread = new Thread();
         return jvm;
     }
@@ -73,9 +70,9 @@ public class Jvm {
     private void execMain() {
         // 入口函数和参数
         String mainClassName = cmd.getMainClass().replaceAll("\\.", "/");
-        HeapObject mainClassObj = StringPool.getObjString(loader, mainClassName);
+        HeapObject mainClassObj = StringPool.getStringObj(loader, mainClassName);
         String[] args = cmd.getArgs();
-        HeapObject argsObj = createArgsArray(loader, args);
+        HeapObject argsObj = StringPool.createStringArray(loader, args);
 
         // 调用bootstrap命令
         MethodMeta bootstrapMethod = ShimClassMeta.getInstance().getBootStrapMethod();
@@ -85,20 +82,7 @@ public class Jvm {
         frame.getLocalVars().setRef(0, mainClassObj);
         frame.getLocalVars().setRef(1, argsObj);
 
-        new Interpreter().interpret(mainThread, cmd.isVerboseInstFlag());
-    }
-
-    /**
-     * 创建参数对象
-     */
-    private HeapObject createArgsArray(ClassMetaLoader loader, String[] args) {
-        ClassMeta stringClassMeta = loader.loadClass("java/lang/String");
-        HeapObject argsArray = stringClassMeta.getArrayClass().newArray(args.length);
-        HeapObject[] refs = argsArray.getRefs();
-        for (int i = 0; i < args.length; i++) {
-            refs[i] = StringPool.getObjString(loader, args[i]);
-        }
-        return argsArray;
+        Interpreter.interpret(mainThread, cmd.isVerboseInstFlag());
     }
 
 }

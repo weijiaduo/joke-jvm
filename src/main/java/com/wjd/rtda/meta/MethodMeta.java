@@ -9,6 +9,7 @@ import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.cons.ClassRef;
 import com.wjd.rtda.meta.ex.ExceptionHandler;
 import com.wjd.rtda.meta.ex.ExceptionTable;
+import com.wjd.rtda.meta.util.MethodDescriptorParser;
 import com.wjd.util.ClassHelper;
 
 /**
@@ -20,33 +21,36 @@ public class MethodMeta extends MemberMeta {
     protected int maxStacks;
     protected int maxLocals;
     protected MethodDescriptor methodDescriptor;
-    protected int paramSlotCount;
-    protected int argSlotCount;
+    protected int paramSlotCount; // 方法的参数插槽数量，不包括this
+    protected int argSlotCount;   // 传参时的插槽数量，可能包括this
     protected Uint16[] exIndexTable;
     protected byte[] codes;
     protected ExceptionTable exceptionTable;
     protected LineNumberTableAttributeInfo lineNumberTable;
 
     public static MethodMeta[] newMethods(ClassMeta clazz, MethodInfo[] methodInfos) {
-        MethodMeta[] methodMetas = new MethodMeta[methodInfos.length];
-        for (int i = 0; i < methodMetas.length; i++) {
-            methodMetas[i] = newMethod(clazz, methodInfos[i]);
+        MethodMeta[] methods = new MethodMeta[methodInfos.length];
+        for (int i = 0; i < methods.length; i++) {
+            methods[i] = newMethod(clazz, methodInfos[i]);
         }
-        return methodMetas;
+        return methods;
     }
 
     public static MethodMeta newMethod(ClassMeta classMeta, MethodInfo methodInfo) {
-        MethodMeta methodMeta = new MethodMeta();
-        methodMeta.clazz = classMeta;
-        methodMeta.copyMemberInfo(methodInfo);
-        methodMeta.copyAttributes(methodInfo);
-        methodMeta.calcArgSlotCount();
-        if (methodMeta.isNative()) {
-            methodMeta.injectCodeAttribute(methodMeta.methodDescriptor.getReturnType());
+        MethodMeta method = new MethodMeta();
+        method.clazz = classMeta;
+        method.copyMemberInfo(methodInfo);
+        method.copyAttributes(methodInfo);
+        method.calcArgSlotCount();
+        if (method.isNative()) {
+            method.injectCodeAttribute(method.methodDescriptor.getReturnType());
         }
-        return methodMeta;
+        return method;
     }
 
+    /**
+     * 复制属性
+     */
     private void copyAttributes(MethodInfo methodInfo) {
         CodeAttributeInfo codeAttr = methodInfo.getCodeAttributeInfo();
         if (codeAttr != null) {
@@ -66,7 +70,7 @@ public class MethodMeta extends MemberMeta {
      * 计算参数的插槽数量
      */
     private void calcArgSlotCount() {
-        methodDescriptor = MethodDescriptorParser.parseMethodDescriptor(descriptor);
+        methodDescriptor = MethodDescriptorParser.parseFrom(descriptor);
         paramSlotCount = methodDescriptor.getParamSlotCount();
         argSlotCount = paramSlotCount;
         if (!isStatic()) {

@@ -65,7 +65,7 @@ public class Class implements NativeClass {
             // 注意这里取的是Class<T>中的T
             ClassMeta classMeta = (ClassMeta) that.getExtra();
             java.lang.String name = classMeta.getJavaName();
-            HeapObject nameObj = StringPool.getObjString(classMeta.getLoader(), name);
+            HeapObject nameObj = StringPool.getStringObj(classMeta.getLoader(), name);
             frame.getOperandStack().pushRef(nameObj);
         }
     }
@@ -133,7 +133,7 @@ public class Class implements NativeClass {
                     Slot classObjSlot = new Slot();
                     classObjSlot.setRef(classObj);
                     // name
-                    HeapObject nameObj = StringPool.getObjString(classMeta.getLoader(), fieldMetas[i].getName());
+                    HeapObject nameObj = StringPool.getStringObj(classMeta.getLoader(), fieldMetas[i].getName());
                     Slot nameSlot = new Slot();
                     nameSlot.setRef(nameObj);
                     // type
@@ -149,7 +149,7 @@ public class Class implements NativeClass {
                     Slot signatureSlot = null;
                     java.lang.String signature = fieldMetas[i].getSignature();
                     if (signature != null) {
-                        HeapObject signatureObj = StringPool.getObjString(loader, signature);
+                        HeapObject signatureObj = StringPool.getStringObj(loader, signature);
                         signatureSlot = new Slot();
                         signatureSlot.setRef(signatureObj);
                     }
@@ -202,7 +202,7 @@ public class Class implements NativeClass {
             HeapObject jClass = classMeta.getjClass();
 
             if (initialize && !classMeta.isInitStarted()) {
-                frame.getThread().undoExec();
+                frame.getThread().revertNextPc();
                 InitClass.initClass(frame.getThread(), classMeta);
             } else {
                 frame.getOperandStack().pushRef(jClass);
@@ -284,7 +284,7 @@ public class Class implements NativeClass {
                     Slot signatureSlot = null;
                     java.lang.String signature = constructorMeta.getSignature();
                     if (signature != null) {
-                        HeapObject signatureObj = StringPool.getObjString(loader, signature);
+                        HeapObject signatureObj = StringPool.getStringObj(loader, signature);
                         signatureSlot = new Slot();
                         signatureSlot.setRef(signatureObj);
                     }

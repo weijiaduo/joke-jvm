@@ -323,7 +323,7 @@ public class ClassMetaLoader {
             case "Ljava/lang/String;":
             {
                 String val = ((StringConstant) constant).value();
-                HeapObject stringObj = StringPool.getObjString(clazz.getLoader(), val);
+                HeapObject stringObj = StringPool.getStringObj(clazz.getLoader(), val);
                 vars[slotId].setRef(stringObj);
                 break;
             }

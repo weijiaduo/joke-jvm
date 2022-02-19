@@ -24,7 +24,7 @@ public class IDCW extends Index16Instruction {
             stack.pushFloat(((FloatConstant) constant).value());
         } else if (constant instanceof StringConstant) {
             String string = ((StringConstant) constant).value();
-            HeapObject stringObj = StringPool.getObjString(frame.getMethod().getClazz().getLoader(), string);
+            HeapObject stringObj = StringPool.getStringObj(frame.getMethod().getClazz().getLoader(), string);
             stack.pushRef(stringObj);
         } else if (constant instanceof ClassRef) {
             HeapObject jClassObj = ((ClassRef) constant).resolvedClass().getjClass();

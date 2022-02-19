@@ -1,4 +1,6 @@
-package com.wjd.rtda.meta;
+package com.wjd.rtda.meta.util;
+
+import com.wjd.rtda.meta.MethodDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ public class MethodDescriptorParser {
         str = new StringBuffer(string);
     }
 
-    public static MethodDescriptor parseMethodDescriptor(String descriptor) {
+    public static MethodDescriptor parseFrom(String descriptor) {
         return new MethodDescriptorParser(descriptor).parse();
     }
 

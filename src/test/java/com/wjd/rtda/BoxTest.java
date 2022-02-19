@@ -9,14 +9,18 @@ import java.util.List;
 public class BoxTest {
 
     public static void main(String[] args) {
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
+        List<Long> list = new ArrayList<>();
+        list.add(1L);
+        list.add(2L);
+        list.add(3L);
         System.out.println(list.toString());
-        for (int x : list) {
-            System.out.println(x);
+        for (Long x : list) {
+            testBox(x);
         }
+    }
+
+    private static void testBox(long x) {
+        System.out.println(x);
     }
 
 }

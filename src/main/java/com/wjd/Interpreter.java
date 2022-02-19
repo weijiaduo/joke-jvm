@@ -11,47 +11,44 @@ import com.wjd.rtda.stack.Frame;
  */
 public class Interpreter {
 
-    public void interpret(Thread thread, boolean logInst) {
+    public static void interpret(Thread thread, boolean logInst) {
         loop(thread, logInst);
     }
 
-    private void loop(Thread thread, boolean logInst) {
+    private static void loop(Thread thread, boolean logInst) {
         ByteCodeReader reader = new ByteCodeReader();
-        try {
-            while (true) {
-                Frame frame = thread.currentFrame();
-                // 程序计数器地址
-                int pc = frame.getNextPc();
-                thread.setPc(pc);
+        while (!thread.isStackEmpty()) {
+            // 栈顶，当前栈帧
+            Frame frame = thread.currentFrame();
 
-                // 设置指令地址
-                reader.reset(frame.getMethod().getCodes(), pc);
+            // 程序计数器地址
+            int pc = frame.getNextPc();
+            thread.setPc(pc);
 
-                // 编译识别指令
-                int opcode = reader.readUint8().value();
-                Instruction instruction = InstructionFactory.newInstance(opcode);
-                if (instruction == null) {
-                    System.out.println("Instruction is null: " + opcode);
-                    break;
-                }
+            // 设置当前指令地址
+            reader.reset(frame.getMethod().getCodes(), pc);
 
-                // 获取指定操作数
-                instruction.fetchOperands(reader);
-                frame.setNextPc(reader.getPosition());
-
-                // 执行指令
-                if (logInst) {
-                    System.out.println(instruction);
-                }
-                instruction.execute(frame);
-
-                // 执行结束
-                if (thread.isStackEmpty()) {
-                    break;
-                }
+            // 编译识别指令
+            int opcode = reader.readUint8().value();
+            Instruction instruction = InstructionFactory.newInstance(opcode);
+            if (instruction == null) {
+                System.out.println("Unsupported instruction opcode: " + opcode);
+                break;
             }
-        } catch (Exception e) {
-           e.printStackTrace();
+
+            // 获取指定操作数
+            instruction.fetchOperands(reader);
+
+            // 设置下一条指令地址
+            frame.setNextPc(reader.getPosition());
+
+            // 打印指令
+            if (logInst) {
+                System.out.println(instruction);
+            }
+
+            // 执行指令
+            instruction.execute(frame);
         }
     }
 

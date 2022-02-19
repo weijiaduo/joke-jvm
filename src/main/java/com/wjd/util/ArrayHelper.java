@@ -47,6 +47,11 @@ public class ArrayHelper {
         return "L" + className + ";";
     }
 
+    /**
+     * 获取数组元素的类名
+     * @param className 数组类名
+     * @return 元素的类名
+     */
     public static String getComponentClassName(String className) {
         if (className.charAt(0) == '[') {
             String componentTypeDescriptor = className.substring(1);

@@ -40,6 +40,12 @@ public class Cmd {
     private String jreOption;
     private String cpOption;
 
+    public static Cmd parseFrom(String[] args) {
+        Cmd cmd = new Cmd();
+        cmd.parse(args);
+        return cmd;
+    }
+
     /**
      * 解析命令行参数
      * @param args 命令行参数
@@ -112,7 +118,7 @@ public class Cmd {
     /**
      * 打印命令行帮助信息
      */
-    public void printHelp() {
+    public static void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("self-jvm", options);
     }

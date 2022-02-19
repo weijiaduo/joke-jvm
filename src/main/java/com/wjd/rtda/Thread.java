@@ -46,6 +46,13 @@ public class Thread {
         this.pc = pc;
     }
 
+    /**
+     * 回退指令地址，下次继续执行当前指令
+     */
+    public void revertNextPc() {
+        currentFrame().revertNextPc();
+    }
+
     public void pushFrame(Frame frame) {
         stack.push(frame);
     }
@@ -124,13 +131,6 @@ public class Thread {
             Slot slot = from.getOperandStack().popSlot();
             to.getLocalVars().setSlot(i, slot);
         }
-    }
-
-    /**
-     * 回退指令地址，下次继续执行当前指令
-     */
-    public void undoExec() {
-        currentFrame().revertNextPc();
     }
 
     public HeapObject getjThreadGroup() {

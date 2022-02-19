@@ -18,7 +18,7 @@ public class StringPool {
     /**
      * 获取String对象
      */
-    public static HeapObject getObjString(ClassMetaLoader loader, String string) {
+    public static HeapObject getStringObj(ClassMetaLoader loader, String string) {
         if (internedStrings.containsKey(string)) {
             return internedStrings.get(string);
         }
@@ -53,5 +53,18 @@ public class StringPool {
         }
         internedStrings.put(str, stringObj);
         return stringObj;
+    }
+
+    /**
+     * 创建String数组对象
+     */
+    public static HeapObject createStringArray(ClassMetaLoader loader, String[] args) {
+        ClassMeta stringClassMeta = loader.loadClass("java/lang/String");
+        HeapObject argsArray = stringClassMeta.getArrayClass().newArray(args.length);
+        HeapObject[] refs = argsArray.getRefs();
+        for (int i = 0; i < args.length; i++) {
+            refs[i] = StringPool.getStringObj(loader, args[i]);
+        }
+        return argsArray;
     }
 }

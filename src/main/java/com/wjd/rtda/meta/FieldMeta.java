@@ -18,15 +18,15 @@ public class FieldMeta extends MemberMeta {
     private ClassMeta type;
 
     public static FieldMeta[] newFields(ClassMeta clazz, FieldInfo[] fieldInfos) {
-        FieldMeta[] fieldMetas = new FieldMeta[fieldInfos.length];
-        for (int i = 0; i < fieldMetas.length; i++) {
-            fieldMetas[i] = new FieldMeta();
-            fieldMetas[i].clazz = clazz;
-            fieldMetas[i].copyMemberInfo(fieldInfos[i]);
-            fieldMetas[i].copyFieldAttribute(fieldInfos[i]);
-            fieldMetas[i].isLongOrDouble = "J".equals(fieldMetas[i].descriptor) || "D".equals(fieldMetas[i].descriptor);
+        FieldMeta[] fields = new FieldMeta[fieldInfos.length];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = new FieldMeta();
+            fields[i].clazz = clazz;
+            fields[i].copyMemberInfo(fieldInfos[i]);
+            fields[i].copyFieldAttribute(fieldInfos[i]);
+            fields[i].isLongOrDouble = "J".equals(fields[i].descriptor) || "D".equals(fields[i].descriptor);
         }
-        return fieldMetas;
+        return fields;
     }
 
     private void copyFieldAttribute(FieldInfo fieldInfo) {

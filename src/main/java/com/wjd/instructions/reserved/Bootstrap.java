@@ -69,7 +69,7 @@ public class Bootstrap extends NoOperandsInstruction {
         for (String className : bootClassNames) {
             ClassMeta classMeta = bootLoader.loadClass(className);
             if (!classMeta.isInitStarted()) {
-                thread.undoExec();
+                thread.revertNextPc();
                 InitClass.initClass(thread, classMeta);
                 return false;
             }
@@ -86,7 +86,7 @@ public class Bootstrap extends NoOperandsInstruction {
 
         if (thread.getjThreadGroup() == null) {
             // java/lang/ThreadGroup
-            thread.undoExec();
+            thread.revertNextPc();
 
             ClassMeta threadGroupClass = loader.loadClass("java/lang/ThreadGroup");
             HeapObject mainThreadGroupObj = threadGroupClass.newObject();
@@ -100,7 +100,7 @@ public class Bootstrap extends NoOperandsInstruction {
 
         if (thread.getjThread() == null) {
             // java/lang/Thread
-            thread.undoExec();
+            thread.revertNextPc();
 
             ClassMeta threadClass = loader.loadClass("java/lang/Thread");
             HeapObject mainThreadObj = threadClass.newObject();
@@ -110,7 +110,7 @@ public class Bootstrap extends NoOperandsInstruction {
             MethodMeta initMethod = threadClass.getConstructor("(Ljava/lang/ThreadGroup;Ljava/lang/String;)V");
             frame.getOperandStack().pushRef(mainThreadObj);                           // this
             frame.getOperandStack().pushRef(thread.getjThreadGroup());                // group
-            frame.getOperandStack().pushRef(StringPool.getObjString(loader, "main")); // name
+            frame.getOperandStack().pushRef(StringPool.getStringObj(loader, "main")); // name
             thread.invokeMethod(initMethod);
             return false;
         }
@@ -125,7 +125,7 @@ public class Bootstrap extends NoOperandsInstruction {
         ClassMeta sysClass = bootLoader.loadClass("java/lang/System");
         HeapObject props = sysClass.getRefVar("props", "Ljava/util/Properties;");
         if (props == null) {
-            thread.undoExec();
+            thread.revertNextPc();
             MethodMeta initSysMethod = sysClass.getStaticMethod("initializeSystemClass", "()V");
             thread.invokeMethod(initSysMethod);
             return false;
@@ -139,7 +139,7 @@ public class Bootstrap extends NoOperandsInstruction {
     private boolean initMainClass(Thread thread) {
         mainClass = bootLoader.loadClass(mainClassName);
         if (!mainClass.isInitStarted()) {
-            thread.undoExec();
+            thread.revertNextPc();
             InitClass.initClass(thread, mainClass);
             return false;
         }
