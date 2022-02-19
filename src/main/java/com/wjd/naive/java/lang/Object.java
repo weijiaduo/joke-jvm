@@ -58,8 +58,8 @@ public class Object implements NativeClass {
             HeapObject that = frame.getLocalVars().getThis();
 
             // 必须要实现java/lang/Cloneable才行
-            ClassMeta cloneableClassMeta = that.getClazz().getLoader().loadClass("java/lang/Cloneable");
-            if (!that.getClazz().isImplements(cloneableClassMeta)) {
+            ClassMeta cloneableClazz = that.getClazz().getLoader().loadClass("java/lang/Cloneable");
+            if (!that.getClazz().isImplements(cloneableClazz)) {
                 throw new CloneNotSupportedException("Not support clone: " + that.getClazz().getName());
             }
 

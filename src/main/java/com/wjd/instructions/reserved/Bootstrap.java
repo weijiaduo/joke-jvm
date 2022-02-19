@@ -67,10 +67,10 @@ public class Bootstrap extends NoOperandsInstruction {
      */
     private boolean initBootClass(Thread thread) {
         for (String className : bootClassNames) {
-            ClassMeta classMeta = bootLoader.loadClass(className);
-            if (!classMeta.isInitStarted()) {
+            ClassMeta clazz = bootLoader.loadClass(className);
+            if (!clazz.isInitStarted()) {
                 thread.revertNextPc();
-                InitClass.initClass(thread, classMeta);
+                InitClass.initClass(thread, clazz);
                 return false;
             }
         }
@@ -152,13 +152,13 @@ public class Bootstrap extends NoOperandsInstruction {
     private void execMain(Thread thread) {
         thread.popFrame(); // bootstrap frame
 
-        MethodMeta mainMethodMeta = mainClass.getMainMethod();
-        if (mainMethodMeta == null) {
+        MethodMeta mainMethod = mainClass.getMainMethod();
+        if (mainMethod == null) {
             System.out.println("Not found main method in class: " + mainClass.getJavaName());
             return;
         }
 
-        Frame frame = thread.newFrame(mainMethodMeta);
+        Frame frame = thread.newFrame(mainMethod);
         thread.pushFrame(frame);
         frame.getLocalVars().setRef(0, argsObj);
     }

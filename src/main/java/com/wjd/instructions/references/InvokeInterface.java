@@ -25,32 +25,32 @@ public class InvokeInterface extends Index16Instruction {
     public void execute(Frame frame) {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         InterfaceMethodRef methodRef = (InterfaceMethodRef) cp.getConstant(index);
-        MethodMeta resolvedMethodMeta = methodRef.resolvedInterfaceMethod();
+        MethodMeta resolvedMethod = methodRef.resolvedInterfaceMethod();
 
-        if (resolvedMethodMeta.isStatic() || resolvedMethodMeta.isPrivate()) {
-            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethodMeta.getName());
+        if (resolvedMethod.isStatic() || resolvedMethod.isPrivate()) {
+            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethod.getName());
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethodMeta.getParamSlotCount());
+        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
-            throw new NullPointerException("Invoke interface method: " + resolvedMethodMeta.getName());
+            throw new NullPointerException("Invoke interface method: " + resolvedMethod.getName());
         }
 
         if (!ref.getClazz().isImplements(methodRef.resolvedClass())) {
-            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethodMeta.getName());
+            throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethod.getName());
         }
 
         // 方法的多态性，运行时确定实际执行的方法
-        MethodMeta methodMetaToBeInvoked = MethodRef.lookupMethod(ref.getClazz(),
+        MethodMeta methodToBeInvoked = MethodRef.lookupMethod(ref.getClazz(),
                 methodRef.getName(), methodRef.getDescriptor());
 
         // 未实现的抽象方法验证
-        if (methodMetaToBeInvoked == null || methodMetaToBeInvoked.isAbstract()) {
-            throw new AbstractMethodError("Invoke interface method: " + resolvedMethodMeta.getName());
+        if (methodToBeInvoked == null || methodToBeInvoked.isAbstract()) {
+            throw new AbstractMethodError("Invoke interface method: " + resolvedMethod.getName());
         }
 
-        frame.getThread().invokeMethod(methodMetaToBeInvoked);
+        frame.getThread().invokeMethod(methodToBeInvoked);
     }
 
     @Override

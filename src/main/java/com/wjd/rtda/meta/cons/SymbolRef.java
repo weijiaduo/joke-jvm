@@ -24,13 +24,13 @@ public abstract class SymbolRef extends Constant {
      * 解析类符号引用
      */
     private void resolveClassRef() {
-        ClassMeta currentClassMeta = constantPool.getClazz();
-        ClassMeta refClassMeta = currentClassMeta.getLoader().loadClass(className);
-        if (!refClassMeta.isAccessibleTo(currentClassMeta)) {
-            throw new IllegalAccessError("Class " + currentClassMeta.getName()
-                    + " can not access Class " + refClassMeta.getName());
+        ClassMeta currentClazz = constantPool.getClazz();
+        ClassMeta refClazz = currentClazz.getLoader().loadClass(className);
+        if (!refClazz.isAccessibleTo(currentClazz)) {
+            throw new IllegalAccessError("Class " + currentClazz.getName()
+                    + " can not access Class " + refClazz.getName());
         }
-        clazz = refClassMeta;
+        clazz = refClazz;
     }
 
 }

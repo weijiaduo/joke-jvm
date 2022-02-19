@@ -17,20 +17,20 @@ public class InvokeStatic extends Index16Instruction {
     public void execute(Frame frame) {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
-        MethodMeta methodMeta = methodRef.resolvedMethod();
+        MethodMeta method = methodRef.resolvedMethod();
 
         // 类初始化
-        ClassMeta methodClassMeta = methodMeta.getClazz();
-        if (!methodClassMeta.isInitStarted()) {
+        ClassMeta methodClazz = method.getClazz();
+        if (!methodClazz.isInitStarted()) {
             frame.revertNextPc();
-            InitClass.initClass(frame.getThread(), methodClassMeta);
+            InitClass.initClass(frame.getThread(), methodClazz);
             return;
         }
 
-        if (!methodMeta.isStatic()) {
-            throw new IncompatibleClassChangeError("Invoke static method: " + methodMeta.getName());
+        if (!method.isStatic()) {
+            throw new IncompatibleClassChangeError("Invoke static method: " + method.getName());
         }
 
-        frame.getThread().invokeMethod(methodMeta);
+        frame.getThread().invokeMethod(method);
     }
 }

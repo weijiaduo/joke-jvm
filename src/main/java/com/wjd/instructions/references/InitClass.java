@@ -28,9 +28,9 @@ public class InitClass {
 
     private static void initSuperClass(Thread thread, ClassMeta clazz) {
         if (!clazz.isInterface()) {
-            ClassMeta superClassMeta = clazz.getSuperClass();
-            if (superClassMeta != null && !superClassMeta.isInitStarted()) {
-                initClass(thread, superClassMeta);
+            ClassMeta superClazz = clazz.getSuperClass();
+            if (superClazz != null && !superClazz.isInitStarted()) {
+                initClass(thread, superClazz);
             }
         }
     }

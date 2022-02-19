@@ -132,38 +132,38 @@ public class HeapObject implements Cloneable {
     }
 
     public void setRefVar(String name, String descriptor, HeapObject ref) {
-        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        getFields()[fieldMeta.getSlotId()].setRef(ref);
+        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        getFields()[field.getSlotId()].setRef(ref);
     }
 
     public HeapObject getRefVar(String name, String descriptor) {
-        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        return getFields()[fieldMeta.getSlotId()].getRef();
+        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        return getFields()[field.getSlotId()].getRef();
     }
 
     public int getIntVar(String name, String descriptor) {
-        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        return (int) getFields()[fieldMeta.getSlotId()].getNum();
+        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        return (int) getFields()[field.getSlotId()].getNum();
     }
 
     public void setIntVar(String name, String descriptor, int val) {
-        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
-        getFields()[fieldMeta.getSlotId()].setNum(val);
+        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        getFields()[field.getSlotId()].setNum(val);
     }
 
     public long getLongVar(String name, String descriptor) {
-        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = clazz.getInstanceField(name, descriptor);
         Slot[] slots = getFields();
-        Slot highSlot = slots[fieldMeta.getSlotId()];
-        Slot lowSlot = slots[fieldMeta.getSlotId() + 1];
+        Slot highSlot = slots[field.getSlotId()];
+        Slot lowSlot = slots[field.getSlotId() + 1];
         return Slot.getLong(highSlot, lowSlot);
     }
 
     public void setLongVar(String name, String descriptor, long val) {
-        FieldMeta fieldMeta = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = clazz.getInstanceField(name, descriptor);
         Slot[] slots = getFields();
-        Slot highSlot = slots[fieldMeta.getSlotId()];
-        Slot lowSlot = slots[fieldMeta.getSlotId() + 1];
+        Slot highSlot = slots[field.getSlotId()];
+        Slot lowSlot = slots[field.getSlotId() + 1];
         Slot.setLong(highSlot, lowSlot, val);
     }
 

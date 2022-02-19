@@ -16,51 +16,51 @@ public class InvokeSpecial extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ClassMeta currentClassMeta = frame.getMethod().getClazz();
-        ConstantPool cp = currentClassMeta.getConstantPool();
+        ClassMeta currentClazz = frame.getMethod().getClazz();
+        ConstantPool cp = currentClazz.getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
-        ClassMeta resolvedClassMeta = methodRef.resolvedClass();
-        MethodMeta resolvedMethodMeta = methodRef.resolvedMethod();
+        ClassMeta resolvedClazz = methodRef.resolvedClass();
+        MethodMeta resolvedMethod = methodRef.resolvedMethod();
 
         // 构造方法验证
-        if ("<init>".equals(resolvedMethodMeta.getName()) && resolvedMethodMeta.getClazz() != resolvedClassMeta) {
-            throw new NoSuchMethodError("Invoke special method: " + resolvedMethodMeta.getName());
+        if ("<init>".equals(resolvedMethod.getName()) && resolvedMethod.getClazz() != resolvedClazz) {
+            throw new NoSuchMethodError("Invoke special method: " + resolvedMethod.getName());
         }
-        if (resolvedMethodMeta.isStatic()) {
-            throw new IncompatibleClassChangeError("Invoke special method: " + resolvedMethodMeta.getName());
+        if (resolvedMethod.isStatic()) {
+            throw new IncompatibleClassChangeError("Invoke special method: " + resolvedMethod.getName());
         }
 
         // 调用方法的this对象
-        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethodMeta.getParamSlotCount());
+        HeapObject ref = frame.getOperandStack().getRefFromTop(resolvedMethod.getParamSlotCount());
         if (ref == null) {
-            throw new NullPointerException("Invoke special method: " + resolvedMethodMeta.getName());
+            throw new NullPointerException("Invoke special method: " + resolvedMethod.getName());
         }
 
         // 调用方法是protected时的权限验证
-        if (resolvedMethodMeta.isProtected() &&
-                resolvedMethodMeta.getClazz().isSuperClassOf(currentClassMeta) &&
-                !resolvedMethodMeta.getClazz().getPackageName().equals(currentClassMeta.getPackageName()) &&
-                ref.getClazz() != currentClassMeta &&
-                !ref.getClazz().isSubClassOf(currentClassMeta)) {
-            throw new IllegalAccessError("Invoke special method: " + resolvedMethodMeta.getName());
+        if (resolvedMethod.isProtected() &&
+                resolvedMethod.getClazz().isSuperClassOf(currentClazz) &&
+                !resolvedMethod.getClazz().getPackageName().equals(currentClazz.getPackageName()) &&
+                ref.getClazz() != currentClazz &&
+                !ref.getClazz().isSubClassOf(currentClazz)) {
+            throw new IllegalAccessError("Invoke special method: " + resolvedMethod.getName());
         }
 
-        MethodMeta methodMetaToBeInvoked = resolvedMethodMeta;
+        MethodMeta methodToBeInvoked = resolvedMethod;
 
         // 调用super关键字
-        if (currentClassMeta.isSuper() &&
-                resolvedClassMeta.isSuperClassOf(currentClassMeta) &&
-                !"<init>".equals(resolvedMethodMeta.getName())) {
-            methodMetaToBeInvoked = MethodRef.lookupMethodInClass(currentClassMeta.getSuperClass(),
+        if (currentClazz.isSuper() &&
+                resolvedClazz.isSuperClassOf(currentClazz) &&
+                !"<init>".equals(resolvedMethod.getName())) {
+            methodToBeInvoked = MethodRef.lookupMethodInClass(currentClazz.getSuperClass(),
                     methodRef.getName(),
                     methodRef.getDescriptor());
         }
 
         // 未实现的抽象方法验证
-        if (methodMetaToBeInvoked == null || methodMetaToBeInvoked.isAbstract()) {
-            throw new AbstractMethodError("Invoke special method: " + resolvedMethodMeta.getName());
+        if (methodToBeInvoked == null || methodToBeInvoked.isAbstract()) {
+            throw new AbstractMethodError("Invoke special method: " + resolvedMethod.getName());
         }
 
-        frame.getThread().invokeMethod(methodMetaToBeInvoked);
+        frame.getThread().invokeMethod(methodToBeInvoked);
     }
 }

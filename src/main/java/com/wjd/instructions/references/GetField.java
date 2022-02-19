@@ -18,13 +18,13 @@ public class GetField extends Index16Instruction {
     public void execute(Frame frame) {
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
-        FieldMeta fieldMeta = fieldRef.resolvedField();
-        if (fieldMeta.isStatic()) {
-            throw new IncompatibleClassChangeError("getfield field: " + fieldMeta.getName());
+        FieldMeta field = fieldRef.resolvedField();
+        if (field.isStatic()) {
+            throw new IncompatibleClassChangeError("getfield field: " + field.getName());
         }
 
-        String descriptor = fieldMeta.getDescriptor();
-        int slotId = fieldMeta.getSlotId();
+        String descriptor = field.getDescriptor();
+        int slotId = field.getSlotId();
         OperandStack stack = frame.getOperandStack();
         char d = descriptor.charAt(0);
         switch (d) {
@@ -36,7 +36,7 @@ public class GetField extends Index16Instruction {
             {
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("getfield Field: " + fieldMeta.getName());
+                    throw new NullPointerException("getfield Field: " + field.getName());
                 }
                 Slot[] slots = ref.getFields();
                 stack.pushInt(Slot.getInt(slots[slotId]));
@@ -46,7 +46,7 @@ public class GetField extends Index16Instruction {
             {
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("getfield Field: " + fieldMeta.getName());
+                    throw new NullPointerException("getfield Field: " + field.getName());
                 }
                 Slot[] slots = ref.getFields();
                 stack.pushFloat(Slot.getFloat(slots[slotId]));
@@ -56,7 +56,7 @@ public class GetField extends Index16Instruction {
             {
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("getfield Field: " + fieldMeta.getName());
+                    throw new NullPointerException("getfield Field: " + field.getName());
                 }
                 Slot[] slots = ref.getFields();
                 stack.pushLong(Slot.getLong(slots[slotId], slots[slotId + 1]));
@@ -66,7 +66,7 @@ public class GetField extends Index16Instruction {
             {
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("getfield Field: " + fieldMeta.getName());
+                    throw new NullPointerException("getfield Field: " + field.getName());
                 }
                 Slot[] slots = ref.getFields();
                 stack.pushDouble(Slot.getDouble(slots[slotId], slots[slotId + 1]));
@@ -77,7 +77,7 @@ public class GetField extends Index16Instruction {
             {
                 HeapObject ref = stack.popRef();
                 if (ref == null) {
-                    throw new NullPointerException("getfield Field: " + fieldMeta.getName());
+                    throw new NullPointerException("getfield Field: " + field.getName());
                 }
                 Slot[] slots = ref.getFields();
                 stack.pushRef(slots[slotId].getRef());

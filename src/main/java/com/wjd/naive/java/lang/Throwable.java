@@ -65,12 +65,12 @@ public class Throwable implements NativeClass {
          * 生成栈帧的堆栈信息
          */
         private StackTraceElement createStackTraceElement(Frame frame) {
-            MethodMeta methodMeta = frame.getMethod();
-            ClassMeta classMeta = methodMeta.getClazz();
-            StackTraceElement stack = new StackTraceElement(classMeta.getSourceFile(),
-                    classMeta.getJavaName(),
-                    methodMeta.getName(),
-                    methodMeta.getLineNumber(frame.getNextPc() - 1));
+            MethodMeta method = frame.getMethod();
+            ClassMeta clazz = method.getClazz();
+            StackTraceElement stack = new StackTraceElement(clazz.getSourceFile(),
+                    clazz.getJavaName(),
+                    method.getName(),
+                    method.getLineNumber(frame.getNextPc() - 1));
             return stack;
         }
     }

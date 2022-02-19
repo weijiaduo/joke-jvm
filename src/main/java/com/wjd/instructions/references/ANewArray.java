@@ -18,7 +18,7 @@ public class ANewArray extends Index16Instruction {
         // 数组元素类型
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
-        ClassMeta componentClassMeta = classRef.resolvedClass();
+        ClassMeta componentClazz = classRef.resolvedClass();
 
         int count = frame.getOperandStack().popInt();
         if (count < 0) {
@@ -26,8 +26,8 @@ public class ANewArray extends Index16Instruction {
         }
 
         // 数组类型
-        ClassMeta arrayClassMeta = componentClassMeta.getArrayClass();
-        HeapObject arrayObject = arrayClassMeta.newArray(count);
+        ClassMeta arrayClazz = componentClazz.getArrayClass();
+        HeapObject arrayObject = arrayClazz.newArray(count);
         frame.getOperandStack().pushRef(arrayObject);
     }
 

@@ -120,14 +120,14 @@ public class ArrayHelper {
      * 验证数组是否可以复制
      */
     public static boolean checkArrayCopy(HeapObject src, HeapObject dest) {
-        ClassMeta srcClassMeta = src.getClazz();
-        ClassMeta destClassMeta = dest.getClazz();
-        if (!srcClassMeta.isArray() || !destClassMeta.isArray()) {
+        ClassMeta srcClazz = src.getClazz();
+        ClassMeta destClazz = dest.getClazz();
+        if (!srcClazz.isArray() || !destClazz.isArray()) {
             return false;
         }
-        if (srcClassMeta.getComponentClass().isPrimitive()
-            || destClassMeta.getComponentClass().isPrimitive()) {
-            return srcClassMeta.getComponentClass() == destClassMeta.getComponentClass();
+        if (srcClazz.getComponentClass().isPrimitive()
+            || destClazz.getComponentClass().isPrimitive()) {
+            return srcClazz.getComponentClass() == destClazz.getComponentClass();
         }
         return true;
     }

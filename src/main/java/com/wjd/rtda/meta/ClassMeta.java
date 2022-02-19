@@ -126,8 +126,8 @@ public class ClassMeta {
         return superClass;
     }
 
-    public void setSuperClass(ClassMeta superClassMeta) {
-        this.superClass = superClassMeta;
+    public void setSuperClass(ClassMeta superClazz) {
+        this.superClass = superClazz;
     }
 
     public ClassMeta[] getInterfaces() {
@@ -350,9 +350,9 @@ public class ClassMeta {
             return fields;
         }
         List<FieldMeta> fs = new ArrayList<>();
-        for (FieldMeta fieldMeta : fields) {
-            if (fieldMeta.isPublic()) {
-                fs.add(fieldMeta);
+        for (FieldMeta field : fields) {
+            if (field.isPublic()) {
+                fs.add(field);
             }
         }
         return fs.toArray(new FieldMeta[0]);
@@ -380,11 +380,11 @@ public class ClassMeta {
      */
     private FieldMeta getField(String name, String descriptor, boolean isStatic) {
         for (ClassMeta c = this; c != null; c = c.getSuperClass()) {
-            for (FieldMeta fieldMeta : c.getFields()) {
-                if (fieldMeta.isStatic() == isStatic &&
-                        fieldMeta.getName().equals(name) &&
-                        fieldMeta.getDescriptor().equals(descriptor)) {
-                    return fieldMeta;
+            for (FieldMeta field : c.getFields()) {
+                if (field.isStatic() == isStatic &&
+                        field.getName().equals(name) &&
+                        field.getDescriptor().equals(descriptor)) {
+                    return field;
                 }
             }
         }
@@ -500,16 +500,16 @@ public class ClassMeta {
      * 获取指定静态字段成员
      */
     public HeapObject getRefVar(String name, String descriptor) {
-        FieldMeta fieldMeta = getStaticField(name, descriptor);
-        return staticVars[fieldMeta.getSlotId()].getRef();
+        FieldMeta field = getStaticField(name, descriptor);
+        return staticVars[field.getSlotId()].getRef();
     }
 
     /**
      * 设置静态字段成员值
      */
     public void setRefVar(String name, String descriptor, HeapObject ref) {
-        FieldMeta fieldMeta = getStaticField(name, descriptor);
-        staticVars[fieldMeta.getSlotId()].setRef(ref);
+        FieldMeta field = getStaticField(name, descriptor);
+        staticVars[field.getSlotId()].setRef(ref);
     }
 
 }

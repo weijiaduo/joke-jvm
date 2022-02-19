@@ -11,7 +11,7 @@ import com.wjd.rtda.meta.FieldMeta;
  */
 public class FieldRef extends MemberRef {
 
-    private FieldMeta fieldMeta;
+    private FieldMeta field;
 
     public static FieldRef newFieldRef(ConstantPool constantPool, FieldRefConstantInfo constantInfo) {
         FieldRef ref = new FieldRef();
@@ -24,26 +24,26 @@ public class FieldRef extends MemberRef {
      * 解析字段符号引用，返回字段元数据
      */
     public FieldMeta resolvedField() {
-        if (fieldMeta == null) {
+        if (field == null) {
             resolveFieldRef();
         }
-        return fieldMeta;
+        return field;
     }
 
     /**
      * 解析字段符号引用
      */
     private void resolveFieldRef() {
-        ClassMeta currentClassMeta = constantPool.getClazz();
-        ClassMeta refClassMeta = resolvedClass();
-        FieldMeta refFieldMeta = lookupField(refClassMeta, name, descriptor);
-        if (refFieldMeta == null) {
+        ClassMeta currentClazz = constantPool.getClazz();
+        ClassMeta refClazz = resolvedClass();
+        FieldMeta refField = lookupField(refClazz, name, descriptor);
+        if (refField == null) {
             throw new NoSuchFieldError("No such field: " + name + ", " + descriptor);
         }
-        if (!refFieldMeta.isAccessibleTo(currentClassMeta)) {
-            throw new IllegalAccessError(("Class " + currentClassMeta.getName() + " can not assess Field " + name));
+        if (!refField.isAccessibleTo(currentClazz)) {
+            throw new IllegalAccessError(("Class " + currentClazz.getName() + " can not assess Field " + name));
         }
-        fieldMeta = refFieldMeta;
+        field = refField;
     }
 
     /**
@@ -55,9 +55,9 @@ public class FieldRef extends MemberRef {
      */
     private static FieldMeta lookupField(ClassMeta clazz, String name, String descriptor) {
         // 当前类声明的字段
-        for (FieldMeta fieldMeta : clazz.getFields()) {
-            if (fieldMeta.getName().equals(name) && fieldMeta.getDescriptor().equals(descriptor)) {
-                return fieldMeta;
+        for (FieldMeta field : clazz.getFields()) {
+            if (field.getName().equals(name) && field.getDescriptor().equals(descriptor)) {
+                return field;
             }
         }
         // 接口声明的字段

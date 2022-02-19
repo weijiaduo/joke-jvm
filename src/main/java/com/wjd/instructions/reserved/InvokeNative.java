@@ -14,10 +14,10 @@ public class InvokeNative extends NoOperandsInstruction {
 
     @Override
     public void execute(Frame frame) {
-        MethodMeta methodMeta = frame.getMethod();
-        String className = methodMeta.getClazz().getName();
-        String methodName = methodMeta.getName();
-        String methodDescriptor = methodMeta.getDescriptor();
+        MethodMeta method = frame.getMethod();
+        String className = method.getClazz().getName();
+        String methodName = method.getName();
+        String methodDescriptor = method.getDescriptor();
         NativeMethod nativeMethod = NativeRegistry.findNativeMethod(className, methodName, methodDescriptor);
         if (nativeMethod == null) {
             String methodInfo = className + "." + methodName + methodDescriptor;

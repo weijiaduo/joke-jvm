@@ -25,8 +25,8 @@ public class AccessController implements NativeClass {
         HeapObject action = frame.getLocalVars().getRef(0);
         frame.getOperandStack().pushRef(action);
 
-        MethodMeta methodMeta = action.getClazz().getInstanceMethod("run", "()Ljava/lang/Object;");
-        frame.getThread().invokeMethod(methodMeta);
+        MethodMeta method = action.getClazz().getInstanceMethod("run", "()Ljava/lang/Object;");
+        frame.getThread().invokeMethod(method);
     }
 
     /**

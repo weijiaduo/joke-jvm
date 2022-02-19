@@ -85,13 +85,13 @@ public class Thread {
         stack.clear();
     }
 
-    public Frame newFrame(MethodMeta methodMeta) {
-        return new Frame(this, methodMeta);
+    public Frame newFrame(MethodMeta method) {
+        return new Frame(this, method);
     }
 
     public Frame newShimFrame(Slot[] args) {
-        MethodMeta methodMeta = ShimClassMeta.getInstance().getReturnMethod();
-        Frame frame = new Frame(this, methodMeta);
+        MethodMeta method = ShimClassMeta.getInstance().getReturnMethod();
+        Frame frame = new Frame(this, method);
         if (args != null) {
             for (Slot slot : args) {
                 frame.getOperandStack().pushSlot(slot);
@@ -100,21 +100,21 @@ public class Thread {
         return frame;
     }
 
-    public void invokeMethodWithShim(MethodMeta methodMeta, Slot[] args) {
+    public void invokeMethodWithShim(MethodMeta method, Slot[] args) {
         Frame shimFrame = newShimFrame(args);
         this.pushFrame(shimFrame);
-        this.invokeMethod(methodMeta);
+        this.invokeMethod(method);
     }
 
     /**
      * 调用方法
-     * @param methodMeta 方法
+     * @param method 方法
      */
-    public void invokeMethod(MethodMeta methodMeta) {
+    public void invokeMethod(MethodMeta method) {
         Frame currentFrame = this.currentFrame();
-        Frame newFrame = this.newFrame(methodMeta);
+        Frame newFrame = this.newFrame(method);
         this.pushFrame(newFrame);
-        int argsSlotCount = methodMeta.getArgSlotCount();
+        int argsSlotCount = method.getArgSlotCount();
         if (argsSlotCount > 0) {
             passArgs(currentFrame, newFrame, argsSlotCount);
         }

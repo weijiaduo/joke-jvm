@@ -36,9 +36,9 @@ public class MethodMeta extends MemberMeta {
         return methods;
     }
 
-    public static MethodMeta newMethod(ClassMeta classMeta, MethodInfo methodInfo) {
+    public static MethodMeta newMethod(ClassMeta clazz, MethodInfo methodInfo) {
         MethodMeta method = new MethodMeta();
-        method.clazz = classMeta;
+        method.clazz = clazz;
         method.copyMemberInfo(methodInfo);
         method.copyAttributes(methodInfo);
         method.calcArgSlotCount();

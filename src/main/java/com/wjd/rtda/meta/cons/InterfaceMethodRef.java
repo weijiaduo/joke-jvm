@@ -11,7 +11,7 @@ import com.wjd.rtda.meta.MethodMeta;
  */
 public class InterfaceMethodRef extends MemberRef {
 
-    private MethodMeta methodMeta;
+    private MethodMeta method;
 
     public static InterfaceMethodRef newInterfaceMethodRef(ConstantPool constantPool,
                                                            InterfaceMethodRefConstantInfo constantInfo) {
@@ -25,33 +25,33 @@ public class InterfaceMethodRef extends MemberRef {
      * 解析接口方法符号引用
      */
     public MethodMeta resolvedInterfaceMethod() {
-        if (methodMeta == null) {
+        if (method == null) {
             resolveInterfaceMethodRef();
         }
-        return methodMeta;
+        return method;
     }
 
     /**
      * 解析接口方法符号引用
      */
     private void resolveInterfaceMethodRef() {
-        ClassMeta currentClassMeta = constantPool.getClazz(); // 当前类
-        ClassMeta refClassMeta = resolvedClass(); // 方法所在接口
-        if (!refClassMeta.isInterface()) {
-            throw new IncompatibleClassChangeError("Class: " + refClassMeta);
+        ClassMeta currentClazz = constantPool.getClazz(); // 当前类
+        ClassMeta refClazz = resolvedClass(); // 方法所在接口
+        if (!refClazz.isInterface()) {
+            throw new IncompatibleClassChangeError("Class: " + refClazz);
         }
 
         // 查找接口方法
-        MethodMeta methodMeta = lookupInterfaceMethod(refClassMeta, name, descriptor);
-        if (methodMeta == null) {
+        MethodMeta method = lookupInterfaceMethod(refClazz, name, descriptor);
+        if (method == null) {
             throw new NoSuchMethodError("Method: " + name);
         }
 
         // 验证访问权限
-        if (!methodMeta.isAccessibleTo(currentClassMeta)) {
-            throw new IllegalAccessError("Method: " + methodMeta + " can not access by Class: " + currentClassMeta);
+        if (!method.isAccessibleTo(currentClazz)) {
+            throw new IllegalAccessError("Method: " + method + " can not access by Class: " + currentClazz);
         }
-        this.methodMeta = methodMeta;
+        this.method = method;
     }
 
     /**
@@ -62,9 +62,9 @@ public class InterfaceMethodRef extends MemberRef {
      * @return 方法元数据
      */
     public static MethodMeta lookupInterfaceMethod(ClassMeta clazz, String name, String descriptor) {
-        for (MethodMeta methodMeta : clazz.getMethods()) {
-            if (methodMeta.getName().equals(name) && methodMeta.getDescriptor().equals(descriptor)) {
-                return methodMeta;
+        for (MethodMeta method : clazz.getMethods()) {
+            if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                return method;
             }
         }
         return lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
@@ -72,14 +72,14 @@ public class InterfaceMethodRef extends MemberRef {
 
     private static MethodMeta lookupMethodInInterfaces(ClassMeta[] interfaces, String name, String descriptor) {
         for (ClassMeta iface : interfaces) {
-            for (MethodMeta methodMeta : iface.getMethods()) {
-                if (methodMeta.getName().equals(name) && methodMeta.getDescriptor().equals(descriptor)) {
-                    return methodMeta;
+            for (MethodMeta method : iface.getMethods()) {
+                if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                    return method;
                 }
             }
-            MethodMeta methodMeta = lookupMethodInInterfaces(iface.getInterfaces(), name, descriptor);
-            if (methodMeta != null) {
-                return methodMeta;
+            MethodMeta method = lookupMethodInInterfaces(iface.getInterfaces(), name, descriptor);
+            if (method != null) {
+                return method;
             }
         }
         return null;

@@ -11,7 +11,7 @@ import com.wjd.rtda.meta.MethodMeta;
  */
 public class MethodRef extends MemberRef {
 
-    private MethodMeta methodMeta;
+    private MethodMeta method;
 
     public static MethodRef newMethodRef(ConstantPool constantPool, MethodRefConstantInfo constantInfo) {
         MethodRef ref = new MethodRef();
@@ -24,33 +24,33 @@ public class MethodRef extends MemberRef {
      * 解析方法符号引用
      */
     public MethodMeta resolvedMethod() {
-        if (methodMeta == null) {
+        if (method == null) {
             resolveMethodRef();
         }
-        return methodMeta;
+        return method;
     }
 
     /**
      * 解析方法符号引用
      */
     private void resolveMethodRef() {
-        ClassMeta currentClassMeta = constantPool.getClazz(); // 当前类
-        ClassMeta refClassMeta = resolvedClass(); // 方法所在类
-        if (refClassMeta.isInterface()) {
-            throw new IncompatibleClassChangeError("Class: " + refClassMeta);
+        ClassMeta currentClazz = constantPool.getClazz(); // 当前类
+        ClassMeta refClazz = resolvedClass(); // 方法所在类
+        if (refClazz.isInterface()) {
+            throw new IncompatibleClassChangeError("Class: " + refClazz);
         }
 
         // 查找指定方法
-        MethodMeta methodMeta = lookupMethod(refClassMeta, name, descriptor);
-        if (methodMeta == null) {
+        MethodMeta method = lookupMethod(refClazz, name, descriptor);
+        if (method == null) {
             throw new NoSuchMethodError("Method: " + name);
         }
 
         // 验证访问权限
-        if (!methodMeta.isAccessibleTo(currentClassMeta)) {
-            throw new IllegalAccessError("Method: " + methodMeta + " can not access by Class: " + currentClassMeta);
+        if (!method.isAccessibleTo(currentClazz)) {
+            throw new IllegalAccessError("Method: " + method + " can not access by Class: " + currentClazz);
         }
-        this.methodMeta = methodMeta;
+        this.method = method;
     }
 
     /**
@@ -61,11 +61,11 @@ public class MethodRef extends MemberRef {
      * @return 方法元数据
      */
     public static MethodMeta lookupMethod(ClassMeta clazz, String name, String descriptor) {
-        MethodMeta methodMeta = lookupMethodInClass(clazz, name, descriptor);
-        if (methodMeta == null) {
-            methodMeta = lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
+        MethodMeta method = lookupMethodInClass(clazz, name, descriptor);
+        if (method == null) {
+            method = lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
         }
-        return methodMeta;
+        return method;
     }
 
     /**
@@ -77,9 +77,9 @@ public class MethodRef extends MemberRef {
      */
     public static MethodMeta lookupMethodInClass(ClassMeta clazz, String name, String descriptor) {
         for (ClassMeta c = clazz; c != null; c = c.getSuperClass()) {
-            for (MethodMeta methodMeta : c.getMethods()) {
-                if (methodMeta.getName().equals(name) && methodMeta.getDescriptor().equals(descriptor)) {
-                    return methodMeta;
+            for (MethodMeta method : c.getMethods()) {
+                if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                    return method;
                 }
             }
         }
@@ -95,9 +95,9 @@ public class MethodRef extends MemberRef {
      */
     private static MethodMeta lookupMethodInInterfaces(ClassMeta[] interfaces, String name, String descriptor) {
         for (ClassMeta iface : interfaces) {
-            for (MethodMeta methodMeta : iface.getMethods()) {
-                if (methodMeta.getName().equals(name) && methodMeta.getDescriptor().equals(descriptor)) {
-                    return methodMeta;
+            for (MethodMeta method : iface.getMethods()) {
+                if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                    return method;
                 }
             }
             MethodMeta methodMeta = lookupMethodInInterfaces(iface.getInterfaces(), name, descriptor);

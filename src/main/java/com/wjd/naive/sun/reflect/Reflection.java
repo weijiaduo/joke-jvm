@@ -41,8 +41,8 @@ public class Reflection implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject type = frame.getLocalVars().getRef(0);
-            ClassMeta classMeta = (ClassMeta) type.getExtra();
-            frame.getOperandStack().pushInt(classMeta.getAccessFlags().value());
+            ClassMeta clazz = (ClassMeta) type.getExtra();
+            frame.getOperandStack().pushInt(clazz.getAccessFlags().value());
         }
     }
 
