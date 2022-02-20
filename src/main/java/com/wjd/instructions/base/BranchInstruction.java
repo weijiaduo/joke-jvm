@@ -12,7 +12,6 @@ public class BranchInstruction implements Instruction {
 
     @Override
     public void execute(Frame frame) {
-        //
     }
 
     @Override
@@ -21,7 +20,11 @@ public class BranchInstruction implements Instruction {
         offset = reader.readShort();
     }
 
-    public void branch(Frame frame) {
+    /**
+     * 指令跳转
+     * @param frame 栈帧
+     */
+    protected void branch(Frame frame) {
         int pc = frame.getThread().getPc();
         frame.setNextPc(pc + offset);
     }

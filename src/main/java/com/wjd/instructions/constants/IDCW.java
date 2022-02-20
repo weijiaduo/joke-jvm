@@ -2,11 +2,11 @@ package com.wjd.instructions.constants;
 
 import com.wjd.instructions.base.Index16Instruction;
 import com.wjd.rtda.heap.HeapObject;
+import com.wjd.rtda.meta.ConstantPool;
 import com.wjd.rtda.meta.StringPool;
 import com.wjd.rtda.meta.cons.*;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.stack.OperandStack;
-import com.wjd.rtda.meta.ConstantPool;
 
 /**
  * @since 2022/2/2
@@ -18,7 +18,7 @@ public class IDCW extends Index16Instruction {
         OperandStack stack = frame.getOpStack();
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         Constant constant = cp.getConstant(index);
-        if(constant instanceof IntegerConstant) {
+        if (constant instanceof IntegerConstant) {
             stack.pushInt(((IntegerConstant) constant).value());
         } else if (constant instanceof FloatConstant) {
             stack.pushFloat(((FloatConstant) constant).value());

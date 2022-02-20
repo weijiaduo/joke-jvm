@@ -1,6 +1,6 @@
 package com.wjd.instructions.comparisons;
 
-import com.wjd.instructions.constants.NoOperandsInstruction;
+import com.wjd.instructions.base.NoOperandsInstruction;
 import com.wjd.rtda.stack.Frame;
 
 /**

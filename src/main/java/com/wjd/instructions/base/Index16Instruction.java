@@ -13,7 +13,6 @@ public class Index16Instruction implements Instruction {
 
     @Override
     public void execute(Frame frame) {
-        //
     }
 
     @Override

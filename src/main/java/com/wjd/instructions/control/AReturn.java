@@ -1,6 +1,6 @@
 package com.wjd.instructions.control;
 
-import com.wjd.instructions.constants.NoOperandsInstruction;
+import com.wjd.instructions.base.NoOperandsInstruction;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;

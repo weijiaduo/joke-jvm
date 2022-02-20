@@ -5,7 +5,8 @@ import com.wjd.instructions.comparisons.*;
 import com.wjd.instructions.constants.*;
 import com.wjd.instructions.control.*;
 import com.wjd.instructions.conversions.*;
-import com.wjd.instructions.extended.*;
+import com.wjd.instructions.extended.WGoto;
+import com.wjd.instructions.extended.Wide;
 import com.wjd.instructions.loads.*;
 import com.wjd.instructions.math.*;
 import com.wjd.instructions.references.*;
@@ -22,7 +23,7 @@ public class InstructionFactory {
     public static Instruction newInstance(int opcode) {
         switch (opcode) {
             case 0x00:
-                return new NoOperandsInstruction();
+                return new Nop();
             case 0x01:
                 return new AConstNull();
             case 0x02:

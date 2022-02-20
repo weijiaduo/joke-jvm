@@ -1,5 +1,6 @@
 package com.wjd.instructions.constants;
 
+import com.wjd.instructions.base.NoOperandsInstruction;
 import com.wjd.rtda.stack.Frame;
 
 /**

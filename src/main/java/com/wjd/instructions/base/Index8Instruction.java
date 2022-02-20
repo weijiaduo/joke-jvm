@@ -13,7 +13,6 @@ public class Index8Instruction implements Instruction {
 
     @Override
     public void execute(Frame frame) {
-        //
     }
 
     @Override

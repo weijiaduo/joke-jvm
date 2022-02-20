@@ -1,6 +1,6 @@
 package com.wjd.instructions.references;
 
-import com.wjd.instructions.constants.NoOperandsInstruction;
+import com.wjd.instructions.base.NoOperandsInstruction;
 import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ex.StackTraceElement;

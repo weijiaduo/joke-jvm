@@ -17,6 +17,7 @@ public class WGoto extends BranchInstruction {
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
-        offset = (int) reader.readUint32().value();
+        // 注意是32位有符号整数
+        offset = reader.readInt();
     }
 }

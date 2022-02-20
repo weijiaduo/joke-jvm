@@ -1,7 +1,5 @@
-package com.wjd.instructions.constants;
+package com.wjd.instructions.base;
 
-import com.wjd.instructions.base.ByteCodeReader;
-import com.wjd.instructions.base.Instruction;
 import com.wjd.rtda.stack.Frame;
 
 /**

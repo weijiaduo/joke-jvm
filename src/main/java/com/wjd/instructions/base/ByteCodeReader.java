@@ -12,7 +12,9 @@ import java.nio.ByteOrder;
  */
 public class ByteCodeReader {
 
+    /** 字节码字节数组 */
     private byte[] bytes;
+    /** 字节缓冲读取 */
     private ByteBuffer buf;
 
     public ByteCodeReader() {}
