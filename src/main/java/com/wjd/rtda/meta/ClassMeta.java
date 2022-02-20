@@ -4,11 +4,11 @@ import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
-import com.wjd.rtda.heap.Heap;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.util.ArrayHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -494,4 +494,13 @@ public class ClassMeta {
         staticVars[field.getSlotId()].setRef(ref);
     }
 
+    @Override
+    public String toString() {
+        return "ClassMeta{" +
+                "sourceFile='" + sourceFile + '\'' +
+                ", name='" + name + '\'' +
+                ", superClassName='" + superClassName + '\'' +
+                ", interfaceNames=" + Arrays.toString(interfaceNames) +
+                '}';
+    }
 }

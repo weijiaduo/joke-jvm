@@ -69,4 +69,15 @@ public class FieldMeta extends MemberMeta {
     public Slot getStaticValue() {
         return clazz.getStaticVars()[slotId];
     }
+
+    @Override
+    public String toString() {
+        return "FieldMeta{" +
+                "slotId=" + slotId +
+                ", name='" + name + '\'' +
+                ", descriptor='" + descriptor + '\'' +
+                ", signature='" + signature + '\'' +
+                ", clazz=" + clazz +
+                '}';
+    }
 }

@@ -3,6 +3,7 @@ package com.wjd.rtda.heap;
 import com.wjd.rtda.Slot;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.FieldMeta;
+import com.wjd.util.ArrayHelper;
 
 /**
  * 对象基类
@@ -51,46 +52,6 @@ public class HeapObject implements Cloneable {
         this.extra = extra;
     }
 
-    public Slot[] getSlots() {
-        return (Slot[]) data;
-    }
-
-    public boolean[] getBooleans() {
-        return (boolean[]) data;
-    }
-
-    public byte[] getBytes() {
-        return (byte[]) data;
-    }
-
-    public char[] getChars() {
-        return (char[]) data;
-    }
-
-    public short[] getShorts() {
-        return (short[]) data;
-    }
-
-    public int[] getInts() {
-        return (int[]) data;
-    }
-
-    public long[] getLongs() {
-        return (long[]) data;
-    }
-
-    public float[] getFloats() {
-        return (float[]) data;
-    }
-
-    public double[] getDoubles() {
-        return (double[]) data;
-    }
-
-    public HeapObject[] getRefs() {
-        return (HeapObject[]) data;
-    }
-
     public String getDataType() {
         if (data == null) {
             return null;
@@ -99,32 +60,7 @@ public class HeapObject implements Cloneable {
     }
 
     public int getArrayLength() {
-        String dataType = getDataType();
-        if (dataType == null) {
-            return -1;
-        }
-        switch (dataType) {
-            case "boolean[]":
-                return getBooleans().length;
-            case "byte[]":
-                return getBytes().length;
-            case "char[]":
-                return getChars().length;
-            case "short[]":
-                return getShorts().length;
-            case "int[]":
-                return getInts().length;
-            case "long[]":
-                return getLongs().length;
-            case "float[]":
-                return getFloats().length;
-            case "double[]":
-                return getDoubles().length;
-            case "HeapObject[]":
-                return getRefs().length;
-            default:
-        }
-        throw new IllegalStateException("Not array");
+        return ArrayHelper.getArrayLength(this);
     }
 
     public boolean isInstanceOf(ClassMeta cls) {
@@ -177,39 +113,56 @@ public class HeapObject implements Cloneable {
     }
 
     private Object cloneData() {
-        String dataType = getDataType();
-        if (dataType == null) {
-            return null;
-        }
-        switch (dataType) {
-            case "boolean[]":
-                return getBooleans().clone();
-            case "byte[]":
-                return getBytes().clone();
-            case "char[]":
-                return getChars().clone();
-            case "short[]":
-                return getShorts().clone();
-            case "int[]":
-                return getInts().clone();
-            case "long[]":
-                return getLongs().clone();
-            case "float[]":
-                return getFloats().clone();
-            case "double[]":
-                return getDoubles().clone();
-            case "HeapObject[]":
-                return getRefs().clone();
-            default:
-            {
-                // Slot[]
-                Slot[] slots = getSlots();
-                Slot[] newSlots = new Slot[slots.length];
-                for (int i = 0; i < newSlots.length; i++) {
-                    newSlots[i] = new Slot(slots[i]);
-                }
-                return newSlots;
+        if (clazz.isArray()) {
+            return ArrayHelper.cloneArrayData(this);
+        } else {
+            // Slot[]
+            Slot[] slots = getSlots();
+            Slot[] newSlots = new Slot[slots.length];
+            for (int i = 0; i < newSlots.length; i++) {
+                newSlots[i] = new Slot(slots[i]);
             }
+            return newSlots;
         }
+    }
+
+    public Slot[] getSlots() {
+        return (Slot[]) data;
+    }
+
+    public boolean[] getBooleans() {
+        return (boolean[]) data;
+    }
+
+    public byte[] getBytes() {
+        return (byte[]) data;
+    }
+
+    public char[] getChars() {
+        return (char[]) data;
+    }
+
+    public short[] getShorts() {
+        return (short[]) data;
+    }
+
+    public int[] getInts() {
+        return (int[]) data;
+    }
+
+    public long[] getLongs() {
+        return (long[]) data;
+    }
+
+    public float[] getFloats() {
+        return (float[]) data;
+    }
+
+    public double[] getDoubles() {
+        return (double[]) data;
+    }
+
+    public HeapObject[] getRefs() {
+        return (HeapObject[]) data;
     }
 }

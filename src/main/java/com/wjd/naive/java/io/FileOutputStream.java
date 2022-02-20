@@ -36,7 +36,7 @@ public class FileOutputStream implements NativeClass {
             // boolean append = vars.getBoolean(4);
             byte[] bytes = bytesObj.getBytes();
             bytes = Arrays.copyOfRange(bytes, off, off + len);
-            System.out.print(new String(bytes));
+            System.out.write(bytes);
         }
     }
 

@@ -68,18 +68,6 @@ public class System implements NativeClass {
     }
 
     /**
-     * private static native void setOut0(PrintStream out);
-     */
-    static class SetOut0 implements NativeMethod {
-        @Override
-        public void execute(Frame frame) throws Exception {
-            HeapObject outObj = frame.getLocalVars().getRef(0);
-            ClassMeta sysClass = frame.getMethod().getClazz();
-            sysClass.setFieldRef("out", "Ljava/io/PrintStream;", outObj);
-        }
-    }
-
-    /**
      * private static native Properties initProperties(Properties props);
      */
     static class InitProperties implements NativeMethod {
@@ -118,6 +106,18 @@ public class System implements NativeClass {
             props.put("line.separator", "\n");
             props.put("file.encoding", "UTF-8");
             return props;
+        }
+    }
+
+    /**
+     * private static native void setOut0(PrintStream out);
+     */
+    static class SetOut0 implements NativeMethod {
+        @Override
+        public void execute(Frame frame) throws Exception {
+            HeapObject outObj = frame.getLocalVars().getRef(0);
+            ClassMeta sysClass = frame.getMethod().getClazz();
+            sysClass.setFieldRef("out", "Ljava/io/PrintStream;", outObj);
         }
     }
 

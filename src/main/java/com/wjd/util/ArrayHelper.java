@@ -1,6 +1,7 @@
 package com.wjd.util;
 
 import com.wjd.classfile.type.Uint8;
+import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.ClassMeta;
 import com.wjd.rtda.meta.ClassMetaLoader;
@@ -206,6 +207,82 @@ public class ArrayHelper {
                 break;
             default:
                 throw new IllegalArgumentException("Unknown type: " + dataType);
+        }
+    }
+
+    /**
+     * 获取数组长度
+     * @param arr 数组对象
+     * @return 数组长度
+     */
+    public static int getArrayLength(HeapObject arr) {
+        String dataType = arr.getDataType();
+        if (dataType == null) {
+            return -1;
+        }
+        switch (dataType) {
+            case "boolean[]":
+                return arr.getBooleans().length;
+            case "byte[]":
+                return arr.getBytes().length;
+            case "char[]":
+                return arr.getChars().length;
+            case "short[]":
+                return arr.getShorts().length;
+            case "int[]":
+                return arr.getInts().length;
+            case "long[]":
+                return arr.getLongs().length;
+            case "float[]":
+                return arr.getFloats().length;
+            case "double[]":
+                return arr.getDoubles().length;
+            case "HeapObject[]":
+                return arr.getRefs().length;
+            default:
+        }
+        throw new IllegalStateException("Not array");
+    }
+
+    /**
+     * 克隆数组数据
+     * @param arr 数组对象
+     * @return 数组数据
+     */
+    public static Object cloneArrayData(HeapObject arr) {
+        String dataType = arr.getDataType();
+        if (dataType == null) {
+            return null;
+        }
+        switch (dataType) {
+            case "boolean[]":
+                return arr.getBooleans().clone();
+            case "byte[]":
+                return arr.getBytes().clone();
+            case "char[]":
+                return arr.getChars().clone();
+            case "short[]":
+                return arr.getShorts().clone();
+            case "int[]":
+                return arr.getInts().clone();
+            case "long[]":
+                return arr.getLongs().clone();
+            case "float[]":
+                return arr.getFloats().clone();
+            case "double[]":
+                return arr.getDoubles().clone();
+            case "HeapObject[]":
+                return arr.getRefs().clone();
+            default:
+            {
+                // Slot[]
+                Slot[] slots = arr.getSlots();
+                Slot[] newSlots = new Slot[slots.length];
+                for (int i = 0; i < newSlots.length; i++) {
+                    newSlots[i] = new Slot(slots[i]);
+                }
+                return newSlots;
+            }
         }
     }
 

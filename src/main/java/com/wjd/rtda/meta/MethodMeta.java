@@ -237,4 +237,17 @@ public class MethodMeta extends MemberMeta {
     public byte[] getCodes() {
         return codes;
     }
+
+    @Override
+    public String toString() {
+        return "MethodMeta{" +
+                "name='" + name + '\'' +
+                ", descriptor='" + descriptor + '\'' +
+                ", signature='" + signature + '\'' +
+                ", clazz=" + clazz +
+                ", maxStacks=" + maxStacks +
+                ", maxLocals=" + maxLocals +
+                ", paramSlotCount=" + paramSlotCount +
+                '}';
+    }
 }

@@ -20,7 +20,7 @@ public class Jvm {
     public static void main(String[] args) {
         Cmd.printHelp();
         String[] testArgs = new String[] {
-                "com.wjd.rtda.BoxTest", "-classpath",
+                "com.wjd.rtda.CloneTest", "-classpath",
                 "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes"
         };
 
