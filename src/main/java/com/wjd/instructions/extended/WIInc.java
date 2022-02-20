@@ -19,18 +19,19 @@ public class WIInc implements Instruction {
     /**
      * 常量
      */
-    private Uint16 value;
+    private int value;
 
     @Override
     public void execute(Frame frame) {
         int val = frame.getLocalVars().getInt(index.value());
-        val += value.value();
+        val += value;
         frame.getLocalVars().setInt(index.value(), val);
     }
 
     @Override
     public void fetchOperands(ByteCodeReader reader) {
         index = reader.readUint16();
-        value = reader.readUint16();
+        // 注意这里是16位有符号整数
+        value = reader.readInt16();
     }
 }
