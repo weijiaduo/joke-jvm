@@ -12,7 +12,7 @@ public class ClassFileTest {
     @Test
     public void getClassName() throws IOException {
         String jreOption = null;
-        String cpOption = "C:\\Users\\weijiaduo\\IdeaProjects\\self-jvm\\target;C:\\Users\\weijiaduo\\IdeaProjects\\self-jvm\\target\\classes";
+        String cpOption = "C:\\Users\\weijiaduo\\IdeaProjects\\j-jvm\\target;C:\\Users\\weijiaduo\\IdeaProjects\\j-jvm\\target\\classes";
         String bootClassName = "java\\lang\\Object";
         String userClassName = "com\\wjd\\classfile\\ClassFileStructureTest";
         Classpath classpath = new Classpath(jreOption, cpOption);
@@ -26,12 +26,4 @@ public class ClassFileTest {
         assertEquals("Class name error", "com/wjd/classfile/ClassFileStructureTest", userClassFile.getClassName());
     }
 
-    @Test
-    public void etstt() {
-        int a = 1;
-        a >>>= 1;
-        boolean s = true;
-        s &= false;
-        double d = 1.0;
-    }
 }

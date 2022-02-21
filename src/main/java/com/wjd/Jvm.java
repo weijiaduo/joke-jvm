@@ -21,7 +21,7 @@ public class Jvm {
         Cmd.printHelp();
         String[] testArgs = new String[] {
                 "com.wjd.rtda.CloneTest", "-classpath",
-                "D:\\Projects\\IdeaProjects\\self-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\self-jvm\\target\\classes"
+                "D:\\Projects\\IdeaProjects\\j-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\j-jvm\\target\\classes"
         };
 
         Jvm jvm = new Jvm(testArgs);

@@ -120,7 +120,7 @@ public class Cmd {
      */
     public static void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("self-jvm", options);
+        formatter.printHelp("j-jvm", options);
     }
 
     public boolean isHelpFlag() {
