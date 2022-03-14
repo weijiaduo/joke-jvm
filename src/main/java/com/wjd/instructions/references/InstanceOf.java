@@ -21,6 +21,7 @@ public class InstanceOf extends Index16Instruction {
             stack.pushInt(0);
             return;
         }
+
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
         ClassMeta clazz = classRef.resolvedClass();

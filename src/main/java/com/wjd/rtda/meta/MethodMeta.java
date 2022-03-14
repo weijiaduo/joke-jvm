@@ -19,14 +19,25 @@ import com.wjd.util.ClassHelper;
  */
 public class MethodMeta extends MemberMeta {
 
+    /** 方法的操作数栈最大深度 */
     protected int maxStacks;
+    /** 局部变量表的最大长度 */
     protected int maxLocals;
+
+    /** 方法描述符 */
     protected MethodDescriptor methodDescriptor;
-    protected int paramSlotCount; // 方法的参数插槽数量，不包括this
-    protected int argSlotCount;   // 传参时的插槽数量，可能包括this
+    /** 方法的参数插槽数量，不包括this */
+    protected int paramSlotCount;
+    /** 传参时的实际插槽数量，非静态方法会包括this */
+    protected int argSlotCount;
+    /** 方法的异常表索引，指向方法抛出的异常类型 */
     protected Uint16[] exIndexTable;
+
+    /** 方法的代码字节码 */
     protected byte[] codes;
+    /** 代码中捕获的异常类型，即没有往方法外抛的异常类型 */
     protected ExceptionTable exceptionTable;
+    /** 代码的行号表，指向ClassFile的常量 */
     protected LineNumberTableAttributeInfo lineNumberTable;
 
     public static MethodMeta[] newMethods(ClassMeta clazz, MethodInfo[] methodInfos) {
@@ -160,20 +171,7 @@ public class MethodMeta extends MemberMeta {
      * 获取参数数组对象
      */
     public HeapObject getParameterTypeArr() {
-        ClassMeta[] paramTypes = getParameterTypes();
-        int paramCount = paramTypes.length;
-        ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
-        ClassMeta arrClass = jlClassClass.getArrayClass();
-        HeapObject arr = Heap.newArray(arrClass, paramCount);
-
-        if (paramCount > 0) {
-            HeapObject[] refs = arr.getRefs();
-            for (int i = 0; i < paramCount; i++) {
-                refs[i] = paramTypes[i].getjClass();
-            }
-        }
-
-        return arr;
+        return toJClassArr(getParameterTypes());
     }
 
     /**
@@ -202,8 +200,16 @@ public class MethodMeta extends MemberMeta {
         if (exClasses == null) {
             return null;
         }
+        return toJClassArr(exClasses);
+    }
 
-        int count = exClasses.length;
+    /**
+     * 转成java.lang.Class数组对象
+     * @param classes 类元数据数组
+     * @return java.lang.Class数组对象
+     */
+    private HeapObject toJClassArr(ClassMeta[] classes) {
+        int count = classes.length;
         ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
         ClassMeta arrClass = jlClassClass.getArrayClass();
         HeapObject arr = Heap.newArray(arrClass, count);
@@ -211,10 +217,9 @@ public class MethodMeta extends MemberMeta {
         if (count > 0) {
             HeapObject[] refs = arr.getRefs();
             for (int i = 0; i < count; i++) {
-                refs[i] = exClasses[i].getjClass();
+                refs[i] = classes[i].getjClass();
             }
         }
-
         return arr;
     }
 

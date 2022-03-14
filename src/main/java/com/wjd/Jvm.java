@@ -1,7 +1,7 @@
 package com.wjd;
 
 import com.wjd.cmd.Cmd;
-import com.wjd.cp.Classpath;
+import com.wjd.classpath.Classpath;
 import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;
 import com.wjd.rtda.meta.*;

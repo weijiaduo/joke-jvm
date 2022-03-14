@@ -29,6 +29,7 @@ public class New extends Index16Instruction {
         if (clazz.isInterface() || clazz.isAbstract()) {
             throw new InstantiationError("Class : " + clazz.getName());
         }
+
         HeapObject ref = Heap.newObject(clazz);
         frame.getOpStack().pushRef(ref);
     }

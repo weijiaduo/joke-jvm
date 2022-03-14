@@ -1,8 +1,8 @@
 package com.wjd.instructions.reserved;
 
 import com.wjd.instructions.base.NoOperandsInstruction;
-import com.wjd.naive.NativeMethod;
-import com.wjd.naive.NativeRegistry;
+import com.wjd.jnative.NativeMethod;
+import com.wjd.jnative.NativeRegistry;
 import com.wjd.rtda.stack.Frame;
 import com.wjd.rtda.meta.MethodMeta;
 

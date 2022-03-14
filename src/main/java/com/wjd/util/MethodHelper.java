@@ -122,6 +122,22 @@ public final class MethodHelper {
     }
 
     /**
+     * 查找接口方法元数据
+     * @param clazz 类元数据
+     * @param name 接口方法名称
+     * @param descriptor 接口方法描述符
+     * @return 方法元数据
+     */
+    public static MethodMeta lookupInterfaceMethod(ClassMeta clazz, String name, String descriptor) {
+        for (MethodMeta method : clazz.getMethods()) {
+            if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                return method;
+            }
+        }
+        return lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
+    }
+
+    /**
      * 在类中查找指定方法
      * @param clazz 类元数据
      * @param name 方法名称

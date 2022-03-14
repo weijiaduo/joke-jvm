@@ -1,6 +1,6 @@
 package com.wjd.classfile;
 
-import com.wjd.cp.Classpath;
+import com.wjd.classpath.Classpath;
 import org.junit.Test;
 
 import java.io.IOException;

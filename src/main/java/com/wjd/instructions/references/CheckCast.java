@@ -21,6 +21,7 @@ public class CheckCast extends Index16Instruction {
         if (ref == null) {
             return;
         }
+
         ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
         ClassMeta clazz = classRef.resolvedClass();

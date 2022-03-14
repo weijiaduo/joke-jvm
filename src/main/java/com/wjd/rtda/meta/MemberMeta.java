@@ -11,13 +11,18 @@ import com.wjd.rtda.AccessFlags;
  */
 public abstract class MemberMeta {
 
-    protected Uint16 accessFlags;
-    protected String name;
-    protected String descriptor;
-    protected String signature;
+    /** 成员所属类 */
     protected ClassMeta clazz;
+    /** 成员的访问标志 */
+    protected Uint16 accessFlags;
+    /** 成员名称 */
+    protected String name;
+    /** 成员描述符 */
+    protected String descriptor;
+    /** 成员签名 */
+    protected String signature;
 
-    public void copyMemberInfo(MemberInfo memberInfo) {
+    protected void copyMemberInfo(MemberInfo memberInfo) {
         accessFlags = memberInfo.getAccessFlags();
         name = memberInfo.getName();
         descriptor = memberInfo.getDescriptor();
@@ -75,22 +80,27 @@ public abstract class MemberMeta {
         return AccessFlags.isNative(accessFlags);
     }
 
+    /**
+     * 是否可以被其他类访问
+     * @param other 其他类
+     * @return true/false
+     */
     public boolean isAccessibleTo(ClassMeta other) {
-        // 公开权限
+        // public公开权限
         if (isPublic()) {
             return true;
         }
-        // 保护权限
+        // protected保护权限
         if (isProtected()) {
             return clazz == other ||
                     other.isSubClassOf(clazz) ||
                     clazz.getPackageName().equals(other.getPackageName());
         }
-        // 包权限
+        // default包权限
         if (!isPrivate()) {
             return clazz.getPackageName().equals(other.getPackageName());
         }
-        // 私有权限
+        // private私有权限
         return clazz == other;
     }
 

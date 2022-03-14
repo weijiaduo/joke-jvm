@@ -42,6 +42,7 @@ public class ClassMeta {
     protected ClassMeta superClass;
     /** 接口引用 */
     protected ClassMeta[] interfaces;
+
     /** 实例变量数量 */
     protected int instanceSlotCount;
     /** 静态变量数量 */

@@ -9,10 +9,16 @@ import com.wjd.rtda.meta.ConstantPool;
  */
 public abstract class SymbolRef extends Constant {
 
+    /** 常量池 */
     protected ConstantPool constantPool;
+    /** 所属类完全限定名 */
     protected String className;
+    /** 所属类元数据，用于缓存，避免多次解析 */
     protected ClassMeta clazz;
 
+    /**
+     * 解析类符号引用
+     */
     public ClassMeta resolvedClass() {
         if (clazz == null) {
             resolveClassRef();

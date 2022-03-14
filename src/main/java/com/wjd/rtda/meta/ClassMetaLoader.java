@@ -2,7 +2,7 @@ package com.wjd.rtda.meta;
 
 import com.wjd.classfile.ClassFile;
 import com.wjd.classfile.type.Uint16;
-import com.wjd.cp.Classpath;
+import com.wjd.classpath.Classpath;
 import com.wjd.rtda.AccessFlags;
 import com.wjd.rtda.Slot;
 import com.wjd.rtda.heap.Heap;
@@ -14,19 +14,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 类加载器
  * @since 2022/1/30
  */
 public class ClassMetaLoader {
 
-    private Map<String, ClassMeta> classMap;
+    /** 类加载路径 */
     private Classpath classpath;
-    private boolean verboseFlag = false;
+    /** 是否打印类加载信息 */
+    private boolean verboseLoadClass = false;
+    /** 已加载的类 */
+    private Map<String, ClassMeta> classMap;
 
     public static ClassMetaLoader newClassLoader(Classpath classpath, boolean verboseFlag) {
         ClassMetaLoader classMetaLoader = new ClassMetaLoader();
         classMetaLoader.classpath = classpath;
         classMetaLoader.classMap = new HashMap<>();
-        classMetaLoader.verboseFlag = verboseFlag;
+        classMetaLoader.verboseLoadClass = verboseFlag;
         // 加载初始化基类对象
         classMetaLoader.loadBasicClasses();
         // 加载基本类型
@@ -138,7 +142,7 @@ public class ClassMetaLoader {
         byte[] classBytes = readClass(name);
         ClassMeta clazz = defineClass(classBytes);
         link(clazz);
-        if (verboseFlag) {
+        if (verboseLoadClass) {
             System.out.println("Loaded Class: " + name);
         }
         return clazz;

@@ -11,22 +11,30 @@ import com.wjd.util.ClassHelper;
  */
 public class FieldMeta extends MemberMeta {
 
+    /** 字段在类中的id，有这个id就能在类那边拿到这个字段 */
     private int slotId;
-    private boolean isLongOrDouble;
-    private Uint16 constValueIndex;
-
+    /** 字段的类型 */
     private ClassMeta type;
+    /** 指向ClassFile常量池的索引 */
+    private Uint16 constValueIndex;
+    /** 是否是long或者double类型 */
+    private boolean isLongOrDouble;
 
     public static FieldMeta[] newFields(ClassMeta clazz, FieldInfo[] fieldInfos) {
         FieldMeta[] fields = new FieldMeta[fieldInfos.length];
         for (int i = 0; i < fields.length; i++) {
-            fields[i] = new FieldMeta();
-            fields[i].clazz = clazz;
-            fields[i].copyMemberInfo(fieldInfos[i]);
-            fields[i].copyFieldAttribute(fieldInfos[i]);
-            fields[i].isLongOrDouble = "J".equals(fields[i].descriptor) || "D".equals(fields[i].descriptor);
+            fields[i] = newField(clazz, fieldInfos[i]);
         }
         return fields;
+    }
+
+    public static FieldMeta newField(ClassMeta clazz, FieldInfo fieldInfo) {
+        FieldMeta field = new FieldMeta();
+        field.clazz = clazz;
+        field.copyMemberInfo(fieldInfo);
+        field.copyFieldAttribute(fieldInfo);
+        field.isLongOrDouble = "J".equals(field.descriptor) || "D".equals(field.descriptor);
+        return field;
     }
 
     private void copyFieldAttribute(FieldInfo fieldInfo) {
@@ -58,8 +66,7 @@ public class FieldMeta extends MemberMeta {
 
     private ClassMeta resolvedType() {
         String typeClassName = ClassHelper.getClassName(descriptor);
-        ClassMeta type = clazz.getLoader().loadClass(typeClassName);
-        return type;
+        return clazz.getLoader().loadClass(typeClassName);
     }
 
     public void putStaticValue(Slot slot) {

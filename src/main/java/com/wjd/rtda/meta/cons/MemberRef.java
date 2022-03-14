@@ -8,7 +8,9 @@ import com.wjd.classfile.cons.MemberConstantInfo;
  */
 public class MemberRef extends SymbolRef {
 
+    /** 成员名称 */
     protected String name;
+    /** 成员描述符 */
     protected String descriptor;
 
     /**
