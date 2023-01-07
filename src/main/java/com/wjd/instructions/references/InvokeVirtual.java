@@ -17,8 +17,8 @@ public class InvokeVirtual extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ClassMeta currentClazz = frame.getMethod().getClazz();
-        ConstantPool cp = currentClazz.getConstantPool();
+        ClassMeta currentClassMeta = frame.getMethod().getClassMeta();
+        ConstantPool cp = currentClassMeta.getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
         MethodMeta resolvedMethod = methodRef.resolvedMethod();
 
@@ -34,16 +34,16 @@ public class InvokeVirtual extends Index16Instruction {
 
         // 调用方法是protected时的权限验证
         if (resolvedMethod.isProtected() &&
-                resolvedMethod.getClazz().isSuperClassOf(currentClazz) &&
-                !resolvedMethod.getClazz().getPackageName().equals(currentClazz.getPackageName()) &&
-                ref.getClazz() != currentClazz &&
-                !ref.getClazz().isSubClassOf(currentClazz) &&
-                !ref.getClazz().isArray()) {
+                resolvedMethod.getClassMeta().isSuperClassOf(currentClassMeta) &&
+                !resolvedMethod.getClassMeta().getPackageName().equals(currentClassMeta.getPackageName()) &&
+                ref.getClassMeta() != currentClassMeta &&
+                !ref.getClassMeta().isSubClassOf(currentClassMeta) &&
+                !ref.getClassMeta().isArray()) {
             throw new IllegalAccessError("Invoke special method: " + resolvedMethod.getName());
         }
 
         // 方法的多态性，运行时确定实际执行的方法
-        MethodMeta methodToBeInvoked = MethodHelper.lookupMethodInClass(ref.getClazz(),
+        MethodMeta methodToBeInvoked = MethodHelper.lookupMethodInClass(ref.getClassMeta(),
                 methodRef.getName(),
                 methodRef.getDescriptor());
 

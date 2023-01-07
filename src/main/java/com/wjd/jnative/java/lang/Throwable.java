@@ -40,7 +40,7 @@ public class Throwable implements NativeClass {
         public StackTraceElement[] createStackTraceElements(HeapObject that, Thread thread) {
             // 栈顶两帧正在执行fillInStackTrace（int）和fillInStackTrace（）方法
             // 下面的几帧正在执行异常类的构造函数，具体要跳过多少帧数则要看异常类的继承层次
-            int skip = distanceToObject(that.getClazz()) + 2;
+            int skip = distanceToObject(that.getClassMeta()) + 2;
             Frame[] frames = thread.getFrames();
             frames = Arrays.copyOfRange(frames, skip, frames.length);
             StackTraceElement[] stacks = new StackTraceElement[frames.length];
@@ -53,9 +53,9 @@ public class Throwable implements NativeClass {
         /**
          * 类的继承层数
          */
-        private int distanceToObject(ClassMeta clazz) {
+        private int distanceToObject(ClassMeta classMeta) {
             int distance = 0;
-            for (ClassMeta c = clazz.getSuperClass(); c != null; c = c.getSuperClass()) {
+            for (ClassMeta c = classMeta.getSuperClass(); c != null; c = c.getSuperClass()) {
                 distance++;
             }
             return distance;
@@ -66,9 +66,9 @@ public class Throwable implements NativeClass {
          */
         private StackTraceElement createStackTraceElement(Frame frame) {
             MethodMeta method = frame.getMethod();
-            ClassMeta clazz = method.getClazz();
-            StackTraceElement stack = new StackTraceElement(clazz.getSourceFile(),
-                    clazz.getJavaName(),
+            ClassMeta classMeta = method.getClassMeta();
+            StackTraceElement stack = new StackTraceElement(classMeta.getSourceFile(),
+                    classMeta.getJavaName(),
                     method.getName(),
                     method.getLineNumber(frame.getNextPc() - 1));
             return stack;

@@ -35,21 +35,21 @@ public class MethodRef extends MemberRef {
      * 解析方法符号引用
      */
     private void resolveMethodRef() {
-        ClassMeta currentClazz = constantPool.getClazz(); // 当前类
-        ClassMeta refClazz = resolvedClass(); // 方法所在类
-        if (refClazz.isInterface()) {
-            throw new IncompatibleClassChangeError("Class: " + refClazz);
+        ClassMeta currentClassMeta = constantPool.getClassMeta(); // 当前类
+        ClassMeta refClassMeta = resolvedClass(); // 方法所在类
+        if (refClassMeta.isInterface()) {
+            throw new IncompatibleClassChangeError("Class: " + refClassMeta);
         }
 
         // 查找指定方法
-        MethodMeta method = MethodHelper.lookupMethod(refClazz, name, descriptor);
+        MethodMeta method = MethodHelper.lookupMethod(refClassMeta, name, descriptor);
         if (method == null) {
             throw new NoSuchMethodError("Method: " + name);
         }
 
         // 验证访问权限
-        if (!method.isAccessibleTo(currentClazz)) {
-            throw new IllegalAccessError("Method: " + method + " can not access by Class: " + currentClazz);
+        if (!method.isAccessibleTo(currentClassMeta)) {
+            throw new IllegalAccessError("Method: " + method + " can not access by Class: " + currentClassMeta);
         }
         this.method = method;
     }

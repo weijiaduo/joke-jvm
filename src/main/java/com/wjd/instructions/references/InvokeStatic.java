@@ -15,15 +15,15 @@ public class InvokeStatic extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
         MethodMeta method = methodRef.resolvedMethod();
 
         // 类初始化
-        ClassMeta methodClazz = method.getClazz();
-        if (!methodClazz.isInitStarted()) {
+        ClassMeta methodClassMeta = method.getClassMeta();
+        if (!methodClassMeta.isInitStarted()) {
             frame.revertNextPc();
-            InitClass.initClass(frame.getThread(), methodClazz);
+            InitClass.initClass(frame.getThread(), methodClassMeta);
             return;
         }
 

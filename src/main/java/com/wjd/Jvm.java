@@ -73,7 +73,7 @@ public class Jvm {
 
         // 初始化启动线程栈帧，调用bootstrap命令
         MethodMeta bootstrapMethod = ShimClassMeta.getInstance().getBootStrapMethod();
-        bootstrapMethod.getClazz().setLoader(loader);
+        bootstrapMethod.getClassMeta().setLoader(loader);
         Frame frame = mainThread.newFrame(bootstrapMethod);
         mainThread.pushFrame(frame);
         frame.getLocalVars().setRef(0, mainClassObj);

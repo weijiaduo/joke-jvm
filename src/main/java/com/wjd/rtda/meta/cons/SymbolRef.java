@@ -14,29 +14,29 @@ public abstract class SymbolRef extends Constant {
     /** 所属类完全限定名 */
     protected String className;
     /** 所属类元数据，用于缓存，避免多次解析 */
-    protected ClassMeta clazz;
+    protected ClassMeta classMeta;
 
     /**
      * 解析类符号引用
      */
     public ClassMeta resolvedClass() {
-        if (clazz == null) {
+        if (classMeta == null) {
             resolveClassRef();
         }
-        return clazz;
+        return classMeta;
     }
 
     /**
      * 解析类符号引用
      */
     private void resolveClassRef() {
-        ClassMeta currentClazz = constantPool.getClazz();
-        ClassMeta refClazz = currentClazz.getLoader().loadClass(className);
-        if (!refClazz.isAccessibleTo(currentClazz)) {
-            throw new IllegalAccessError("Class " + currentClazz.getName()
-                    + " can not access Class " + refClazz.getName());
+        ClassMeta currentClassMeta = constantPool.getClassMeta();
+        ClassMeta refClassMeta = currentClassMeta.getLoader().loadClass(className);
+        if (!refClassMeta.isAccessibleTo(currentClassMeta)) {
+            throw new IllegalAccessError("Class " + currentClassMeta.getName()
+                    + " can not access Class " + refClassMeta.getName());
         }
-        clazz = refClazz;
+        classMeta = refClassMeta;
     }
 
 }

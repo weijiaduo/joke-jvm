@@ -25,9 +25,9 @@ public class NewArray implements Instruction {
             throw new NegativeArraySizeException("NewArray count: " + count);
         }
 
-        ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
-        ClassMeta arrayClazz = ArrayHelper.getPrimitiveArrayClass(loader, atype);
-        HeapObject arrayObject = Heap.newArray(arrayClazz, count);
+        ClassMetaLoader loader = frame.getMethod().getClassMeta().getLoader();
+        ClassMeta arrayClassMeta = ArrayHelper.getPrimitiveArrayClass(loader, atype);
+        HeapObject arrayObject = Heap.newArray(arrayClassMeta, count);
         frame.getOpStack().pushRef(arrayObject);
     }
 

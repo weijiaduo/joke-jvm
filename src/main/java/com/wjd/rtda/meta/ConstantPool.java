@@ -9,12 +9,12 @@ import com.wjd.rtda.meta.cons.*;
  */
 public class ConstantPool {
 
-    private ClassMeta clazz;
+    private ClassMeta classMeta;
     private Constant[] constants;
 
-    public static ConstantPool newConstantPool(ClassMeta clazz, ConstantInfoPool constantInfoPool) {
+    public static ConstantPool newConstantPool(ClassMeta classMeta, ConstantInfoPool constantInfoPool) {
         ConstantPool constantPool = new ConstantPool();
-        constantPool.clazz = clazz;
+        constantPool.classMeta = classMeta;
         ConstantInfo[] constantInfos = constantInfoPool.getConstantInfos();
         constantPool.constants = new Constant[constantInfos.length];
         for (int i = 0; i < constantPool.constants.length; i++) {
@@ -100,7 +100,7 @@ public class ConstantPool {
         return constants[index];
     }
 
-    public ClassMeta getClazz() {
-        return clazz;
+    public ClassMeta getClassMeta() {
+        return classMeta;
     }
 }

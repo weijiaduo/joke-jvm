@@ -50,7 +50,7 @@ public class Class implements NativeClass {
         public void execute(Frame frame) {
             HeapObject nameObj = frame.getLocalVars().getRef(0);
             java.lang.String name = StringPool.getRawString(nameObj);
-            ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
+            ClassMetaLoader loader = frame.getMethod().getClassMeta().getLoader();
             HeapObject jClass = loader.loadClass(name).getjClass();
             frame.getOpStack().pushRef(jClass);
         }
@@ -64,15 +64,15 @@ public class Class implements NativeClass {
         public void execute(Frame frame) {
             HeapObject that = frame.getLocalVars().getThis();
             // 注意这里取的是Class<T>中的T
-            ClassMeta clazz = (ClassMeta) that.getExtra();
-            java.lang.String name = clazz.getJavaName();
-            HeapObject nameObj = StringPool.getStringObj(clazz.getLoader(), name);
+            ClassMeta classMeta = (ClassMeta) that.getExtra();
+            java.lang.String name = classMeta.getJavaName();
+            HeapObject nameObj = StringPool.getStringObj(classMeta.getLoader(), name);
             frame.getOpStack().pushRef(nameObj);
         }
     }
 
     /**
-     * private static native boolean desiredAssertionStatus0(Class<?> clazz);
+     * private static native boolean desiredAssertionStatus0(Class<?> type);
      */
     static class DesiredAssertionStatus0 implements NativeMethod {
         @Override
@@ -97,17 +97,17 @@ public class Class implements NativeClass {
     static class GetDeclaredFields0 implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
+            ClassMetaLoader loader = frame.getMethod().getClassMeta().getLoader();
 
             HeapObject classObj = frame.getLocalVars().getThis();
             boolean publicOnly = frame.getLocalVars().getBoolean(1);
 
             // 注意这里取的是Class<T>中的T
-            ClassMeta clazz = (ClassMeta) classObj.getExtra();
-            FieldMeta[] fields = clazz.getFields(publicOnly);
+            ClassMeta classMeta = (ClassMeta) classObj.getExtra();
+            FieldMeta[] fields = classMeta.getFields(publicOnly);
             int fieldCount = fields.length;
 
-            ClassMeta fieldClass = clazz.getLoader().loadClass("java/lang/reflect/Field");
+            ClassMeta fieldClass = classMeta.getLoader().loadClass("java/lang/reflect/Field");
             ClassMeta fieldArrClass = fieldClass.getArrayClass();
             HeapObject fieldArr = Heap.newArray(fieldArrClass, fieldCount);
 
@@ -134,7 +134,7 @@ public class Class implements NativeClass {
                     Slot classObjSlot = new Slot();
                     classObjSlot.setRef(classObj);
                     // name
-                    HeapObject nameObj = StringPool.getStringObj(clazz.getLoader(), fields[i].getName());
+                    HeapObject nameObj = StringPool.getStringObj(classMeta.getLoader(), fields[i].getName());
                     Slot nameSlot = new Slot();
                     nameSlot.setRef(nameObj);
                     // type
@@ -179,8 +179,8 @@ public class Class implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject that = frame.getLocalVars().getThis();
             // 注意这里取的是Class<T>中的T
-            ClassMeta clazz = (ClassMeta) that.getExtra();
-            frame.getOpStack().pushBoolean(clazz.isPrimitive());
+            ClassMeta classMeta = (ClassMeta) that.getExtra();
+            frame.getOpStack().pushBoolean(classMeta.isPrimitive());
         }
     }
 
@@ -198,13 +198,13 @@ public class Class implements NativeClass {
             java.lang.String name = StringPool.getRawString(nameObj);
             java.lang.String className = name.replaceAll("\\.", "/");
 
-            ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
-            ClassMeta clazz = loader.loadClass(className);
-            HeapObject jClass = clazz.getjClass();
+            ClassMetaLoader loader = frame.getMethod().getClassMeta().getLoader();
+            ClassMeta classMeta = loader.loadClass(className);
+            HeapObject jClass = classMeta.getjClass();
 
-            if (initialize && !clazz.isInitStarted()) {
+            if (initialize && !classMeta.isInitStarted()) {
                 frame.getThread().revertNextPc();
-                InitClass.initClass(frame.getThread(), clazz);
+                InitClass.initClass(frame.getThread(), classMeta);
             } else {
                 frame.getOpStack().pushRef(jClass);
             }
@@ -219,8 +219,8 @@ public class Class implements NativeClass {
         public void execute(Frame frame) throws Exception {
             HeapObject that = frame.getLocalVars().getThis();
             // 注意这里取的是Class<T>中的T
-            ClassMeta clazz = (ClassMeta) that.getExtra();
-            frame.getOpStack().pushBoolean(clazz.isInterface());
+            ClassMeta classMeta = (ClassMeta) that.getExtra();
+            frame.getOpStack().pushBoolean(classMeta.isInterface());
         }
     }
 
@@ -230,17 +230,17 @@ public class Class implements NativeClass {
     static class GetDeclaredConstructors0 implements NativeMethod {
         @Override
         public void execute(Frame frame) throws Exception {
-            ClassMetaLoader loader = frame.getMethod().getClazz().getLoader();
+            ClassMetaLoader loader = frame.getMethod().getClassMeta().getLoader();
 
             HeapObject classObj = frame.getLocalVars().getThis();
             boolean publicOnly = frame.getLocalVars().getBoolean(1);
 
             // 注意这里取的是Class<T>中的T
-            ClassMeta clazz = (ClassMeta) classObj.getExtra();
-            MethodMeta[] constructorMetas = clazz.getConstructors(publicOnly);
+            ClassMeta classMeta = (ClassMeta) classObj.getExtra();
+            MethodMeta[] constructorMetas = classMeta.getConstructors(publicOnly);
             int count = constructorMetas.length;
 
-            ClassMeta constructorClass = clazz.getLoader().loadClass("java/lang/reflect/Constructor");
+            ClassMeta constructorClass = classMeta.getLoader().loadClass("java/lang/reflect/Constructor");
             ClassMeta constructorArrClass = constructorClass.getArrayClass();
             HeapObject constructorArr = Heap.newArray(constructorArrClass, count);
 

@@ -15,22 +15,22 @@ public class New extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
-        ClassMeta clazz = classRef.resolvedClass();
+        ClassMeta classMeta = classRef.resolvedClass();
 
         // 类初始化
-        if (!clazz.isInitStarted()) {
+        if (!classMeta.isInitStarted()) {
             frame.revertNextPc();
-            InitClass.initClass(frame.getThread(), clazz);
+            InitClass.initClass(frame.getThread(), classMeta);
             return;
         }
 
-        if (clazz.isInterface() || clazz.isAbstract()) {
-            throw new InstantiationError("Class : " + clazz.getName());
+        if (classMeta.isInterface() || classMeta.isAbstract()) {
+            throw new InstantiationError("Class : " + classMeta.getName());
         }
 
-        HeapObject ref = Heap.newObject(clazz);
+        HeapObject ref = Heap.newObject(classMeta);
         frame.getOpStack().pushRef(ref);
     }
 }

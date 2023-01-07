@@ -19,18 +19,18 @@ public class PutField extends Index16Instruction {
     @Override
     public void execute(Frame frame) {
         MethodMeta currentMethod = frame.getMethod();
-        ClassMeta currentClazz = currentMethod.getClazz();
-        ConstantPool cp = currentClazz.getConstantPool();
+        ClassMeta currentClassMeta = currentMethod.getClassMeta();
+        ConstantPool cp = currentClassMeta.getConstantPool();
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
         FieldMeta field = fieldRef.resolvedField();
-        ClassMeta fieldClazz = field.getClazz();
+        ClassMeta fieldClassMeta = field.getClassMeta();
 
         if (field.isStatic()) {
             throw new IncompatibleClassChangeError("putfield field: " + field.getName());
         }
         if (field.isFinal()) {
             // final 字段的初始化必须在构造函数中做
-            if (currentClazz != fieldClazz || !"<init>".equals(currentMethod.getName())) {
+            if (currentClassMeta != fieldClassMeta || !"<init>".equals(currentMethod.getName())) {
                 throw new IllegalAccessError("putfield field: " + field.getName());
             }
         }

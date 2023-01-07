@@ -23,7 +23,7 @@ public class InvokeInterface extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         InterfaceMethodRef methodRef = (InterfaceMethodRef) cp.getConstant(index);
         MethodMeta resolvedMethod = methodRef.resolvedInterfaceMethod();
 
@@ -37,12 +37,12 @@ public class InvokeInterface extends Index16Instruction {
             throw new NullPointerException("Invoke interface method: " + resolvedMethod.getName());
         }
 
-        if (!ref.getClazz().isImplements(methodRef.resolvedClass())) {
+        if (!ref.getClassMeta().isImplements(methodRef.resolvedClass())) {
             throw new IncompatibleClassChangeError("Invoke interface method: " + resolvedMethod.getName());
         }
 
         // 方法的多态性，运行时确定实际执行的方法
-        MethodMeta methodToBeInvoked = MethodHelper.lookupMethod(ref.getClazz(),
+        MethodMeta methodToBeInvoked = MethodHelper.lookupMethod(ref.getClassMeta(),
                 methodRef.getName(), methodRef.getDescriptor());
 
         // 未实现的抽象方法验证

@@ -33,7 +33,7 @@ public class AThrow extends NoOperandsInstruction {
         do {
             Frame frame = thread.currentFrame();
             int pc = frame.getNextPc() - 1;
-            int handlerPc = frame.getMethod().findExceptionHandler(ex.getClazz(), pc);
+            int handlerPc = frame.getMethod().findExceptionHandler(ex.getClassMeta(), pc);
             if (handlerPc > 0) {
                 OperandStack stack = frame.getOpStack();
                 stack.clear();
@@ -53,7 +53,7 @@ public class AThrow extends NoOperandsInstruction {
         thread.clearStack();
         HeapObject msgObj = ex.getFieldRef("detailMessage", "Ljava/lang/String;");
         String msg = StringPool.getRawString(msgObj);
-        System.out.println("Exception in " + ex.getClazz().getJavaName() + ": " + msg);
+        System.out.println("Exception in " + ex.getClassMeta().getJavaName() + ": " + msg);
         Object extra = ex.getExtra();
         if (extra instanceof StackTraceElement[]) {
             StackTraceElement[] stacks = (StackTraceElement[]) extra;

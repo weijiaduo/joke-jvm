@@ -16,7 +16,7 @@ public class GetField extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
         FieldMeta field = fieldRef.resolvedField();
         if (field.isStatic()) {

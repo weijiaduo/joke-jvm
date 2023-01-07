@@ -8,19 +8,19 @@ import com.wjd.util.ArrayHelper;
  */
 public final class Heap {
 
-    public static HeapObject newObject(ClassMeta clazz) {
-        return new HeapObject(clazz);
+    public static HeapObject newObject(ClassMeta classMeta) {
+        return new HeapObject(classMeta);
     }
 
-    public static HeapObject newObject(ClassMeta clazz, Object data) {
-        return new HeapObject(clazz, data);
+    public static HeapObject newObject(ClassMeta classMeta, Object data) {
+        return new HeapObject(classMeta, data);
     }
 
-    public static HeapObject newArray(ClassMeta clazz, int count) {
-        if (!clazz.isArray()) {
-            throw new IllegalStateException("Not array class: " + clazz.getName());
+    public static HeapObject newArray(ClassMeta classMeta, int count) {
+        if (!classMeta.isArray()) {
+            throw new IllegalStateException("Not array class: " + classMeta.getName());
         }
-        return newObject(clazz, ArrayHelper.makeArray(clazz.getName(), count));
+        return newObject(classMeta, ArrayHelper.makeArray(classMeta.getName(), count));
     }
 
 }

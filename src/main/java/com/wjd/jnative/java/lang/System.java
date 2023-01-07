@@ -78,10 +78,10 @@ public class System implements NativeClass {
             HeapObject propsObj = frame.getLocalVars().getRef(0);
             frame.getOpStack().pushRef(propsObj);
 
-            MethodMeta setPropMethod = propsObj.getClazz().getInstanceMethod("setProperty",
+            MethodMeta setPropMethod = propsObj.getClassMeta().getInstanceMethod("setProperty",
                     "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;");
 
-            ClassMetaLoader loader = propsObj.getClazz().getLoader();
+            ClassMetaLoader loader = propsObj.getClassMeta().getLoader();
             Map<java.lang.String, java.lang.String> props = getSysProps(thread.getJvmOptions());
             for (java.lang.String key : props.keySet()) {
                 Slot propsSlot = new Slot();
@@ -116,7 +116,7 @@ public class System implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject outObj = frame.getLocalVars().getRef(0);
-            ClassMeta sysClass = frame.getMethod().getClazz();
+            ClassMeta sysClass = frame.getMethod().getClassMeta();
             sysClass.setFieldRef("out", "Ljava/io/PrintStream;", outObj);
         }
     }
@@ -128,7 +128,7 @@ public class System implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject in = frame.getLocalVars().getRef(0);
-            ClassMeta sysClass = frame.getMethod().getClazz();
+            ClassMeta sysClass = frame.getMethod().getClassMeta();
             sysClass.setFieldRef("in", "Ljava/io/InputStream;", in);
         }
     }
@@ -140,7 +140,7 @@ public class System implements NativeClass {
         @Override
         public void execute(Frame frame) throws Exception {
             HeapObject err = frame.getLocalVars().getRef(0);
-            ClassMeta sysClass = frame.getMethod().getClazz();
+            ClassMeta sysClass = frame.getMethod().getClassMeta();
             sysClass.setFieldRef("err", "Ljava/io/PrintStream;", err);
         }
     }

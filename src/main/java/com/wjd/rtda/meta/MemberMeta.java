@@ -12,7 +12,7 @@ import com.wjd.rtda.AccessFlags;
 public abstract class MemberMeta {
 
     /** 成员所属类 */
-    protected ClassMeta clazz;
+    protected ClassMeta classMeta;
     /** 成员的访问标志 */
     protected Uint16 accessFlags;
     /** 成员名称 */
@@ -48,8 +48,8 @@ public abstract class MemberMeta {
         return signature;
     }
 
-    public ClassMeta getClazz() {
-        return clazz;
+    public ClassMeta getClassMeta() {
+        return classMeta;
     }
 
     public boolean isStatic() {
@@ -92,16 +92,16 @@ public abstract class MemberMeta {
         }
         // protected保护权限
         if (isProtected()) {
-            return clazz == other ||
-                    other.isSubClassOf(clazz) ||
-                    clazz.getPackageName().equals(other.getPackageName());
+            return classMeta == other ||
+                    other.isSubClassOf(classMeta) ||
+                    classMeta.getPackageName().equals(other.getPackageName());
         }
         // default包权限
         if (!isPrivate()) {
-            return clazz.getPackageName().equals(other.getPackageName());
+            return classMeta.getPackageName().equals(other.getPackageName());
         }
         // private私有权限
-        return clazz == other;
+        return classMeta == other;
     }
 
 }

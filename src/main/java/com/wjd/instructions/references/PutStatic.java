@@ -18,16 +18,16 @@ public class PutStatic extends Index16Instruction {
     @Override
     public void execute(Frame frame) {
         MethodMeta currentMethod = frame.getMethod();
-        ClassMeta currentClazz = currentMethod.getClazz();
-        ConstantPool cp = currentClazz.getConstantPool();
+        ClassMeta currentClassMeta = currentMethod.getClassMeta();
+        ConstantPool cp = currentClassMeta.getConstantPool();
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
         FieldMeta field = fieldRef.resolvedField();
-        ClassMeta fieldClazz = field.getClazz();
+        ClassMeta fieldClassMeta = field.getClassMeta();
 
         // 类初始化
-        if (!fieldClazz.isInitStarted()) {
+        if (!fieldClassMeta.isInitStarted()) {
             frame.revertNextPc();
-            InitClass.initClass(frame.getThread(), fieldClazz);
+            InitClass.initClass(frame.getThread(), fieldClassMeta);
             return;
         }
 
@@ -35,14 +35,14 @@ public class PutStatic extends Index16Instruction {
             throw new IncompatibleClassChangeError("putstatic field: " + field.getName());
         }
         if (field.isFinal()) {
-            if (currentClazz != fieldClazz || !"<clinit>".equals(currentMethod.getName())) {
+            if (currentClassMeta != fieldClassMeta || !"<clinit>".equals(currentMethod.getName())) {
                 throw new IllegalAccessError("putstatic field: " + field.getName());
             }
         }
 
         String descriptor = field.getDescriptor();
         int slotId = field.getSlotId();
-        Slot[] slots = fieldClazz.getStaticVars();
+        Slot[] slots = fieldClassMeta.getStaticVars();
         OperandStack stack = frame.getOpStack();
         char d = descriptor.charAt(0);
         switch (d) {

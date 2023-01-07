@@ -108,44 +108,44 @@ public final class MethodHelper {
 
     /**
      * 寻找指定方法元数据
-     * @param clazz 类元数据
+     * @param classMeta 类元数据
      * @param name 方法名称
      * @param descriptor 描述符
      * @return 方法元数据
      */
-    public static MethodMeta lookupMethod(ClassMeta clazz, String name, String descriptor) {
-        MethodMeta method = lookupMethodInClass(clazz, name, descriptor);
+    public static MethodMeta lookupMethod(ClassMeta classMeta, String name, String descriptor) {
+        MethodMeta method = lookupMethodInClass(classMeta, name, descriptor);
         if (method == null) {
-            method = lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
+            method = lookupMethodInInterfaces(classMeta.getInterfaces(), name, descriptor);
         }
         return method;
     }
 
     /**
      * 查找接口方法元数据
-     * @param clazz 类元数据
+     * @param classMeta 类元数据
      * @param name 接口方法名称
      * @param descriptor 接口方法描述符
      * @return 方法元数据
      */
-    public static MethodMeta lookupInterfaceMethod(ClassMeta clazz, String name, String descriptor) {
-        for (MethodMeta method : clazz.getMethods()) {
+    public static MethodMeta lookupInterfaceMethod(ClassMeta classMeta, String name, String descriptor) {
+        for (MethodMeta method : classMeta.getMethods()) {
             if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
                 return method;
             }
         }
-        return lookupMethodInInterfaces(clazz.getInterfaces(), name, descriptor);
+        return lookupMethodInInterfaces(classMeta.getInterfaces(), name, descriptor);
     }
 
     /**
      * 在类中查找指定方法
-     * @param clazz 类元数据
+     * @param classMeta 类元数据
      * @param name 方法名称
      * @param descriptor 描述符
      * @return 方法元数据
      */
-    public static MethodMeta lookupMethodInClass(ClassMeta clazz, String name, String descriptor) {
-        for (ClassMeta c = clazz; c != null; c = c.getSuperClass()) {
+    public static MethodMeta lookupMethodInClass(ClassMeta classMeta, String name, String descriptor) {
+        for (ClassMeta c = classMeta; c != null; c = c.getSuperClass()) {
             for (MethodMeta method : c.getMethods()) {
                 if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
                     return method;

@@ -36,21 +36,21 @@ public class InterfaceMethodRef extends MemberRef {
      * 解析接口方法符号引用
      */
     private void resolveInterfaceMethodRef() {
-        ClassMeta currentClazz = constantPool.getClazz(); // 当前类
-        ClassMeta refClazz = resolvedClass(); // 方法所在接口
-        if (!refClazz.isInterface()) {
-            throw new IncompatibleClassChangeError("Class: " + refClazz);
+        ClassMeta currentClassMeta = constantPool.getClassMeta(); // 当前类
+        ClassMeta refClassMeta = resolvedClass(); // 方法所在接口
+        if (!refClassMeta.isInterface()) {
+            throw new IncompatibleClassChangeError("Class: " + refClassMeta);
         }
 
         // 查找接口方法
-        MethodMeta method = MethodHelper.lookupInterfaceMethod(refClazz, name, descriptor);
+        MethodMeta method = MethodHelper.lookupInterfaceMethod(refClassMeta, name, descriptor);
         if (method == null) {
             throw new NoSuchMethodError("Method: " + name);
         }
 
         // 验证访问权限
-        if (!method.isAccessibleTo(currentClazz)) {
-            throw new IllegalAccessError("Method: " + method + " can not access by Class: " + currentClazz);
+        if (!method.isAccessibleTo(currentClassMeta)) {
+            throw new IllegalAccessError("Method: " + method + " can not access by Class: " + currentClassMeta);
         }
         this.method = method;
     }

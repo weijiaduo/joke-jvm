@@ -16,15 +16,15 @@ public class GetStatic extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         FieldRef fieldRef = (FieldRef) cp.getConstant(index);
         FieldMeta field = fieldRef.resolvedField();
-        ClassMeta fieldClazz = field.getClazz();
+        ClassMeta fieldClassMeta = field.getClassMeta();
 
         // 类初始化
-        if (!fieldClazz.isInitStarted()) {
+        if (!fieldClassMeta.isInitStarted()) {
             frame.revertNextPc();
-            InitClass.initClass(frame.getThread(), fieldClazz);
+            InitClass.initClass(frame.getThread(), fieldClassMeta);
             return;
         }
 
@@ -34,7 +34,7 @@ public class GetStatic extends Index16Instruction {
 
         String descriptor = field.getDescriptor();
         int slotId = field.getSlotId();
-        Slot[] slots = fieldClazz.getStaticVars();
+        Slot[] slots = fieldClassMeta.getStaticVars();
         OperandStack stack = frame.getOpStack();
         char d = descriptor.charAt(0);
         switch (d) {

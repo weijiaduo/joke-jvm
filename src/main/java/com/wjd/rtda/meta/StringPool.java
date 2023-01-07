@@ -59,8 +59,8 @@ public class StringPool {
      * 创建String数组对象
      */
     public static HeapObject createStringArray(ClassMetaLoader loader, String[] args) {
-        ClassMeta stringClazz = loader.loadClass("java/lang/String");
-        HeapObject argsArray = Heap.newArray(stringClazz.getArrayClass(), args.length);
+        ClassMeta stringClassMeta = loader.loadClass("java/lang/String");
+        HeapObject argsArray = Heap.newArray(stringClassMeta.getArrayClass(), args.length);
         HeapObject[] refs = argsArray.getRefs();
         for (int i = 0; i < args.length; i++) {
             refs[i] = StringPool.getStringObj(loader, args[i]);

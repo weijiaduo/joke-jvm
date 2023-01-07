@@ -33,7 +33,7 @@ public class ShimClassMeta extends ClassMeta {
             returnMethod = new MethodMeta();
             returnMethod.accessFlags = new Uint16(AccessFlags.ACCSTATIC);
             returnMethod.name = "<return>";
-            returnMethod.clazz = this;
+            returnMethod.classMeta = this;
             returnMethod.codes = new byte[] {(byte) 0xb1}; // return
         }
         return returnMethod;
@@ -47,7 +47,7 @@ public class ShimClassMeta extends ClassMeta {
             bootStrapMethod = new MethodMeta();
             bootStrapMethod.accessFlags = new Uint16(AccessFlags.ACCSTATIC);
             bootStrapMethod.name = "<bootstrap>";
-            bootStrapMethod.clazz = this;
+            bootStrapMethod.classMeta = this;
             bootStrapMethod.codes = new byte[] {(byte) 0xff, (byte) 0xb1}; // boostrap, return
             bootStrapMethod.maxLocals = 8;
             bootStrapMethod.maxStacks = 8;

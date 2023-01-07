@@ -34,7 +34,7 @@ public class NativeConstructorAccessorImpl implements NativeClass {
             HeapObject argsArr = frame.getLocalVars().getRef(1);
 
             MethodMeta constructorMethod = MethodHelper.getObjConstructor(constructorObj);
-            ClassMeta constructorClass = constructorMethod.getClazz();
+            ClassMeta constructorClass = constructorMethod.getClassMeta();
 
             // 先进行类初始化
             if (!constructorClass.isInitStarted()) {

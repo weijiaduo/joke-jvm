@@ -16,7 +16,7 @@ public class IDC extends Index8Instruction {
     @Override
     public void execute(Frame frame) {
         OperandStack stack = frame.getOpStack();
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         Constant constant = cp.getConstant(index);
         if (constant instanceof IntegerConstant) {
             stack.pushInt(((IntegerConstant) constant).value());
@@ -24,7 +24,7 @@ public class IDC extends Index8Instruction {
             stack.pushFloat(((FloatConstant) constant).value());
         } else if (constant instanceof StringConstant) {
             String string = ((StringConstant) constant).value();
-            HeapObject stringObj = StringPool.getStringObj(frame.getMethod().getClazz().getLoader(), string);
+            HeapObject stringObj = StringPool.getStringObj(frame.getMethod().getClassMeta().getLoader(), string);
             stack.pushRef(stringObj);
         } else if (constant instanceof ClassRef) {
             HeapObject jClassObj = ((ClassRef) constant).resolvedClass().getjClass();

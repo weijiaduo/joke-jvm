@@ -16,7 +16,7 @@ public class IDC2W extends Index16Instruction {
     @Override
     public void execute(Frame frame) {
         OperandStack stack = frame.getOpStack();
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         Constant constant = cp.getConstant(index);
         if (constant instanceof LongConstant) {
             stack.pushLong(((LongConstant) constant).value());

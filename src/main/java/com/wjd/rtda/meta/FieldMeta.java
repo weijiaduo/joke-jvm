@@ -20,17 +20,17 @@ public class FieldMeta extends MemberMeta {
     /** 是否是long或者double类型 */
     private boolean isLongOrDouble;
 
-    public static FieldMeta[] newFields(ClassMeta clazz, FieldInfo[] fieldInfos) {
+    public static FieldMeta[] newFields(ClassMeta classMeta, FieldInfo[] fieldInfos) {
         FieldMeta[] fields = new FieldMeta[fieldInfos.length];
         for (int i = 0; i < fields.length; i++) {
-            fields[i] = newField(clazz, fieldInfos[i]);
+            fields[i] = newField(classMeta, fieldInfos[i]);
         }
         return fields;
     }
 
-    public static FieldMeta newField(ClassMeta clazz, FieldInfo fieldInfo) {
+    public static FieldMeta newField(ClassMeta classMeta, FieldInfo fieldInfo) {
         FieldMeta field = new FieldMeta();
-        field.clazz = clazz;
+        field.classMeta = classMeta;
         field.copyMemberInfo(fieldInfo);
         field.copyFieldAttribute(fieldInfo);
         field.isLongOrDouble = "J".equals(field.descriptor) || "D".equals(field.descriptor);
@@ -66,15 +66,15 @@ public class FieldMeta extends MemberMeta {
 
     private ClassMeta resolvedType() {
         String typeClassName = ClassHelper.getClassName(descriptor);
-        return clazz.getLoader().loadClass(typeClassName);
+        return classMeta.getLoader().loadClass(typeClassName);
     }
 
     public void putStaticValue(Slot slot) {
-        clazz.getStaticVars()[slotId].setSlot(slot);
+        classMeta.getStaticVars()[slotId].setSlot(slot);
     }
 
     public Slot getStaticValue() {
-        return clazz.getStaticVars()[slotId];
+        return classMeta.getStaticVars()[slotId];
     }
 
     @Override
@@ -84,7 +84,7 @@ public class FieldMeta extends MemberMeta {
                 ", name='" + name + '\'' +
                 ", descriptor='" + descriptor + '\'' +
                 ", signature='" + signature + '\'' +
-                ", clazz=" + clazz +
+                ", classMeta=" + classMeta +
                 '}';
     }
 }

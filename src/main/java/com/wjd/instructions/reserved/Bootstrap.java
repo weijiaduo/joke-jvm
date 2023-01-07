@@ -57,7 +57,7 @@ public class Bootstrap extends NoOperandsInstruction {
     }
 
     private void init(Frame frame) {
-        bootLoader = frame.getMethod().getClazz().getLoader();
+        bootLoader = frame.getMethod().getClassMeta().getLoader();
         HeapObject mainClassObj = frame.getLocalVars().getRef(0);
         mainClassName = StringPool.getRawString(mainClassObj);
         argsObj = frame.getLocalVars().getRef(1);
@@ -68,10 +68,10 @@ public class Bootstrap extends NoOperandsInstruction {
      */
     private boolean initBootClass(Thread thread) {
         for (String className : bootClassNames) {
-            ClassMeta clazz = bootLoader.loadClass(className);
-            if (!clazz.isInitStarted()) {
+            ClassMeta classMeta = bootLoader.loadClass(className);
+            if (!classMeta.isInitStarted()) {
                 thread.revertNextPc();
-                InitClass.initClass(thread, clazz);
+                InitClass.initClass(thread, classMeta);
                 return false;
             }
         }

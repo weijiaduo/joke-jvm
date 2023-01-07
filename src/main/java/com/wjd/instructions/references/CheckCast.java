@@ -22,11 +22,11 @@ public class CheckCast extends Index16Instruction {
             return;
         }
 
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
-        ClassMeta clazz = classRef.resolvedClass();
-        if (!ref.isInstanceOf(clazz)) {
-            throw new ClassCastException("Cast Class: " + clazz);
+        ClassMeta classMeta = classRef.resolvedClass();
+        if (!ref.isInstanceOf(classMeta)) {
+            throw new ClassCastException("Cast Class: " + classMeta);
         }
     }
 }

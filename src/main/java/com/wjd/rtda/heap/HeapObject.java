@@ -12,32 +12,32 @@ import com.wjd.util.ArrayHelper;
 public class HeapObject implements Cloneable {
 
     /** 对象的元数据类型 */
-    ClassMeta clazz;
+    ClassMeta classMeta;
     /** 实例对象的数据 */
     Object data;
-    /** 目前是Class对象 */
+    /** 额外数据，目前只放了 java.lang.Class 对象 */
     Object extra;
 
-    HeapObject(ClassMeta clazz) {
-        this.clazz = clazz;
+    HeapObject(ClassMeta classMeta) {
+        this.classMeta = classMeta;
         this.initSlots();
     }
 
-    HeapObject(ClassMeta clazz, Object data) {
-        this.clazz = clazz;
+    HeapObject(ClassMeta classMeta, Object data) {
+        this.classMeta = classMeta;
         this.data = data;
     }
 
     void initSlots() {
-        Slot[] fields = new Slot[clazz.getInstanceSlotCount()];
+        Slot[] fields = new Slot[classMeta.getInstanceSlotCount()];
         for (int i = 0; i < fields.length; i++) {
             fields[i] = new Slot();
         }
         data = fields;
     }
 
-    public ClassMeta getClazz() {
-        return clazz;
+    public ClassMeta getClassMeta() {
+        return classMeta;
     }
 
     public Object getData() {
@@ -64,31 +64,31 @@ public class HeapObject implements Cloneable {
     }
 
     public boolean isInstanceOf(ClassMeta cls) {
-        return cls.isAssignableFrom(clazz);
+        return cls.isAssignableFrom(classMeta);
     }
 
     public void setFieldRef(String name, String descriptor, HeapObject ref) {
-        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = classMeta.getInstanceField(name, descriptor);
         getSlots()[field.getSlotId()].setRef(ref);
     }
 
     public HeapObject getFieldRef(String name, String descriptor) {
-        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = classMeta.getInstanceField(name, descriptor);
         return getSlots()[field.getSlotId()].getRef();
     }
 
     public int getFieldInt(String name, String descriptor) {
-        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = classMeta.getInstanceField(name, descriptor);
         return (int) getSlots()[field.getSlotId()].getNum();
     }
 
     public void setFieldInt(String name, String descriptor, int val) {
-        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = classMeta.getInstanceField(name, descriptor);
         getSlots()[field.getSlotId()].setNum(val);
     }
 
     public long getFieldLong(String name, String descriptor) {
-        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = classMeta.getInstanceField(name, descriptor);
         Slot[] slots = getSlots();
         Slot highSlot = slots[field.getSlotId()];
         Slot lowSlot = slots[field.getSlotId() + 1];
@@ -96,7 +96,7 @@ public class HeapObject implements Cloneable {
     }
 
     public void setFieldLong(String name, String descriptor, long val) {
-        FieldMeta field = clazz.getInstanceField(name, descriptor);
+        FieldMeta field = classMeta.getInstanceField(name, descriptor);
         Slot[] slots = getSlots();
         Slot highSlot = slots[field.getSlotId()];
         Slot lowSlot = slots[field.getSlotId() + 1];
@@ -113,7 +113,7 @@ public class HeapObject implements Cloneable {
     }
 
     private Object cloneData() {
-        if (clazz.isArray()) {
+        if (classMeta.isArray()) {
             return ArrayHelper.cloneArrayData(this);
         } else {
             // Slot[]

@@ -63,16 +63,16 @@ public class ClassMeta {
     }
 
     public static ClassMeta newClass(ClassFile classFile) {
-        ClassMeta clazz = new ClassMeta();
-        clazz.sourceFile = classFile.getSourceFile();
-        clazz.accessFlags = classFile.getAccessFlags();
-        clazz.name = classFile.getClassName();
-        clazz.superClassName = classFile.getSuperClassName();
-        clazz.interfaceNames = classFile.getInterfaceNames();
-        clazz.constantPool = ConstantPool.newConstantPool(clazz, classFile.getConstantPool());
-        clazz.fields = FieldMeta.newFields(clazz, classFile.getFields());
-        clazz.methods = MethodMeta.newMethods(clazz, classFile.getMethods());
-        return clazz;
+        ClassMeta classMeta = new ClassMeta();
+        classMeta.sourceFile = classFile.getSourceFile();
+        classMeta.accessFlags = classFile.getAccessFlags();
+        classMeta.name = classFile.getClassName();
+        classMeta.superClassName = classFile.getSuperClassName();
+        classMeta.interfaceNames = classFile.getInterfaceNames();
+        classMeta.constantPool = ConstantPool.newConstantPool(classMeta, classFile.getConstantPool());
+        classMeta.fields = FieldMeta.newFields(classMeta, classFile.getFields());
+        classMeta.methods = MethodMeta.newMethods(classMeta, classFile.getMethods());
+        return classMeta;
     }
 
     public String getSourceFile() {
@@ -127,8 +127,8 @@ public class ClassMeta {
         return superClass;
     }
 
-    public void setSuperClass(ClassMeta superClazz) {
-        this.superClass = superClazz;
+    public void setSuperClass(ClassMeta superClassMeta) {
+        this.superClass = superClassMeta;
     }
 
     public ClassMeta[] getInterfaces() {

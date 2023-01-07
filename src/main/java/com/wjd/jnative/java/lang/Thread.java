@@ -65,7 +65,7 @@ public class Thread implements NativeClass {
             com.wjd.rtda.Thread newThread = new com.wjd.rtda.Thread(frame.getThread().getJvmOptions());
             newThread.setJThread(that);
 
-            MethodMeta runMethod = that.getClazz().getInstanceMethod("run", "()V");
+            MethodMeta runMethod = that.getClassMeta().getInstanceMethod("run", "()V");
             Frame newFrame = newThread.newFrame(runMethod);
             newFrame.getLocalVars().setRef(0, that);
             newThread.pushFrame(newFrame);

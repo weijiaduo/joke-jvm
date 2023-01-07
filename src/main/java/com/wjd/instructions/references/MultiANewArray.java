@@ -25,11 +25,11 @@ public class MultiANewArray implements Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index.value());
-        ClassMeta arrayClazz = classRef.resolvedClass();
+        ClassMeta arrayClassMeta = classRef.resolvedClass();
         int[] counts = popAndCheckCounts(frame.getOpStack(), dimension.value());
-        HeapObject arrayObject = newMultiDimensionalArray(counts, arrayClazz);
+        HeapObject arrayObject = newMultiDimensionalArray(counts, arrayClassMeta);
         frame.getOpStack().pushRef(arrayObject);
     }
 
@@ -51,14 +51,14 @@ public class MultiANewArray implements Instruction {
         return counts;
     }
 
-    private HeapObject newMultiDimensionalArray(int[] counts, ClassMeta arrayClazz) {
+    private HeapObject newMultiDimensionalArray(int[] counts, ClassMeta arrayClassMeta) {
         int count = counts[0];
-        HeapObject arrayObject = Heap.newArray(arrayClazz, count);
+        HeapObject arrayObject = Heap.newArray(arrayClassMeta, count);
         if (counts.length > 1) {
             int[] newCounts = Arrays.copyOfRange(counts, 1, counts.length);
             HeapObject[] refs = arrayObject.getRefs();
             for (int i = 0; i < refs.length; i++) {
-                refs[i] = newMultiDimensionalArray(newCounts, arrayClazz.getComponentClass());
+                refs[i] = newMultiDimensionalArray(newCounts, arrayClassMeta.getComponentClass());
             }
         }
         return arrayObject;

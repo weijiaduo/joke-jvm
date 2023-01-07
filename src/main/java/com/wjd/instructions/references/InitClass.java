@@ -10,27 +10,27 @@ import com.wjd.rtda.meta.MethodMeta;
  */
 public class InitClass {
 
-    public static void initClass(Thread thread, ClassMeta clazz) {
-        clazz.startInit();
+    public static void initClass(Thread thread, ClassMeta classMeta) {
+        classMeta.startInit();
         // 调用类的初始化方法
-        scheduleClinit(thread, clazz);
+        scheduleClinit(thread, classMeta);
         // 调用父类的初始化方法
-        initSuperClass(thread, clazz);
+        initSuperClass(thread, classMeta);
     }
 
-    private static void scheduleClinit(Thread thread, ClassMeta clazz) {
-        MethodMeta clinit = clazz.getClinitMethod();
+    private static void scheduleClinit(Thread thread, ClassMeta classMeta) {
+        MethodMeta clinit = classMeta.getClinitMethod();
         if (clinit != null) {
             Frame newFrame = thread.newFrame(clinit);
             thread.pushFrame(newFrame);
         }
     }
 
-    private static void initSuperClass(Thread thread, ClassMeta clazz) {
-        if (!clazz.isInterface()) {
-            ClassMeta superClazz = clazz.getSuperClass();
-            if (superClazz != null && !superClazz.isInitStarted()) {
-                initClass(thread, superClazz);
+    private static void initSuperClass(Thread thread, ClassMeta classMeta) {
+        if (!classMeta.isInterface()) {
+            ClassMeta superClassMeta = classMeta.getSuperClass();
+            if (superClassMeta != null && !superClassMeta.isInitStarted()) {
+                initClass(thread, superClassMeta);
             }
         }
     }

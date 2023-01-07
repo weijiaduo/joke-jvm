@@ -22,10 +22,10 @@ public class InstanceOf extends Index16Instruction {
             return;
         }
 
-        ConstantPool cp = frame.getMethod().getClazz().getConstantPool();
+        ConstantPool cp = frame.getMethod().getClassMeta().getConstantPool();
         ClassRef classRef = (ClassRef) cp.getConstant(index);
-        ClassMeta clazz = classRef.resolvedClass();
-        if (ref.isInstanceOf(clazz)) {
+        ClassMeta classMeta = classRef.resolvedClass();
+        if (ref.isInstanceOf(classMeta)) {
             stack.pushInt(1);
         } else {
             stack.pushInt(0);

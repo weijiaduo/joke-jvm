@@ -32,7 +32,7 @@ public class Object implements NativeClass {
         @Override
         public void execute(Frame frame) {
             HeapObject that = frame.getLocalVars().getThis();
-            HeapObject jClassObj = that.getClazz().getjClass();
+            HeapObject jClassObj = that.getClassMeta().getjClass();
             frame.getOpStack().pushRef(jClassObj);
         }
     }
@@ -58,9 +58,9 @@ public class Object implements NativeClass {
             HeapObject that = frame.getLocalVars().getThis();
 
             // 必须要实现java/lang/Cloneable才行
-            ClassMeta cloneableClazz = that.getClazz().getLoader().loadClass("java/lang/Cloneable");
-            if (!that.getClazz().isImplements(cloneableClazz)) {
-                throw new CloneNotSupportedException("Not support clone: " + that.getClazz().getName());
+            ClassMeta cloneableClassMeta = that.getClassMeta().getLoader().loadClass("java/lang/Cloneable");
+            if (!that.getClassMeta().isImplements(cloneableClassMeta)) {
+                throw new CloneNotSupportedException("Not support clone: " + that.getClassMeta().getName());
             }
 
             // 克隆对象

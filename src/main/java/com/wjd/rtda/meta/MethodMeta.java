@@ -40,17 +40,17 @@ public class MethodMeta extends MemberMeta {
     /** 代码的行号表，指向ClassFile的常量 */
     protected LineNumberTableAttributeInfo lineNumberTable;
 
-    public static MethodMeta[] newMethods(ClassMeta clazz, MethodInfo[] methodInfos) {
+    public static MethodMeta[] newMethods(ClassMeta classMeta, MethodInfo[] methodInfos) {
         MethodMeta[] methods = new MethodMeta[methodInfos.length];
         for (int i = 0; i < methods.length; i++) {
-            methods[i] = newMethod(clazz, methodInfos[i]);
+            methods[i] = newMethod(classMeta, methodInfos[i]);
         }
         return methods;
     }
 
-    public static MethodMeta newMethod(ClassMeta clazz, MethodInfo methodInfo) {
+    public static MethodMeta newMethod(ClassMeta classMeta, MethodInfo methodInfo) {
         MethodMeta method = new MethodMeta();
-        method.clazz = clazz;
+        method.classMeta = classMeta;
         method.copyMemberInfo(methodInfo);
         method.copyAttributes(methodInfo);
         method.calcArgSlotCount();
@@ -73,7 +73,7 @@ public class MethodMeta extends MemberMeta {
             maxStacks = codeAttr.getMaxStack().value();
             maxLocals = codeAttr.getMaxLocals().value();
             codes = codeAttr.getCodes();
-            exceptionTable = ExceptionTable.newExceptionTable(codeAttr.getExceptionInfoTable(), clazz.getConstantPool());
+            exceptionTable = ExceptionTable.newExceptionTable(codeAttr.getExceptionInfoTable(), classMeta.getConstantPool());
             lineNumberTable = codeAttr.getLineNumberTableAttribute();
         }
     }
@@ -162,7 +162,7 @@ public class MethodMeta extends MemberMeta {
         ClassMeta[] paramClasses = new ClassMeta[paramTypes.length];
         for (int i = 0; i < paramClasses.length; i++) {
             String paramClassName = ClassHelper.getClassName(paramTypes[i]);
-            paramClasses[i] = clazz.getLoader().loadClass(paramClassName);
+            paramClasses[i] = classMeta.getLoader().loadClass(paramClassName);
         }
         return paramClasses;
     }
@@ -182,7 +182,7 @@ public class MethodMeta extends MemberMeta {
             return null;
         }
 
-        ConstantPool cp = clazz.constantPool;
+        ConstantPool cp = classMeta.constantPool;
         ClassMeta[] handlerClasses = new ClassMeta[exIndexTable.length];
         for (int i = 0; i < handlerClasses.length; i++) {
             ClassRef exClass = (ClassRef) cp.getConstant(exIndexTable[i].value());
@@ -210,7 +210,7 @@ public class MethodMeta extends MemberMeta {
      */
     private HeapObject toJClassArr(ClassMeta[] classes) {
         int count = classes.length;
-        ClassMeta jlClassClass = clazz.getLoader().loadClass("java/lang/Class");
+        ClassMeta jlClassClass = classMeta.getLoader().loadClass("java/lang/Class");
         ClassMeta arrClass = jlClassClass.getArrayClass();
         HeapObject arr = Heap.newArray(arrClass, count);
 
@@ -249,7 +249,7 @@ public class MethodMeta extends MemberMeta {
                 "name='" + name + '\'' +
                 ", descriptor='" + descriptor + '\'' +
                 ", signature='" + signature + '\'' +
-                ", clazz=" + clazz +
+                ", classMeta=" + classMeta +
                 ", maxStacks=" + maxStacks +
                 ", maxLocals=" + maxLocals +
                 ", paramSlotCount=" + paramSlotCount +

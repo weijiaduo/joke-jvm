@@ -35,14 +35,14 @@ public class FieldRef extends MemberRef {
      * 解析字段符号引用
      */
     private void resolveFieldRef() {
-        ClassMeta currentClazz = constantPool.getClazz();
-        ClassMeta refClazz = resolvedClass();
-        FieldMeta refField = FieldHelper.lookupField(refClazz, name, descriptor);
+        ClassMeta currentClassMeta = constantPool.getClassMeta();
+        ClassMeta refClassMeta = resolvedClass();
+        FieldMeta refField = FieldHelper.lookupField(refClassMeta, name, descriptor);
         if (refField == null) {
             throw new NoSuchFieldError("No such field: " + name + ", " + descriptor);
         }
-        if (!refField.isAccessibleTo(currentClazz)) {
-            throw new IllegalAccessError(("Class " + currentClazz.getName() + " can not assess Field " + name));
+        if (!refField.isAccessibleTo(currentClassMeta)) {
+            throw new IllegalAccessError(("Class " + currentClassMeta.getName() + " can not assess Field " + name));
         }
         field = refField;
     }

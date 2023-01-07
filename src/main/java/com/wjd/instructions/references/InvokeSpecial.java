@@ -17,14 +17,14 @@ public class InvokeSpecial extends Index16Instruction {
 
     @Override
     public void execute(Frame frame) {
-        ClassMeta currentClazz = frame.getMethod().getClazz();
-        ConstantPool cp = currentClazz.getConstantPool();
+        ClassMeta currentClassMeta = frame.getMethod().getClassMeta();
+        ConstantPool cp = currentClassMeta.getConstantPool();
         MethodRef methodRef = (MethodRef) cp.getConstant(index);
-        ClassMeta resolvedClazz = methodRef.resolvedClass();
+        ClassMeta resolvedClassMeta = methodRef.resolvedClass();
         MethodMeta resolvedMethod = methodRef.resolvedMethod();
 
         // 构造方法验证
-        if ("<init>".equals(resolvedMethod.getName()) && resolvedMethod.getClazz() != resolvedClazz) {
+        if ("<init>".equals(resolvedMethod.getName()) && resolvedMethod.getClassMeta() != resolvedClassMeta) {
             throw new NoSuchMethodError("Invoke special method: " + resolvedMethod.getName());
         }
         if (resolvedMethod.isStatic()) {
@@ -39,20 +39,20 @@ public class InvokeSpecial extends Index16Instruction {
 
         // 调用方法是protected时的权限验证
         if (resolvedMethod.isProtected() &&
-                resolvedMethod.getClazz().isSuperClassOf(currentClazz) &&
-                !resolvedMethod.getClazz().getPackageName().equals(currentClazz.getPackageName()) &&
-                ref.getClazz() != currentClazz &&
-                !ref.getClazz().isSubClassOf(currentClazz)) {
+                resolvedMethod.getClassMeta().isSuperClassOf(currentClassMeta) &&
+                !resolvedMethod.getClassMeta().getPackageName().equals(currentClassMeta.getPackageName()) &&
+                ref.getClassMeta() != currentClassMeta &&
+                !ref.getClassMeta().isSubClassOf(currentClassMeta)) {
             throw new IllegalAccessError("Invoke special method: " + resolvedMethod.getName());
         }
 
         MethodMeta methodToBeInvoked = resolvedMethod;
 
         // 调用super关键字
-        if (currentClazz.isSuper() &&
-                resolvedClazz.isSuperClassOf(currentClazz) &&
+        if (currentClassMeta.isSuper() &&
+                resolvedClassMeta.isSuperClassOf(currentClassMeta) &&
                 !"<init>".equals(resolvedMethod.getName())) {
-            methodToBeInvoked = MethodHelper.lookupMethodInClass(currentClazz.getSuperClass(),
+            methodToBeInvoked = MethodHelper.lookupMethodInClass(currentClassMeta.getSuperClass(),
                     methodRef.getName(),
                     methodRef.getDescriptor());
         }
