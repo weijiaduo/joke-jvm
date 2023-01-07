@@ -15,7 +15,7 @@ public class HeapObject implements Cloneable {
     ClassMeta classMeta;
     /** 实例对象的数据 */
     Object data;
-    /** 额外数据，目前只放了 java.lang.Class 对象 */
+    /** 额外数据 */
     Object extra;
 
     HeapObject(ClassMeta classMeta) {
