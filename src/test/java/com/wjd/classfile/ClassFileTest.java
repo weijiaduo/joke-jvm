@@ -12,7 +12,7 @@ public class ClassFileTest {
     @Test
     public void getClassName() throws IOException {
         String jreOption = null;
-        String cpOption = "C:\\Users\\weijiaduo\\IdeaProjects\\j-jvm\\target;C:\\Users\\weijiaduo\\IdeaProjects\\j-jvm\\target\\classes";
+        String cpOption = "C:\\Users\\weijiaduo\\IdeaProjects\\joke-jvm\\target;C:\\Users\\weijiaduo\\IdeaProjects\\joke-jvm\\target\\classes";
         String bootClassName = "java\\lang\\Object";
         String userClassName = "com\\wjd\\classfile\\ClassFileStructureTest";
         Classpath classpath = new Classpath(jreOption, cpOption);

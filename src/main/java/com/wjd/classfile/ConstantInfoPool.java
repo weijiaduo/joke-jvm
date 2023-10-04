@@ -1,6 +1,5 @@
 package com.wjd.classfile;
 
-import com.sun.org.apache.bcel.internal.classfile.ClassFormatException;
 import com.wjd.classfile.cons.*;
 import com.wjd.classfile.type.Uint16;
 import com.wjd.classfile.type.Uint8;
@@ -37,11 +36,6 @@ public class ConstantInfoPool {
                 constantPool[++i] = null;
             }
         }
-
-        // System.out.println("Constant Pool: ");
-        // for (int i = 1; i < constantPool.length; i++) {
-        //     System.out.println(i + ": " + constantPool[i]);
-        // }
     }
 
     private ConstantInfo readConstantInfo(ClassReader reader) {
@@ -98,7 +92,7 @@ public class ConstantInfoPool {
                 break;
             case Constants.ConstantDynamic:
             default:
-                throw new ClassFormatException("invalid constant pool tag: " + tag.value());
+                throw new IllegalArgumentException("invalid constant pool tag: " + tag.value());
         }
         constantInfo.readFrom(reader);
         return constantInfo;
@@ -106,6 +100,7 @@ public class ConstantInfoPool {
 
     /**
      * 获取常量的数量
+     *
      * @return 数量
      */
     public Uint16 getConstantCount() {
@@ -114,6 +109,7 @@ public class ConstantInfoPool {
 
     /**
      * 获取指定位置的常量
+     *
      * @param index 常量索引
      * @return 常量对象
      */
@@ -134,6 +130,7 @@ public class ConstantInfoPool {
 
     /**
      * 获取指定的UTF8字符串
+     *
      * @param index 索引位置
      * @return 字符串
      */

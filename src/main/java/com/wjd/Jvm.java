@@ -20,8 +20,9 @@ public class Jvm {
     public static void main(String[] args) {
         Cmd.printHelp();
         String[] testArgs = new String[] {
-                "com.wjd.rtda.CloneTest", "-classpath",
-                "D:\\Projects\\IdeaProjects\\j-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\j-jvm\\target\\classes"
+                "com.wjd.rtda.CloneTest",
+                "-Xjre", "D:\\Environment\\dev\\jdk\\jdk1.8.0_25_x64\\jre",
+                "-classpath", "D:\\Projects\\IdeaProjects\\joke-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\joke-jvm\\target\\classes"
         };
 
         Jvm jvm = new Jvm(testArgs);
