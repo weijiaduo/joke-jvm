@@ -1,25 +1,33 @@
 package com.wjd;
 
-import com.wjd.cmd.Cmd;
 import com.wjd.classpath.Classpath;
+import com.wjd.cmd.Cmd;
 import com.wjd.rtda.Thread;
 import com.wjd.rtda.heap.HeapObject;
-import com.wjd.rtda.meta.*;
+import com.wjd.rtda.meta.ClassMetaLoader;
+import com.wjd.rtda.meta.MethodMeta;
+import com.wjd.rtda.meta.ShimClassMeta;
+import com.wjd.rtda.meta.StringPool;
 import com.wjd.rtda.stack.Frame;
 
 import java.nio.file.Paths;
 
 public class Jvm {
 
+    /** 命令行 */
     private Cmd cmd;
+    /** 类文件路径 */
     private Classpath classpath;
+    /** 类加载器 */
     private ClassMetaLoader loader;
+    /** 主线程 */
     private Thread mainThread;
+    /** JVM 参数 */
     private JvmOptions jvmOptions;
 
     public static void main(String[] args) {
         Cmd.printHelp();
-        String[] testArgs = new String[] {
+        String[] testArgs = new String[]{
                 "com.wjd.rtda.CloneTest",
                 "-Xjre", "D:\\Environment\\dev\\jdk\\jdk1.8.0_25_x64\\jre",
                 "-classpath", "D:\\Projects\\IdeaProjects\\joke-jvm\\target\\test-classes;D:\\Projects\\IdeaProjects\\joke-jvm\\target\\classes"
@@ -40,14 +48,14 @@ public class Jvm {
      * 启动虚拟机
      */
     public void start() {
-        initVM();
-        execMain();
+        init();
+        run();
     }
 
     /**
      * 初始化虚拟机
      */
-    private void initVM() {
+    private void init() {
         initOptions();
         mainThread = new Thread(jvmOptions);
     }
@@ -65,7 +73,7 @@ public class Jvm {
     /**
      * 执行主入口函数
      */
-    private void execMain() {
+    private void run() {
         // 入口函数和参数
         String mainClassName = cmd.getMainClass().replaceAll("\\.", "/");
         HeapObject mainClassObj = StringPool.getStringObj(loader, mainClassName);
